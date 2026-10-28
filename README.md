@@ -40,7 +40,7 @@ project with its own mess. workdeck puts all of it in one place.
 - **Review before you commit.** `work review` asks your AI to review the change, in a pane separate from the conversation that wrote the code.
 - **Nothing gets lost.** Closed the terminal or lost the connection? Run `work` and everything is where you left it, agent included.
 - **Any terminal.** workdeck runs on tmux, its only dependency. kitty, Warp, iTerm2 or the terminal your system ships with: `work` works the same in all of them.
-- **Set up with one command, undone with another.** Installs tmux if it is missing and sets up kitty, a font, a theme and zsh as extras; `work uninstall` reverts all of it.
+- **Set up with one command, undone with another.** Installs tmux if it is missing, asks which terminal you use and offers its extras; `work uninstall` reverts all of it.
 
 ## How it works
 
@@ -79,8 +79,10 @@ curl -fsSL https://raw.githubusercontent.com/workdeckdev/workdeck/main/get.sh | 
 ```
 
 Runs on macOS and Linux (including WSL). The installer detects the system,
-installs tmux if it is missing, sets up [kitty](https://sw.kovidgoyal.net/kitty/)
-and the JetBrains Mono font as extras, and configures everything. Nothing is overwritten: what it
+installs tmux if it is missing, asks which terminal you use
+([kitty](https://sw.kovidgoyal.net/kitty/), [Warp](https://www.warp.dev/) or
+another one) and configures everything. You install the terminal yourself; the
+workdeck theme and font in it are optional. Nothing is overwritten: what it
 writes to your files stays between `# >>> workdeck >>>` markers.
 
 <details>
@@ -208,7 +210,7 @@ including the built-in ones.
 
 ### Themes
 
-Three themes, applied to tmux and, when it is set up, to kitty: `catppuccin-mocha` (default),
+Three themes, applied to tmux and, if you accept the look, to kitty or Warp: `catppuccin-mocha` (default),
 `nord` and `min-dark`. To switch, run the installer with `--theme nord`; the
 choice is kept across updates.
 [Create your own theme →](docs/themes.md)

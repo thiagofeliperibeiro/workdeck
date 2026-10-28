@@ -66,7 +66,7 @@ exec "$REAL_TMUX" -L "$SOCKET" "\$@"
 FAKE
   chmod +x "$base/bin/tmux"
   echo no > "$base/home/.config/workdeck/zsh"
-  unset XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME TMUX KITTY_WINDOW_ID WORKDECK_SESSION
+  unset XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME TMUX KITTY_WINDOW_ID WARP_CLIENT_VERSION WORKDECK_SESSION
   export HOME="$base/home"
   git_dir="$(dirname "$(command -v git)")"
   export PATH="$base/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$git_dir"

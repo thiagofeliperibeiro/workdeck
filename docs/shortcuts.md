@@ -36,20 +36,17 @@ Only workdeck keys work after <kbd>Ctrl</kbd>+<kbd>b</kbd>; any other key shows
   <kbd>T</kbd> opens a window, <kbd>R</kbd> renames the window, <kbd>E</kbd>
   detaches without closing.
 
-In the workdeck kitty they work out of the box, including on a Mac, where
-Option already acts as Alt. The actions use Shift because `Alt`+lowercase
+They work in any terminal. On a Mac, set Option as Meta in the terminal
+settings; with kitty chosen at install time, workdeck does this for you, and in
+Warp the option is **Left Option key is Meta**. The actions use Shift because `Alt`+lowercase
 letter belongs to readline (moving and deleting words on the command line).
 
-## kitty
+## Terminal extras
 
-kitty is the workdeck terminal, and the installer sets it up for you: theme,
-JetBrains Mono, the Mac Option key as Alt and, on a Mac, `cmd` shortcuts
-(`cmd+1…9` goes to a window, `cmd+d` splits side by side, `cmd+h` opens the
-menu). The full list is in [terminals/README.md](../terminals/README.md).
-
-In another terminal, or over SSH, `work` opens the same way, because the
-shortcuts belong to tmux, and the panel tells you that you are outside kitty.
-The look and the `cmd` shortcuts, however, are only guaranteed in kitty.
+Every shortcut above belongs to tmux and works in any terminal. With kitty
+chosen at install time, you also get `cmd` shortcuts on a Mac (`cmd+1…9` goes
+to a window, `cmd+d` splits side by side, `cmd+h` opens the menu). What each
+terminal gets is in [terminals/README.md](../terminals/README.md).
 
 ## Creating or changing a shortcut
 

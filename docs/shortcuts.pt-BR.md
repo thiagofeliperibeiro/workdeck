@@ -36,20 +36,17 @@ fora da lista mostra "tecla sem uso no workdeck — Ctrl+b h abre o menu".
   <kbd>T</kbd> abre uma janela, <kbd>R</kbd> renomeia a janela, <kbd>E</kbd> sai
   da sessão sem fechar.
 
-No kitty do workdeck eles funcionam de cara, inclusive no Mac, onde a Option já
-age como Alt. As ações usam Shift porque `Alt`+letra minúscula é do readline
+Eles funcionam em qualquer terminal. No Mac, ligue a Option como Meta nas
+configurações do terminal; com o kitty escolhido na instalação, o workdeck faz
+isso por você, e no Warp a opção é **Left Option key is Meta**. As ações usam Shift porque `Alt`+letra minúscula é do readline
 (andar e apagar palavras na linha de comando).
 
-## O kitty
+## Extras do terminal
 
-O kitty é o terminal do workdeck, e a instalação deixa ele pronto: tema, fonte
-JetBrains Mono, a Option do Mac como Alt e, no Mac, atalhos em `cmd`
-(`cmd+1…9` vai para a janela, `cmd+d` divide ao lado, `cmd+h` abre o menu). A
-lista completa está em [terminals/README.pt-BR.md](../terminals/README.pt-BR.md).
-
-Em outro terminal, ou por SSH, o `work` abre do mesmo
-jeito, porque os atalhos são do tmux, e o painel avisa que você está fora do
-kitty. O visual e os atalhos `cmd`, porém, só são garantidos no kitty.
+Todos os atalhos acima são do tmux e funcionam em qualquer terminal. Com o
+kitty escolhido na instalação, você ganha também atalhos em `cmd` no Mac
+(`cmd+1…9` vai para a janela, `cmd+d` divide ao lado, `cmd+h` abre o menu). O
+que cada terminal ganha está em [terminals/README.pt-BR.md](../terminals/README.pt-BR.md).
 
 ## Criar ou trocar um atalho
 

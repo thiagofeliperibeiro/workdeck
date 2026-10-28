@@ -25,10 +25,11 @@ less get.sh && bash get.sh
   `uninstall.sh` uses to undo it.
 - **When it asks for a password:** only to install tmux through the Linux
   package manager (`sudo`) and, if you accept, to change your default shell
-  (`chsh`). kitty and the font are installed without sudo.
-- **What it downloads:** workdeck itself from GitHub, kitty with its official
-  installer, the JetBrains Mono font from the official releases and, if you
-  accept, oh-my-zsh and zinit from their repositories.
+  (`chsh`).
+- **What it downloads:** workdeck itself from GitHub and, if you accept,
+  oh-my-zsh and zinit from their repositories. It does not download a terminal;
+  you install it. If you accept the terminal look, it also downloads the
+  JetBrains Mono font from the official releases, without sudo.
 - **What it does not do:** it sends no data anywhere, stores no tokens and runs
   nothing in the background except the new-version check, once a day, with
   `git fetch`.

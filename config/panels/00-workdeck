@@ -77,7 +77,11 @@ if [ "$projects" = 0 ]; then
 fi
 
 if [ -n "${TMUX:-}" ] && [ "$(tmux display -p '#{client_termname}' 2>/dev/null)" != xterm-kitty ]; then
-  printf '%sFora do kitty%s: o work funciona, mas o tema, a fonte e os atalhos cmd só valem lá.\n\n' "$purple" "$x"
+  if [ -n "${WARP_CLIENT_VERSION:-}" ]; then
+    printf '%sNo Warp%s: o work funciona com os atalhos Alt; os atalhos cmd só valem no kitty.\n\n' "$purple" "$x"
+  else
+    printf '%sFora do kitty%s: o work funciona, mas o tema, a fonte e os atalhos cmd só valem lá.\n\n' "$purple" "$x"
+  fi
 fi
 
 printf '%sCtrl+b h abre o menu: projetos, review, dividir a tela%s\n' "$dim" "$x"

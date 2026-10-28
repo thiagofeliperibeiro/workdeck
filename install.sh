@@ -7,6 +7,9 @@
 #   ./install.sh --zsh                instala o oh-my-zsh e o zinit sem perguntar
 #   ./install.sh --with ai-memory     ativa integrações opcionais (vírgula separa)
 #   ./install.sh --list-integrations  mostra as integrações disponíveis e sai
+#   ./install.sh --terminal warp      escolhe o terminal (kitty, warp ou other) sem perguntar
+#   ./install.sh --visual             instala o tema e a fonte no terminal, sem perguntar
+#   ./install.sh --no-visual          no terminal, só os atalhos
 #   ./install.sh --yes                não pergunta nada; usa os padrões
 #   ./install.sh --no-deps            não instala nada pelo gerenciador de pacotes
 #   ./install.sh --no-reload          não recarrega o tmux no fim
@@ -29,9 +32,17 @@ ZSH_CHOICE="$CONFIG_DIR/zsh"
 ZSH_PLUGINS="${XDG_DATA_HOME:-$HOME/.local/share}/workdeck-zsh"
 ZINIT_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 INTEGRATIONS_CHOICE="$CONFIG_DIR/integrations"
+TERMINAL_CHOICE="$CONFIG_DIR/terminal"
+VISUAL_CHOICE="$CONFIG_DIR/visual"
+KITTY_DOWNLOAD="https://sw.kovidgoyal.net/kitty/binary/"
+WARP_DOWNLOAD="https://www.warp.dev/download"
 
 THEME=""
 WANT_ZSH=0
+TERMINAL=""
+TERMINAL_REQUESTED=""
+VISUAL=""
+VISUAL_REQUESTED=""
 RESTART_SHELL=0
 AGENT=""
 WITH=""
@@ -44,7 +55,6 @@ OS_NAME=""
 PKG_MANAGER=""
 SUDO=""
 FONTS_DIR=""
-FONT=""
 ZSH_SUMMARY=""
 CHOSEN=0
 
@@ -62,11 +72,17 @@ parse_options() {
       --with) WITH="${2:?--with precisa de um nome}"; shift 2 ;;
       --yes|-y) YES=1; shift ;;
       --list-integrations) list_integrations; exit 0 ;;
+      --terminal)
+        TERMINAL_REQUESTED="${2:?--terminal precisa de kitty, warp ou other}"
+        valid_terminal "$TERMINAL_REQUESTED" || { echo "terminal '$TERMINAL_REQUESTED' não existe. Disponíveis: kitty, warp, other"; exit 1; }
+        shift 2 ;;
+      --visual) VISUAL_REQUESTED=yes; shift ;;
+      --no-visual) VISUAL_REQUESTED=no; shift ;;
       --no-deps) DEPS=0; shift ;;
       --zsh) WANT_ZSH=1; shift ;;
       --no-reload) RELOAD=0; shift ;;
       --dry-run) DRY=1; shift ;;
-      -h|--help) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+      -h|--help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
       *) echo "opção desconhecida: $1"; exit 1 ;;
     esac
   done
@@ -264,37 +280,185 @@ kitty_installed() {
   ! kitty_from_other_account "$k"
 }
 
-install_kitty() {
-  local app dest
-  if kitty_installed; then say "kitty já instalado"; return 0; fi
-  rm -f "$CONFIG_DIR/kitty"
-  if [ "$DEPS" = 0 ]; then warn "kitty não instalado (--no-deps): https://sw.kovidgoyal.net/kitty/binary/"; return 1; fi
-  [ "$DRY" = 1 ] && { say "[dry-run] instalaria o kitty pelo instalador oficial"; return 0; }
-  if ! command -v curl >/dev/null; then warn "sem curl; instale o kitty: https://sw.kovidgoyal.net/kitty/binary/"; return 1; fi
-  if [ "$OS_NAME" = macOS ]; then dest="$HOME/Applications"; else dest="$HOME/.local"; fi
-  mkdir -p "$dest"
-  if ! curl -fsSL https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest="$dest" launch=n >> "$LOG" 2>&1; then
-    warn "não consegui instalar o kitty; instale por https://sw.kovidgoyal.net/kitty/binary/ e rode a instalação de novo"
-    return 1
+apply_kitty() {
+  local block
+  block="$(sed '$d' "$ROOT/terminals/kitty.conf" | sed '/^# The theme is appended here/d')"
+  [ "$OS_NAME" = macOS ] || block="$(printf '%s\n' "$block" | grep -v '^map cmd\|^macos_')"
+  if [ "$VISUAL" = yes ]; then
+    block="$(printf '%s\n\n%s\n%s\n' "$block" "$(cat "$ROOT/terminals/kitty-visual.conf")" "$(cat "$ROOT/themes/$THEME.conf")")"
   fi
-  app="$dest/kitty.app"
-  if [ "$OS_NAME" != macOS ]; then
-    mkdir -p "$BIN_DIR" "$HOME/.local/share/applications"
-    ln -sf "$app/bin/kitty" "$app/bin/kitten" "$BIN_DIR/"
-    cp "$app/share/applications/kitty.desktop" "$app/share/applications/kitty-open.desktop" "$HOME/.local/share/applications/"
-    sed -i "s|Icon=kitty|Icon=$app/share/icons/hicolor/256x256/apps/kitty.png|g; s|Exec=kitty|Exec=$app/bin/kitty|g" \
-      "$HOME/.local/share/applications"/kitty*.desktop
-  fi
-  record kitty "$app"
-  say "kitty instalado em $(short_path "$app")"
+  write_block "$HOME/.config/kitty/kitty.conf" "$(printf '%s\n' "$block"; echo '# <<< workdeck <<<')"
+  if [ "$VISUAL" = yes ]; then say "kitty.conf — atalhos, tema e fonte"; else say "kitty.conf — atalhos"; fi
 }
 
-apply_kitty() {
-  local bloco
-  bloco="$(sed '$d' "$ROOT/terminals/kitty.conf" | sed '/^# The theme is appended here/d')"
-  [ "$OS_NAME" = macOS ] || bloco="$(printf '%s\n' "$bloco" | grep -v '^map cmd\|^macos_')"
-  write_block "$HOME/.config/kitty/kitty.conf" "$(printf '%s\n' "$bloco"; cat "$ROOT/themes/$THEME.conf"; echo '# <<< workdeck <<<')"
-  say "kitty.conf — tema, fonte e atalhos"
+kitty_block_has_visual() {
+  sed -n '/^# >>> workdeck >>>$/,/^# <<< workdeck <<<$/p' "$HOME/.config/kitty/kitty.conf" 2>/dev/null \
+    | grep -q '^font_family'
+}
+
+in_warp() { [ -n "${WARP_CLIENT_VERSION:-}" ]; }
+
+current_terminal_name() {
+  if in_kitty; then echo kitty
+  elif in_warp; then echo Warp
+  else echo terminal
+  fi
+}
+
+warp_installed() {
+  in_warp && return 0
+  [ -d /Applications/Warp.app ] || [ -d "$HOME/Applications/Warp.app" ] && return 0
+  command -v warp-terminal >/dev/null
+}
+
+valid_terminal() {
+  case "$1" in
+    kitty|warp|other) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+detected_terminal() {
+  in_kitty && { echo kitty; return 0; }
+  in_warp && { echo warp; return 0; }
+  kitty_installed && { echo kitty; return 0; }
+  warp_installed && { echo warp; return 0; }
+  echo other
+}
+
+chosen_terminal_name() {
+  case "$TERMINAL" in
+    warp) echo Warp ;;
+    other) echo outro ;;
+    *) echo "$TERMINAL" ;;
+  esac
+}
+
+ask_terminal() {
+  local answer
+  stop_spin
+  echo
+  echo "  Qual terminal você usa? O workdeck confere se ele está instalado e ajusta o que der."
+  printf '    1) kitty   %satalhos cmd do workdeck%s\n' "$dim" "$reset"
+  printf '    2) Warp    %satalhos Alt do tmux%s\n' "$dim" "$reset"
+  printf '    3) outro   %ssó o tmux; o terminal fica como está%s\n' "$dim" "$reset"
+  echo
+  printf '  Número (Enter para %s): ' "$(chosen_terminal_name)"
+  read -r answer || answer=""
+  spin
+  case "$answer" in
+    1) TERMINAL=kitty ;;
+    2) TERMINAL=warp ;;
+    3) TERMINAL=other ;;
+  esac
+}
+
+save_choice() {
+  [ "$DRY" = 1 ] && return 0
+  mkdir -p "$CONFIG_DIR"
+  echo "$2" > "$1"
+}
+
+choose_terminal() {
+  TERMINAL="${TERMINAL_REQUESTED:-$(cat "$TERMINAL_CHOICE" 2>/dev/null || true)}"
+  if valid_terminal "$TERMINAL"; then
+    save_choice "$TERMINAL_CHOICE" "$TERMINAL"
+    return 0
+  fi
+  TERMINAL="$(detected_terminal)"
+  can_ask || return 0
+  ask_terminal
+  save_choice "$TERMINAL_CHOICE" "$TERMINAL"
+}
+
+terminal_has_visual() { [ "$TERMINAL" = kitty ] || [ "$TERMINAL" = warp ]; }
+
+ask_visual() {
+  local answer
+  stop_spin
+  echo
+  printf '  Quer também o tema e a fonte JetBrains Mono do workdeck no %s? [s/N] ' "$(chosen_terminal_name)"
+  read -r answer || answer=n
+  spin
+  case "${answer:-n}" in
+    s|S|y|Y) VISUAL=yes ;;
+    *) VISUAL=no ;;
+  esac
+}
+
+choose_visual() {
+  VISUAL=""
+  terminal_has_visual || return 0
+  VISUAL="${VISUAL_REQUESTED:-$(cat "$VISUAL_CHOICE" 2>/dev/null || true)}"
+  if [ "$VISUAL" = yes ] || [ "$VISUAL" = no ]; then
+    save_choice "$VISUAL_CHOICE" "$VISUAL"
+    return 0
+  fi
+  if [ "$TERMINAL" = kitty ] && kitty_block_has_visual; then
+    VISUAL=yes
+    save_choice "$VISUAL_CHOICE" "$VISUAL"
+    return 0
+  fi
+  VISUAL=no
+  can_ask || return 0
+  ask_visual
+  save_choice "$VISUAL_CHOICE" "$VISUAL"
+}
+
+warp_themes_dir() {
+  if [ "$OS_NAME" = macOS ]; then echo "$HOME/.warp/themes"
+  else echo "${XDG_DATA_HOME:-$HOME/.local/share}/warp-terminal/themes"
+  fi
+}
+
+apply_warp_theme() {
+  local dest
+  dest="$(warp_themes_dir)/workdeck-$THEME.yaml"
+  record warp-theme "$dest"
+  [ "$DRY" = 1 ] && { say "[dry-run] copiaria o tema do Warp para $dest"; return 0; }
+  mkdir -p "$(dirname "$dest")"
+  cp "$ROOT/themes/$THEME.warp.yaml" "$dest"
+  say "tema do Warp em $(short_path "$dest")"
+}
+
+configure_kitty() {
+  if ! kitty_installed; then
+    warn "kitty não encontrado; instale por $KITTY_DOWNLOAD e rode a instalação de novo"
+    summary "$SUMMARY · kitty não encontrado"
+    return 0
+  fi
+  apply_kitty
+  if [ "$VISUAL" = yes ]; then
+    install_font
+    summary "$SUMMARY · kitty com atalhos, tema e fonte"
+    return 0
+  fi
+  summary "$SUMMARY · kitty com atalhos"
+}
+
+configure_warp() {
+  if ! warp_installed; then
+    warn "Warp não encontrado; instale por $WARP_DOWNLOAD e rode a instalação de novo"
+    summary "$SUMMARY · Warp não encontrado"
+    return 0
+  fi
+  say "Warp encontrado: o tmux funciona com os atalhos Alt"
+  if [ "$VISUAL" = yes ]; then
+    apply_warp_theme
+    install_font
+    summary "$SUMMARY · Warp com tema e fonte"
+    return 0
+  fi
+  summary "$SUMMARY · Warp"
+}
+
+configure_terminal() {
+  rm -f "$CONFIG_DIR/kitty"
+  case "$TERMINAL" in
+    kitty) configure_kitty ;;
+    warp) configure_warp ;;
+    *) say "terminal: sem ajustes; o tmux funciona em qualquer um" ;;
+  esac
 }
 
 has_font() {
@@ -309,7 +473,7 @@ has_font() {
 install_font() {
   local zip
   if has_font; then
-    FONT="JetBrains Mono"
+    say "fonte JetBrains Mono já instalada"
   elif [ "$DEPS" = 0 ]; then
     say "fonte JetBrains Mono não instalada (--no-deps)"
   elif [ "$DRY" = 1 ]; then
@@ -322,7 +486,7 @@ install_font() {
        && mkdir -p "$FONTS_DIR" && unzip -qo -j "$zip" 'fonts/ttf/*.ttf' -d "$FONTS_DIR" >> "$LOG" 2>&1; then
       if command -v fc-cache >/dev/null; then fc-cache -f "$FONTS_DIR" >> "$LOG" 2>&1; fi
       record font "$FONTS_DIR"
-      FONT="JetBrains Mono instalada"
+      say "fonte JetBrains Mono instalada em $(short_path "$FONTS_DIR")"
     else
       warn "não consegui baixar a fonte JetBrains Mono; o resto segue normal"
     fi
@@ -356,9 +520,8 @@ install_dependencies() {
       run "${setup[@]}" || warn "não consegui instalar $package pelo $PKG_MANAGER"
     done
   fi
-  install_font
   if command -v tmux >/dev/null; then versions="tmux $(tmux -V | awk '{print $2}')"; fi
-  summary "${versions}${FONT:+ · $FONT}"
+  summary "$versions"
   finish_step
 }
 
@@ -468,18 +631,15 @@ install_config() {
   finish_step
 }
 
-configure_tmux_kitty() {
-  step 4 "tmux e kitty"
+configure_tmux_and_terminal() {
+  step 4 "tmux e terminal"
   write_block "$HOME/.tmux.conf" \
     "$(sed '$d' "$ROOT/config/tmux.conf" | sed '/^# The theme is appended here/d'; cat "$ROOT/themes/$THEME.tmux"; echo '# <<< workdeck <<<')"
   say "tmux.conf — Ctrl+b, mouse e atalhos em Alt"
   summary "Ctrl+b, mouse e atalhos em Alt"
-  if install_kitty; then
-    apply_kitty
-    summary "Ctrl+b, mouse e atalhos em Alt · kitty com tema e fonte"
-  else
-    summary "Ctrl+b, mouse e atalhos em Alt · sem o kitty"
-  fi
+  choose_terminal
+  choose_visual
+  configure_terminal
   finish_step
 }
 
@@ -704,6 +864,38 @@ configure_integrations() {
   finish_step
 }
 
+choice_status() {
+  [ -f "$1" ] && return 0
+  printf ' (detectado, não salvo)'
+}
+
+show_choices() {
+  local visual=não
+  printf '\n  Suas escolhas, que a instalação lembra nas próximas vezes:\n'
+  printf '       terminal  %s%s\n' "$(chosen_terminal_name)" "$(choice_status "$TERMINAL_CHOICE")"
+  printf '                 para mudar: ./install.sh --terminal kitty|warp|other\n'
+  terminal_has_visual || return 0
+  [ "$VISUAL" = yes ] && visual=sim
+  printf '       visual    %s%s\n' "$visual" "$(choice_status "$VISUAL_CHOICE")"
+  printf '                 para mudar: ./install.sh --visual (tema e fonte) ou --no-visual\n'
+}
+
+teach_warp() {
+  [ "$TERMINAL" = warp ] || return 0
+  warp_installed || return 0
+  [ "$VISUAL" = yes ] || [ "$OS_NAME" = macOS ] || return 0
+  printf '\n  No Warp, falta escolher no app:\n'
+  if [ "$VISUAL" = yes ]; then
+    printf '       tema      Settings › Appearance › Themes, e escolha "workdeck %s"\n' "$THEME"
+    printf '                 (ou "Open theme picker" na Command Palette). Se o tema não aparecer, espere\n'
+    printf '                 alguns minutos ou reabra o Warp\n'
+    printf '       fonte     Settings › Appearance › Text › Font type › JetBrains Mono\n'
+  fi
+  [ "$OS_NAME" = macOS ] || return 0
+  printf '       Option    Settings › Features › "Left Option key is Meta" (ligado). Sem isso, os\n'
+  printf '                 atalhos Alt do tmux (Alt+1…9, Alt+setas) não funcionam no Mac\n'
+}
+
 finish() {
   local open_hint
   if [ "$RELOAD" = 1 ] && command -v tmux >/dev/null && tmux info >/dev/null 2>&1; then
@@ -712,7 +904,7 @@ finish() {
   rm -f "$ZSH_CHOICE.previous"
   if [ -n "$UPDATING" ]; then
     if [ "$RESTART_SHELL" = 1 ]; then
-      printf '\n  %s●%s Feche e abra o kitty para carregar o zsh e o visual novos.\n' "$yellow" "$reset"
+      printf '\n  %s●%s Feche e abra o %s para carregar o zsh e o visual novos.\n' "$yellow" "$reset" "$(current_terminal_name)"
     fi
     exit 0
   fi
@@ -723,8 +915,12 @@ finish() {
   fi
   if in_kitty; then
     open_hint="${bold}feche e abra o kitty${reset}     ${dim}carrega o zsh, o visual e os comandos do workdeck${reset}"
-  elif kitty_installed; then
+  elif in_warp; then
+    open_hint="${bold}feche e abra o Warp${reset}      ${dim}carrega o zsh e os comandos do workdeck${reset}"
+  elif [ "$TERMINAL" = kitty ] && kitty_installed && [ "$VISUAL" = yes ]; then
     open_hint="${bold}abra o kitty${reset}              ${dim}com o tema, a fonte e os atalhos cmd do workdeck${reset}"
+  elif [ "$TERMINAL" = kitty ] && kitty_installed; then
+    open_hint="${bold}abra o kitty${reset}              ${dim}com os atalhos cmd do workdeck${reset}"
   else
     open_hint="${bold}feche e abra o terminal${reset}   ${dim}carrega o zsh e os comandos do workdeck${reset}"
   fi
@@ -739,6 +935,8 @@ finish() {
   também funciona.
   Ajuda a qualquer hora: Ctrl+b e h dentro do work.
 EOF
+  teach_warp
+  show_choices
 }
 
 main() {
@@ -751,7 +949,7 @@ main() {
   install_dependencies
   install_scripts
   install_config
-  configure_tmux_kitty
+  configure_tmux_and_terminal
   configure_shell
   configure_agent
   configure_integrations

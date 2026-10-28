@@ -2,7 +2,8 @@
 
 # Temas
 
-Cada tema pinta o kitty e o tmux juntos.
+Cada tema pinta o tmux e, se você aceitar o visual na instalação, o kitty ou o
+Warp também.
 
 | Tema | Fundo | Jeito |
 |---|---|---|
@@ -21,11 +22,14 @@ tema escolhido.
 
 ## Criar um tema
 
-Crie dois arquivos em `themes/`:
+Crie três arquivos em `themes/`:
 
 - `<nome>.conf` com as cores do kitty (`background`, `foreground`,
   `color0`–`color15`);
-- `<nome>.tmux` com as do tmux (barra, janela ativa, bordas de painel).
+- `<nome>.tmux` com as do tmux (barra, janela ativa, bordas de painel);
+- `<nome>.warp.yaml` com as do Warp (`accent`, `cursor`, `background`,
+  `foreground` e `terminal_colors`). O `name` é `workdeck <nome>`, que é como o
+  tema aparece no seletor do Warp.
 
 O instalador cola cada um no lugar certo. Como os temas ficam no código, um
 tema próprio pede um fork (veja [Customizando](customizing.pt-BR.md)).

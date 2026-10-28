@@ -2,7 +2,8 @@
 
 # Themes
 
-Each theme colors kitty and tmux together.
+Each theme colors tmux and, if you accept the look at install time, kitty or
+Warp too.
 
 | Theme | Background | Character |
 |---|---|---|
@@ -21,11 +22,14 @@ chosen theme.
 
 ## Creating a theme
 
-Create two files in `themes/`:
+Create three files in `themes/`:
 
 - `<name>.conf` with the kitty colors (`background`, `foreground`,
   `color0`–`color15`);
-- `<name>.tmux` with the tmux colors (status bar, active window, pane borders).
+- `<name>.tmux` with the tmux colors (status bar, active window, pane borders);
+- `<name>.warp.yaml` with the Warp colors (`accent`, `cursor`, `background`,
+  `foreground` and `terminal_colors`). Its `name` is `workdeck <name>`, which is
+  how the theme shows up in the Warp theme picker.
 
 The installer places each one where it belongs. Since themes live in the code,
 a theme of your own requires a fork (see [Customizing](customizing.md)).

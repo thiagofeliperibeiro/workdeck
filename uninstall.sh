@@ -74,6 +74,17 @@ if [ -f "$MANIFEST" ]; then
           say "o kitty continua em ${target#"$HOME"/}; para remover também: rm -rf $target"
         fi
         ;;
+      warp-theme)
+        source_file="$ROOT/themes/$(basename "$target" .yaml | sed 's/^workdeck-//').warp.yaml"
+        if [ ! -f "$target" ]; then
+          :
+        elif [ -f "$source_file" ] && same_file "$source_file" "$target"; then
+          run rm -f "$target"
+          say "removido ${target#"$HOME"/}"
+        else
+          say "deixei ${target#"$HOME"/}: foi alterado depois da instalação"
+        fi
+        ;;
       zsh)
         run rm -rf "$target"
         rm -f "$CONFIG_DIR/zsh"

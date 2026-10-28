@@ -36,7 +36,7 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 - **Review antes do commit.** `work review` pede à sua IA uma revisão da mudança, num painel separado da conversa que escreveu o código.
 - **Nada se perde.** Fechou o terminal ou caiu a conexão? `work` e tudo está onde estava, agente incluso.
 - **Qualquer terminal.** O workdeck roda sobre o tmux, a única dependência. kitty, Warp, iTerm2 ou o terminal que vem no sistema: o `work` funciona igual em todos.
-- **Pronto em um comando, reversível em outro.** Instala o tmux, se faltar, e deixa kitty, fonte, tema e zsh como extras; `work uninstall` desfaz tudo.
+- **Pronto em um comando, reversível em outro.** Instala o tmux, se faltar, pergunta qual terminal você usa e oferece os extras dele; `work uninstall` desfaz tudo.
 
 ## Como funciona
 
@@ -75,8 +75,10 @@ curl -fsSL https://raw.githubusercontent.com/workdeckdev/workdeck/main/get.sh | 
 ```
 
 Funciona no macOS e no Linux (inclusive WSL). O instalador detecta o sistema,
-instala o tmux, se faltar, deixa o [kitty](https://sw.kovidgoyal.net/kitty/) e a
-fonte JetBrains Mono como extras e configura tudo. Nada é sobrescrito: o que ele escreve nos
+instala o tmux, se faltar, pergunta qual terminal você usa
+([kitty](https://sw.kovidgoyal.net/kitty/), [Warp](https://www.warp.dev/) ou
+outro) e configura tudo. O terminal você instala por conta própria; o tema e a
+fonte do workdeck nele são opcionais. Nada é sobrescrito: o que ele escreve nos
 seus arquivos fica entre marcadores `# >>> workdeck >>>`.
 
 <details>
@@ -202,7 +204,7 @@ inclusive os que vêm prontos.
 
 ### Temas
 
-Três temas, aplicados ao tmux e, quando ele está configurado, ao kitty: `catppuccin-mocha` (padrão),
+Três temas, aplicados ao tmux e, se você aceitar o visual, ao kitty ou ao Warp: `catppuccin-mocha` (padrão),
 `nord` e `min-dark`. Para trocar, rode a instalação com `--theme nord`; a
 escolha fica salva para as próximas atualizações.
 [Criar o seu tema →](docs/themes.pt-BR.md)

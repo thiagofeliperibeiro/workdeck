@@ -28,8 +28,8 @@ bin/work              the only command on the PATH
 bin/work-panel        the panel
 bin/workdeck-agent    starts the AI agent and the review in a pane
 config/               tmux.conf, the shell block and the built-in panels
-themes/               the kitty and tmux colors of each theme
-terminals/            the kitty configuration
+themes/               the kitty, tmux and Warp colors of each theme
+terminals/            the kitty configuration and the terminals guide
 integrations/         BMAD, Spec Kit, ai-memory and the template for new ones
 docs/                 the guides, in English and Portuguese
 tests/                the tests and the linter

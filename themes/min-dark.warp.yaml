@@ -1,0 +1,25 @@
+name: workdeck min-dark
+accent: '#a690cc'
+cursor: '#a690cc'
+background: '#1f1f1f'
+foreground: '#c3c6c8'
+details: darker
+terminal_colors:
+  bright:
+    black: '#5c5c5c'
+    red: '#ea8d95'
+    green: '#6fcf9c'
+    yellow: '#e6b58f'
+    blue: '#94b9de'
+    magenta: '#b8a5d8'
+    cyan: '#7fbccd'
+    white: '#d8dadc'
+  normal:
+    black: '#1a1a1a'
+    red: '#e07b85'
+    green: '#5bbd8b'
+    yellow: '#d9a278'
+    blue: '#7fa8d4'
+    magenta: '#a690cc'
+    cyan: '#6aa8bd'
+    white: '#b4b7b9'
