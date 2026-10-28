@@ -3,6 +3,12 @@
 O `work update` mostra o trecho da versão nova antes de perguntar se quer
 atualizar. Cada versão é uma tag `vX.Y.Z`.
 
+## v1.4.0
+
+- A instalação pergunta qual terminal você usa (kitty, Warp ou outro), confere se ele está instalado e configura os extras dele. **O workdeck não instala mais o kitty:** se ele faltar, a instalação diz onde baixar. Uma segunda pergunta oferece o tema e a fonte JetBrains Mono no kitty ou no Warp. As flags `--terminal kitty|warp|other` e `--visual` / `--no-visual` respondem sem perguntar, e as respostas ficam em `~/.config/workdeck/`.
+- Suporte ao Warp: a instalação copia o tema do workdeck para a pasta de temas dele e mostra onde escolher o tema, a fonte e a Option como Meta em Settings. O painel reconhece o Warp e explica que o `work` funciona com os atalhos `Alt`.
+- Quem já usa o kitty com o tema e a fonte do workdeck continua com os dois depois desta atualização, sem precisar responder nada.
+
 ## v1.3.0
 
 - README e guias em inglês e em português: `README.md` e `docs/<guia>.md` em inglês, `README.pt-BR.md` e `docs/<guia>.pt-BR.md` em português. O que aparece no terminal continua em português.
