@@ -6,6 +6,9 @@ atualizar. Cada versão é uma tag `vX.Y.Z`.
 ## v1.0.1
 
 - O `work update` não trava mais quando uma versão é republicada com o mesmo nome: a busca de versões passa a aceitar a tag nova no lugar da antiga.
+- `Option+Delete` volta a apagar a palavra inteira dentro do Claude Code e de outros agentes no tmux. No kitty, `Shift+Enter` pula a linha no agente em vez de enviar a mensagem, e só dentro do tmux.
+- **`Alt+←` e `Alt+→` não trocam mais de painel**, para continuarem andando por palavras no shell e nos agentes. `Alt+↑` e `Alt+↓` seguem trocando de painel, e `Ctrl+b` com as setas troca em qualquer direção.
+- Ao atualizar, a sessão aberta já passa a usar os atalhos novos depois de recarregar a configuração (`Ctrl+b r`); não precisa do `work kill`. No kitty, recarregue a configuração com `Ctrl+Cmd+,` ou abra o kitty de novo, senão o `Shift+Enter` não muda.
 
 ## v1.0.0
 

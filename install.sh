@@ -893,7 +893,7 @@ teach_warp() {
   fi
   [ "$OS_NAME" = macOS ] || return 0
   printf '       Option    Settings › Features › "Left Option key is Meta" (ligado). Sem isso, os\n'
-  printf '                 atalhos Alt do tmux (Alt+1…9, Alt+setas) não funcionam no Mac\n'
+  printf '                 atalhos Alt do tmux (Alt+1…9, Alt+↑/↓) não funcionam no Mac\n'
 }
 
 finish() {

@@ -27,6 +27,9 @@ With kitty chosen and installed, the installer adds a block to your
 - **cmd** on a Mac: `cmd+h` opens the menu, `cmd+enter` splits the screen,
   `cmd+1…9` goes to a window, `cmd+d` / `cmd+shift+d` splits side by side /
   stacked, `cmd+shift+enter` zooms, `cmd+shift+w` closes the pane.
+- **Shift+Enter** is sent in the extended format, so agents such as Claude Code
+  get a new line instead of a submit. It only applies while tmux runs in the
+  window, so a plain shell is not affected.
 
 If you accept the look, the same block also gets:
 
@@ -66,7 +69,7 @@ Warp does not switch theme or font from a file, so the last step is yours:
   can also search for "Open theme picker" in the Command Palette. Warp may take a
   few minutes to notice the new folder; reopening the app fixes it.
 - **Font.** In **Settings › Appearance › Text › Font type**, pick JetBrains Mono.
-- **Option as Alt (Mac only).** The tmux Alt shortcuts (`Alt+1…9`, `Alt+arrows`)
+- **Option as Alt (Mac only).** The tmux Alt shortcuts (`Alt+1…9`, `Alt+↑/↓`)
   only work when Option is treated as Alt. In **Settings › Features**, turn on
   **Left Option key is Meta**. The installer does not turn it on for you, because
   Warp keeps this option in its own `settings.toml` and rewrites it.

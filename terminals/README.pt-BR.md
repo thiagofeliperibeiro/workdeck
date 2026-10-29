@@ -27,6 +27,9 @@ Com o kitty escolhido e instalado, a instalação acrescenta um bloco ao seu
 - **cmd** no Mac: `cmd+h` abre o menu, `cmd+enter` divide a tela, `cmd+1…9`
   vai para a janela, `cmd+d` / `cmd+shift+d` divide ao lado / embaixo,
   `cmd+shift+enter` dá zoom, `cmd+shift+w` fecha o painel.
+- **Shift+Enter** é enviado no formato estendido, para que agentes como o
+  Claude Code pulem a linha em vez de enviar a mensagem. Só vale enquanto o
+  tmux roda na janela, então um shell comum não é afetado.
 
 Se você aceitar o visual, o mesmo bloco ganha também:
 
@@ -66,7 +69,7 @@ O Warp não troca de tema nem de fonte por arquivo, então o último passo é se
 - **Fonte.** Em **Settings › Appearance › Text › Font type**, escolha JetBrains
   Mono.
 - **Option como Alt (só no Mac).** Os atalhos `Alt` do tmux (`Alt+1…9`,
-  `Alt+setas`) só funcionam se a Option for tratada como Alt. Em
+  `Alt+↑/↓`) só funcionam se a Option for tratada como Alt. Em
   **Settings › Features**, ligue **Left Option key is Meta**. A instalação não liga
   isso por você, porque o Warp guarda essa opção no `settings.toml` dele e o
   reescreve.

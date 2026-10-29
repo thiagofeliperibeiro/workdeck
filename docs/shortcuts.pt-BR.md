@@ -30,7 +30,8 @@ fora da lista mostra "tecla sem uso no workdeck — Ctrl+b h abre o menu".
 ## Atalhos de uma tecla, com Alt
 
 - <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> vai para a janela.
-- <kbd>Alt</kbd>+setas troca de painel.
+- <kbd>Alt</kbd>+<kbd>↑</kbd> / <kbd>↓</kbd> troca de painel. <kbd>Alt</kbd>+<kbd>←</kbd> /
+  <kbd>→</kbd> ficam livres para andar por palavras no shell e nos agentes.
 - <kbd>Alt</kbd>+<kbd>Shift</kbd>+letra faz as ações: <kbd>D</kbd> divide ao
   lado, <kbd>S</kbd> embaixo, <kbd>Z</kbd> zoom, <kbd>X</kbd> fecha,
   <kbd>T</kbd> abre uma janela, <kbd>R</kbd> renomeia a janela, <kbd>E</kbd> sai

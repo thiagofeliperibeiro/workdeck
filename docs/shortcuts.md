@@ -30,7 +30,8 @@ Only workdeck keys work after <kbd>Ctrl</kbd>+<kbd>b</kbd>; any other key shows
 ## Single-key shortcuts with Alt
 
 - <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> goes to the window.
-- <kbd>Alt</kbd>+arrows switches panes.
+- <kbd>Alt</kbd>+<kbd>↑</kbd> / <kbd>↓</kbd> switches panes. <kbd>Alt</kbd>+<kbd>←</kbd> /
+  <kbd>→</kbd> stay free to move by word in the shell and in agents.
 - <kbd>Alt</kbd>+<kbd>Shift</kbd>+letter runs the actions: <kbd>D</kbd> splits
   side by side, <kbd>S</kbd> stacked, <kbd>Z</kbd> zooms, <kbd>X</kbd> closes,
   <kbd>T</kbd> opens a window, <kbd>R</kbd> renames the window, <kbd>E</kbd>
