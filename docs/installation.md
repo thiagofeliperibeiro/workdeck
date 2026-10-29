@@ -19,7 +19,7 @@ and runs `install.sh` from there. You do not need to clone the repository.
    if the one you chose is missing, it tells you where to download it, and you
    run the installer again afterwards. For kitty and Warp, a second question
    offers the workdeck theme and the JetBrains Mono font. The answers are saved
-   in `~/.config/workdeck/terminal` and `~/.config/workdeck/visual`, and
+   in `~/.config/workdeck/settings.conf` (`TERMINAL` and `VISUAL`), and
    `--terminal kitty|warp|other` and `--visual` / `--no-visual` answer without
    asking. Details in [terminals/README.md](../terminals/README.md).
 3. Puts the `work` command in `~/.local/bin`.
@@ -80,7 +80,7 @@ rest of the file stays as it is.
 ~/.local/share/workdeck/            the code, at the installed version
 ~/.config/workdeck/projects.conf    your projects
 ~/.config/workdeck/panels/          your panels
-~/.config/workdeck/                 your choices: agent, theme, terminal, visual, zsh, integrations
+~/.config/workdeck/settings.conf    your choices: agent, theme, terminal, visual, zsh, integrations, active pane
 ~/.tmux.conf                        block between the markers
 ~/.zshrc or ~/.bashrc               block between the markers
 ~/.config/kitty/kitty.conf          block between the markers, only if you chose kitty

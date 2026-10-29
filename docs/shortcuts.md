@@ -48,6 +48,20 @@ chosen at install time, you also get `cmd` shortcuts on a Mac (`cmd+1…9` goes
 to a window, `cmd+d` splits side by side, `cmd+h` opens the menu). What each
 terminal gets is in [terminals/README.md](../terminals/README.md).
 
+## Telling which pane is active
+
+With two panes side by side, tmux paints only half of the shared border in the
+active color, so it is easy to lose track of where the focus is. For a thin line
+in the theme accent over the active pane, add this to
+`~/.config/workdeck/settings.conf` and press <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>r</kbd>:
+
+```
+ACTIVE_PANE="line"
+```
+
+The line takes one row at the top of the window. `"none"`, the default, keeps
+the borders of the theme.
+
 ## Creating or changing a shortcut
 
 Add the `bind` to your `~/.tmux.conf`, **after** the workdeck block: anything

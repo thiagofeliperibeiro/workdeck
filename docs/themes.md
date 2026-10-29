@@ -17,7 +17,7 @@ Warp too.
 curl -fsSL https://raw.githubusercontent.com/thiagofeliperibeiro/workdeck/main/get.sh | bash -s -- --theme nord
 ```
 
-The choice is saved in `~/.config/workdeck/theme`, and `work update` keeps the
+The choice is saved as `THEME` in `~/.config/workdeck/settings.conf`, and `work update` keeps the
 chosen theme.
 
 ## Creating a theme

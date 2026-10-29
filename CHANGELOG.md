@@ -3,6 +3,11 @@
 O `work update` mostra o trecho da versão nova antes de perguntar se quer
 atualizar. Cada versão é uma tag `vX.Y.Z`.
 
+## v1.1.0
+
+- As suas escolhas ficam num arquivo só, `~/.config/workdeck/settings.conf`, uma `CHAVE="valor"` por linha: terminal, tema, visual, agente, integrações, zsh e o aviso de versão nova. Antes cada uma tinha o seu arquivo. O `work update` junta os arquivos antigos no novo sozinho e não perde nenhuma escolha. Pode editar à mão; a instalação só preenche o que faltar e só reescreve uma chave quando você pede com uma flag, como `--theme`.
+- Novo `ACTIVE_PANE="line"` no `settings.conf`: um traço fino na cor de destaque do tema sobre o painel ativo, para saber onde está o foco quando há dois painéis lado a lado (o tmux pinta só metade da borda). Vem desligado; `Ctrl+b r` aplica, sem reiniciar a sessão. O traço ocupa uma linha no topo da janela.
+
 ## v1.0.1
 
 - O `work update` não trava mais quando uma versão é republicada com o mesmo nome: a busca de versões passa a aceitar a tag nova no lugar da antiga.

@@ -28,12 +28,8 @@ BIN_DIR="$WORKDECK_BIN"
 CODE="$WORKDECK_CODE"
 BACKUPS="$CONFIG_DIR/.backups"
 MANIFEST="$CONFIG_DIR/.install-manifest"
-ZSH_CHOICE="$CONFIG_DIR/zsh"
 ZSH_PLUGINS="${XDG_DATA_HOME:-$HOME/.local/share}/workdeck-zsh"
 ZINIT_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
-INTEGRATIONS_CHOICE="$CONFIG_DIR/integrations"
-TERMINAL_CHOICE="$CONFIG_DIR/terminal"
-VISUAL_CHOICE="$CONFIG_DIR/visual"
 KITTY_DOWNLOAD="https://sw.kovidgoyal.net/kitty/binary/"
 WARP_DOWNLOAD="https://www.warp.dev/download"
 
@@ -215,8 +211,10 @@ setup_output() {
 }
 
 choose_theme() {
+  local saved
+  saved="$(setting_get THEME)"
   if [ -z "$THEME" ]; then
-    THEME="$(cat "$CONFIG_DIR/theme" 2>/dev/null || true)"
+    THEME="$saved"
     [ -f "$ROOT/themes/${THEME:-_}.conf" ] || THEME="catppuccin-mocha"
   fi
   if [ ! -f "$ROOT/themes/$THEME.conf" ]; then
@@ -225,7 +223,7 @@ choose_theme() {
     for t in "$ROOT"/themes/*.conf; do t="$(basename "$t")"; echo "  ${t%.conf}"; done
     exit 1
   fi
-  [ "$DRY" = 1 ] || { mkdir -p "$CONFIG_DIR"; echo "$THEME" > "$CONFIG_DIR/theme"; }
+  save_choice THEME "$THEME"
 }
 
 detect_system() {
@@ -353,22 +351,24 @@ ask_terminal() {
   esac
 }
 
+# A key that already holds this value is left alone, so a reinstall does not
+# rewrite the user's file.
 save_choice() {
   [ "$DRY" = 1 ] && return 0
-  mkdir -p "$CONFIG_DIR"
-  echo "$2" > "$1"
+  setting_has "$1" && [ "$(setting_get "$1")" = "$2" ] && return 0
+  setting_set "$1" "$2"
 }
 
 choose_terminal() {
-  TERMINAL="${TERMINAL_REQUESTED:-$(cat "$TERMINAL_CHOICE" 2>/dev/null || true)}"
+  TERMINAL="${TERMINAL_REQUESTED:-$(setting_get TERMINAL)}"
   if valid_terminal "$TERMINAL"; then
-    save_choice "$TERMINAL_CHOICE" "$TERMINAL"
+    save_choice TERMINAL "$TERMINAL"
     return 0
   fi
   TERMINAL="$(detected_terminal)"
   can_ask || return 0
   ask_terminal
-  save_choice "$TERMINAL_CHOICE" "$TERMINAL"
+  save_choice TERMINAL "$TERMINAL"
 }
 
 terminal_has_visual() { [ "$TERMINAL" = kitty ] || [ "$TERMINAL" = warp ]; }
@@ -389,20 +389,20 @@ ask_visual() {
 choose_visual() {
   VISUAL=""
   terminal_has_visual || return 0
-  VISUAL="${VISUAL_REQUESTED:-$(cat "$VISUAL_CHOICE" 2>/dev/null || true)}"
+  VISUAL="${VISUAL_REQUESTED:-$(setting_get VISUAL)}"
   if [ "$VISUAL" = yes ] || [ "$VISUAL" = no ]; then
-    save_choice "$VISUAL_CHOICE" "$VISUAL"
+    save_choice VISUAL "$VISUAL"
     return 0
   fi
   if [ "$TERMINAL" = kitty ] && kitty_block_has_visual; then
     VISUAL=yes
-    save_choice "$VISUAL_CHOICE" "$VISUAL"
+    save_choice VISUAL "$VISUAL"
     return 0
   fi
   VISUAL=no
   can_ask || return 0
   ask_visual
-  save_choice "$VISUAL_CHOICE" "$VISUAL"
+  save_choice VISUAL "$VISUAL"
 }
 
 warp_themes_dir() {
@@ -634,7 +634,7 @@ install_config() {
 configure_tmux_and_terminal() {
   step 4 "tmux e terminal"
   write_block "$HOME/.tmux.conf" \
-    "$(sed '$d' "$ROOT/config/tmux.conf" | sed '/^# The theme is appended here/d'; cat "$ROOT/themes/$THEME.tmux"; echo '# <<< workdeck <<<')"
+    "$(sed '$d' "$ROOT/config/tmux.conf" | sed '/^# The theme is appended here/d'; cat "$ROOT/themes/$THEME.tmux"; echo "run-shell -b \"$BIN_DIR/work _settings\""; echo '# <<< workdeck <<<')"
   say "tmux.conf — Ctrl+b, mouse e atalhos em Alt"
   summary "Ctrl+b, mouse e atalhos em Alt"
   choose_terminal
@@ -664,9 +664,9 @@ install_omz_zinit() {
 }
 
 setup_zsh() {
-  local choice r zsh_bin
-  choice="$(cat "$ZSH_CHOICE" 2>/dev/null || true)"
-  printf '%s' "$choice" > "$ZSH_CHOICE.previous" 2>/dev/null || true
+  local choice previous r zsh_bin
+  choice="$(setting_get ZSH)"
+  previous="$choice"
   [ "$choice" = no ] && [ "$WANT_ZSH" = 0 ] && return 0
   if [ "$choice" != yes ]; then
     if has_custom_zsh; then
@@ -679,7 +679,7 @@ setup_zsh() {
       printf '  e mais completar com Tab. [S/n] '
       read -r r || r=s
       spin
-      case "$r" in ""|s|S|y|Y) ;; *) [ "$DRY" = 1 ] || { mkdir -p "$CONFIG_DIR"; echo no > "$ZSH_CHOICE"; }; return 0 ;; esac
+      case "$r" in ""|s|S|y|Y) ;; *) save_choice ZSH no; return 0 ;; esac
     fi
   fi
   [ "$DRY" = 1 ] && { say "[dry-run] instalaria o zsh do workdeck"; return 0; }
@@ -712,9 +712,9 @@ setup_zsh() {
     esac
   fi
   if install_omz_zinit; then
-    mkdir -p "$CONFIG_DIR"; echo yes > "$ZSH_CHOICE"
+    save_choice ZSH yes
     ZSH_SUMMARY="oh-my-zsh (robbyrussell) e zinit"
-    [ "$(cat "$ZSH_CHOICE.previous" 2>/dev/null)" = yes ] || RESTART_SHELL=1
+    [ "$previous" = yes ] || RESTART_SHELL=1
   else
     warn "não consegui baixar o oh-my-zsh ou o zinit; rode a instalação de novo com --zsh mais tarde"
   fi
@@ -730,7 +730,7 @@ configure_shell() {
   esac
   if [ -n "$rc" ]; then
     write_block "$rc" "$(cat "$ROOT/config/shell-snippet.sh")"
-    if [ "$(cat "$ZSH_CHOICE" 2>/dev/null)" = yes ] && [ "$DRY" = 0 ] && command -v zsh >/dev/null; then
+    if [ "$(setting_get ZSH)" = yes ] && [ "$DRY" = 0 ] && command -v zsh >/dev/null; then
       zsh -i -c exit </dev/null >> "$LOG" 2>&1 || true
     fi
     say "$(basename "$rc")"
@@ -744,7 +744,7 @@ configure_shell() {
 configure_agent() {
   local current_agent="" found=() c a i choice
   step 6 "agente de IA"
-  [ -f "$CONFIG_DIR/agent.conf" ] && current_agent="$(. "$CONFIG_DIR/agent.conf"; echo "${AGENT_CMD:-}")"
+  current_agent="$(setting_get AGENT_CMD)"
   if [ -n "$AGENT" ]; then
     run "$ROOT/bin/workdeck-agent" --set "$AGENT" && say "agente: $AGENT"
     summary "$AGENT"
@@ -808,7 +808,7 @@ ask_integrations() {
       case ",$WITH," in *",${available[$((e-1))]},"*) ;; *) WITH="${WITH:+$WITH,}${available[$((e-1))]}" ;; esac
     fi
   done
-  [ "$DRY" = 1 ] || { mkdir -p "$CONFIG_DIR"; echo "${WITH:-none}" > "$INTEGRATIONS_CHOICE"; }
+  save_choice INTEGRATIONS "${WITH:-none}"
   CHOSEN=1
   spin
 }
@@ -844,13 +844,13 @@ enable_integration() {
 configure_integrations() {
   local requested=() name
   step 7 "integrações"
-  if [ -z "$WITH" ] && [ ! -f "$INTEGRATIONS_CHOICE" ] && can_ask; then
+  if [ -z "$WITH" ] && ! setting_has INTEGRATIONS && can_ask; then
     ask_integrations
   fi
   if [ -z "$WITH" ]; then
-    if [ -f "$INTEGRATIONS_CHOICE" ] && [ "$(cat "$INTEGRATIONS_CHOICE")" != none ]; then
-      say "escolhidas antes: $(cat "$INTEGRATIONS_CHOICE"); para ver de novo: rode a instalação de novo com --with <nome>"
-      summary "$(cat "$INTEGRATIONS_CHOICE")"
+    if setting_has INTEGRATIONS && [ "$(setting_get INTEGRATIONS)" != none ]; then
+      say "escolhidas antes: $(setting_get INTEGRATIONS); para ver de novo: rode a instalação de novo com --with <nome>"
+      summary "$(setting_get INTEGRATIONS)"
     else
       say "nenhuma; para ligar depois: rode a instalação de novo com --with <nome>"
       summary "nenhuma (--with <nome>)"
@@ -865,18 +865,18 @@ configure_integrations() {
 }
 
 choice_status() {
-  [ -f "$1" ] && return 0
+  setting_has "$1" && return 0
   printf ' (detectado, não salvo)'
 }
 
 show_choices() {
   local visual=não
   printf '\n  Suas escolhas, que a instalação lembra nas próximas vezes:\n'
-  printf '       terminal  %s%s\n' "$(chosen_terminal_name)" "$(choice_status "$TERMINAL_CHOICE")"
+  printf '       terminal  %s%s\n' "$(chosen_terminal_name)" "$(choice_status TERMINAL)"
   printf '                 para mudar: ./install.sh --terminal kitty|warp|other\n'
   terminal_has_visual || return 0
   [ "$VISUAL" = yes ] && visual=sim
-  printf '       visual    %s%s\n' "$visual" "$(choice_status "$VISUAL_CHOICE")"
+  printf '       visual    %s%s\n' "$visual" "$(choice_status VISUAL)"
   printf '                 para mudar: ./install.sh --visual (tema e fonte) ou --no-visual\n'
 }
 
@@ -901,7 +901,6 @@ finish() {
   if [ "$RELOAD" = 1 ] && command -v tmux >/dev/null && tmux info >/dev/null 2>&1; then
     run tmux source-file "$HOME/.tmux.conf" && say "tmux recarregado"
   fi
-  rm -f "$ZSH_CHOICE.previous"
   if [ -n "$UPDATING" ]; then
     if [ "$RESTART_SHELL" = 1 ]; then
       printf '\n  %s●%s Feche e abra o %s para carregar o zsh e o visual novos.\n' "$yellow" "$reset" "$(current_terminal_name)"
@@ -942,7 +941,7 @@ EOF
 main() {
   parse_options "$@"
   setup_output
-  [ "$DRY" = 1 ] || migrate_legacy_config
+  [ "$DRY" = 1 ] || { settings_ensure_header; migrate_legacy_config; }
   choose_theme
   detect_system
   show_header
@@ -953,6 +952,7 @@ main() {
   configure_shell
   configure_agent
   configure_integrations
+  [ "$DRY" = 1 ] || settings_ensure_template
   finish
 }
 

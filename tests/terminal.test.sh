@@ -22,7 +22,7 @@ test_terminal_kitty_installed_gets_the_block() {
   mkdir -p "$HOME/Applications/kitty.app"
   install_workdeck --terminal kitty >/dev/null || fail "the install exited with an error"
   assert "the block was written to kitty.conf" grep -q '^# >>> workdeck >>>$' "$(kitty_conf)"
-  assert_equal "$(cat "$CONFIG/terminal")" kitty "saved choice"
+  assert_equal "$(saved_setting TERMINAL)" kitty "saved choice"
 }
 
 test_terminal_kitty_missing_warns_and_downloads_nothing() {
@@ -37,7 +37,7 @@ test_terminal_other_leaves_the_terminal_alone() {
   output="$(install_workdeck --terminal other 2>&1)" || fail "the install exited with an error"
   assert_contains "$output" "sem ajustes"
   assert "no kitty.conf was created" test ! -e "$(kitty_conf)"
-  assert "no visual choice was saved" test ! -e "$CONFIG/visual"
+  assert "no visual choice was saved" lacks_saved_setting VISUAL
 }
 
 test_saved_terminal_applies_on_reinstall() {
@@ -49,10 +49,10 @@ test_saved_terminal_applies_on_reinstall() {
 }
 
 test_requested_terminal_wins_over_saved() {
-  echo other > "$CONFIG/terminal"
+  save_setting TERMINAL other
   mkdir -p "$HOME/Applications/kitty.app"
   install_workdeck --terminal kitty >/dev/null || fail "the install exited with an error"
-  assert_equal "$(cat "$CONFIG/terminal")" kitty "saved choice"
+  assert_equal "$(saved_setting TERMINAL)" kitty "saved choice"
   assert "the block was written to kitty.conf" grep -q '^# >>> workdeck >>>$' "$(kitty_conf)"
 }
 
@@ -60,7 +60,7 @@ test_terminal_without_a_question_uses_the_detected_one_and_saves_nothing() {
   export KITTY_WINDOW_ID=1
   output="$(install_workdeck 2>&1)" || fail "the install exited with an error"
   assert_contains "$output" "kitty não encontrado" "the detected terminal"
-  assert "nothing was saved without a choice" test ! -e "$CONFIG/terminal"
+  assert "nothing was saved without a choice" lacks_saved_setting TERMINAL
 }
 
 test_install_shows_the_choices_and_how_to_change_them() {
@@ -97,7 +97,7 @@ test_visual_on_kitty_puts_theme_and_font_in_the_block() {
   assert "the font" grep -q '^font_family .*JetBrains Mono' "$(kitty_conf)"
   assert "the padding" grep -q '^window_padding_width 8$' "$(kitty_conf)"
   assert_kitty_shortcuts
-  assert_equal "$(cat "$CONFIG/visual")" yes "saved choice"
+  assert_equal "$(saved_setting VISUAL)" yes "saved choice"
 }
 
 test_no_visual_on_kitty_writes_only_the_shortcuts() {
@@ -107,7 +107,7 @@ test_no_visual_on_kitty_writes_only_the_shortcuts() {
   assert "no colors" test -z "$(grep '^background \|^color0 ' "$(kitty_conf)")"
   assert "no font" test -z "$(grep '^font_family' "$(kitty_conf)")"
   assert "no padding" test -z "$(grep '^window_padding_width' "$(kitty_conf)")"
-  assert_equal "$(cat "$CONFIG/visual")" no "saved choice"
+  assert_equal "$(saved_setting VISUAL)" no "saved choice"
 }
 
 test_saved_visual_applies_on_reinstall() {
@@ -130,17 +130,17 @@ test_visual_without_a_question_is_no_and_saves_nothing() {
   install_workdeck --terminal kitty >/dev/null || fail "the install exited with an error"
   assert_kitty_shortcuts
   assert "no colors" test -z "$(grep '^background ' "$(kitty_conf)")"
-  assert "nothing was saved without a choice" test ! -e "$CONFIG/visual"
+  assert "nothing was saved without a choice" lacks_saved_setting VISUAL
 }
 
 test_update_keeps_the_kitty_look_of_an_older_install() {
   mkdir -p "$HOME/Applications/kitty.app" "$(dirname "$(kitty_conf)")"
   printf '%s\n' '# >>> workdeck >>>' 'map cmd+1 send_text all \x021' 'font_family        JetBrains Mono' 'background #1e1e2e' '# <<< workdeck <<<' > "$(kitty_conf)"
-  echo kitty > "$CONFIG/terminal"
+  save_setting TERMINAL kitty
   install_workdeck >/dev/null || fail "the update exited with an error"
   assert "the font stays" grep -q '^font_family .*JetBrains Mono' "$(kitty_conf)"
   assert "the theme stays" grep -q '^background ' "$(kitty_conf)"
-  assert_equal "$(cat "$CONFIG/visual")" yes "the look is saved as a choice"
+  assert_equal "$(saved_setting VISUAL)" yes "the look is saved as a choice"
 }
 
 test_warp_with_visual_gets_the_chosen_theme() {

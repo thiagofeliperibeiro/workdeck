@@ -65,7 +65,7 @@ if [ "\$1" = display-menu ] && [ -n "\${WD_MENU_LOG:-}" ]; then printf '%s\n' "\
 exec "$REAL_TMUX" -L "$SOCKET" "\$@"
 FAKE
   chmod +x "$base/bin/tmux"
-  echo no > "$base/home/.config/workdeck/zsh"
+  printf 'ZSH="no"\n' > "$base/home/.config/workdeck/settings.conf"
   unset XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME TMUX KITTY_WINDOW_ID WARP_CLIENT_VERSION WORKDECK_SESSION
   export HOME="$base/home"
   git_dir="$(dirname "$(command -v git)")"
@@ -96,3 +96,8 @@ open_work_in_terminal() {
   wait_for "$REAL_TMUX" -L "$SOCKET_HOST" has-session -t host || fail "the test terminal did not open"
   "$REAL_TMUX" -L "$SOCKET_HOST" send-keys -t host "$*" Enter
 }
+
+saved_setting() { ( . "$REPO/lib/common.sh"; setting_get "$1" ); }
+has_saved_setting() { ( . "$REPO/lib/common.sh"; setting_has "$1" ); }
+lacks_saved_setting() { ! has_saved_setting "$1"; }
+save_setting() { ( . "$REPO/lib/common.sh"; setting_set "$1" "$2" ); }

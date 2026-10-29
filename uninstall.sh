@@ -87,11 +87,11 @@ if [ -f "$MANIFEST" ]; then
         ;;
       zsh)
         run rm -rf "$target"
-        rm -f "$CONFIG_DIR/zsh"
+        [ "$DRY" = 1 ] || setting_unset ZSH
         ;;
       omz|zinit)
         run rm -rf "$target"
-        rm -f "$CONFIG_DIR/zsh"
+        [ "$DRY" = 1 ] || setting_unset ZSH
         say "removido ${target#"$HOME"/}"
         ;;
       font)

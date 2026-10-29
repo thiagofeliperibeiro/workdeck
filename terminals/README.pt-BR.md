@@ -11,12 +11,12 @@ ele está instalado e configura os extras que ele aceita. **Ela não instala
 terminal:** se o escolhido faltar, diz onde baixar, e você roda a instalação de
 novo depois. Para responder sem a pergunta, use `--terminal kitty`,
 `--terminal warp` ou `--terminal other`; a escolha fica salva em
-`~/.config/workdeck/terminal`.
+`~/.config/workdeck/settings.conf` (`TERMINAL`).
 
 No kitty e no Warp, uma segunda pergunta oferece o **visual** do workdeck: o
 tema e a fonte JetBrains Mono, baixada das releases oficiais, sem sudo. A
 resposta padrão é não (Enter recusa). `--visual` aceita sem perguntar e
-`--no-visual` recusa; a resposta fica em `~/.config/workdeck/visual`.
+`--no-visual` recusa; a resposta fica em `~/.config/workdeck/settings.conf` (`VISUAL`).
 
 ## kitty
 

@@ -31,3 +31,15 @@ test_uninstall_reads_a_legacy_manifest() {
   assert "the code was removed" test ! -e "$CODE"
   assert "the tmux.conf created by install was removed" test ! -e "$HOME/.tmux.conf"
 }
+
+test_uninstall_removes_only_the_zsh_key() {
+  install_workdeck >/dev/null || fail "install exited with an error"
+  save_setting THEME nord
+  save_setting ZSH yes
+  mkdir -p "$HOME/.oh-my-zsh"
+  echo "omz|$HOME/.oh-my-zsh|" >> "$CONFIG/.install-manifest"
+  bash "$CODE/uninstall.sh" >/dev/null || fail "uninstall exited with an error"
+  assert "oh-my-zsh was removed" test ! -e "$HOME/.oh-my-zsh"
+  assert "the ZSH key is gone" lacks_saved_setting ZSH
+  assert_equal "$(saved_setting THEME)" nord "the other choices are kept"
+}

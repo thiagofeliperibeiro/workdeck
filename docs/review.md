@@ -60,7 +60,7 @@ conversation. With another AI, it goes to the clipboard and to
 `~/.cache/workdeck/review-request.md`, for you to paste.
 
 Which AI is used: the one open in a pane of the window. If there is none, the
-one chosen during installation, stored in `~/.config/workdeck/agent.conf`.
+one chosen during installation, stored as `AGENT_CMD` in `~/.config/workdeck/settings.conf`.
 
 ## Your own review flow
 

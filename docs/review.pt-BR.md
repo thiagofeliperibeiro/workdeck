@@ -58,7 +58,7 @@ IA, ele vai para a área de transferência e para
 `~/.cache/workdeck/review-request.md`, para colar.
 
 Qual IA é usada: a que estiver aberta num painel da janela. Se não houver
-nenhuma, a escolhida na instalação, guardada em `~/.config/workdeck/agent.conf`.
+nenhuma, a escolhida na instalação, guardada como `AGENT_CMD` em `~/.config/workdeck/settings.conf`.
 
 ## O seu fluxo de review
 

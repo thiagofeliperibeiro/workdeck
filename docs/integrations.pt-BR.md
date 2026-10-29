@@ -7,7 +7,7 @@
 O workdeck não traz nem abre nenhum agente: você abre o seu como sempre, num
 painel da janela do projeto (`claude`, `codex`, `copilot`, `aider`, `gemini`…).
 O `work review` usa a IA que estiver aberta ali. Se não houver nenhuma, usa a
-escolhida na instalação, guardada em `~/.config/workdeck/agent.conf`.
+escolhida na instalação, guardada como `AGENT_CMD` em `~/.config/workdeck/settings.conf`.
 
 Para trocar sem perguntas: rode a instalação com `--agent <comando>`.
 

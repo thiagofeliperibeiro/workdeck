@@ -18,8 +18,8 @@ e roda o `install.sh` de lá. Não é preciso clonar o repositório.
    e configura os extras dele. **O workdeck não instala terminal:** se o
    escolhido faltar, avisa onde baixar, e você roda a instalação de novo depois.
    No kitty e no Warp, uma segunda pergunta oferece o tema e a fonte JetBrains
-   Mono do workdeck. As respostas ficam em `~/.config/workdeck/terminal` e
-   `~/.config/workdeck/visual`, e `--terminal kitty|warp|other` e `--visual` /
+   Mono do workdeck. As respostas ficam em `~/.config/workdeck/settings.conf` (`TERMINAL` e
+   `VISUAL`), e `--terminal kitty|warp|other` e `--visual` /
    `--no-visual` respondem sem perguntar. Detalhes em
    [terminals/README.pt-BR.md](../terminals/README.pt-BR.md).
 3. Coloca o comando `work` em `~/.local/bin`.
@@ -79,7 +79,7 @@ do arquivo fica como está.
 ~/.local/share/workdeck/            o código, na versão instalada
 ~/.config/workdeck/projects.conf    os seus projetos
 ~/.config/workdeck/panels/          os seus painéis
-~/.config/workdeck/                 as suas escolhas: agente, tema, terminal, visual, zsh, integrações
+~/.config/workdeck/settings.conf    as suas escolhas: agente, tema, terminal, visual, zsh, integrações, painel ativo
 ~/.tmux.conf                        bloco entre os marcadores
 ~/.zshrc ou ~/.bashrc               bloco entre os marcadores
 ~/.config/kitty/kitty.conf          bloco entre os marcadores, só se você escolheu o kitty

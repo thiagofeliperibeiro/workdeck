@@ -13,7 +13,6 @@ fi
 CONFIG="$WORKDECK_CONFIG/projects.conf"
 CODE="$WORKDECK_CODE"
 UPDATE_CACHE="$WORKDECK_CACHE/update"
-NOTIFY_CONF="$WORKDECK_CONFIG/update.conf"
 SESSION="${WORKDECK_SESSION:-work}"
 
 if [ -n "${TERM:-}" ] && command -v infocmp >/dev/null && ! infocmp "$TERM" >/dev/null 2>&1; then
@@ -68,7 +67,7 @@ is_newer() {
   [ "$1" != "$2" ] && [ "$(latest_version "$1" "$2")" = "$1" ]
 }
 
-notify_enabled() { ! grep -qx 'NOTIFY=0' "$NOTIFY_CONF" 2>/dev/null; }
+notify_enabled() { [ "$(setting_get NOTIFY 1)" != 0 ]; }
 
 cache_get() { { sed -n "s/^$1=//p" "$UPDATE_CACHE" 2>/dev/null || true; } | tail -1; }
 
@@ -296,6 +295,36 @@ decorate() {
   return 0
 }
 
+apply_active_pane_line() {
+  local accent dim
+  accent="$(tmux show -gqv @wd_accent)"
+  dim="$(tmux show -gqv @wd_dim)"
+  tmux setw -g pane-border-status top \; setw -g pane-border-format '' \; set -gq pane-border-indicators off \; set -g @wd_active_pane line
+  [ -z "$dim" ] || tmux setw -g pane-border-style "fg=$dim"
+  [ -z "$accent" ] || tmux setw -g pane-active-border-style "fg=$accent"
+}
+
+# Only undoes what apply_active_pane_line did, so a pane-border-status the user
+# set in their own tmux.conf is left alone.
+remove_active_pane_line() {
+  [ "$(tmux show -gqv @wd_active_pane)" = line ] || return 0
+  tmux setw -g pane-border-status off \; setw -gu pane-border-format \; set -gq pane-border-indicators colour \; set -gu @wd_active_pane
+}
+
+# Called from the workdeck block of ~/.tmux.conf, on load and on Ctrl+b r.
+apply_settings() {
+  local active_pane
+  tmux show -gqv @wd_accent >/dev/null 2>&1 || return 0
+  active_pane="$(setting_get ACTIVE_PANE none)"
+  case "$active_pane" in
+    line) apply_active_pane_line ;;
+    none|"") remove_active_pane_line ;;
+    *)
+      printf 'workdeck: ACTIVE_PANE="%s" inválido; use none ou line\n' "$active_pane"
+      remove_active_pane_line ;;
+  esac
+}
+
 sync_windows() {
   local open entry name dir cmd d tmp removed=""
   decorate
@@ -364,8 +393,8 @@ case "${1:-}" in
   review) shift; review "$@"; exit $? ;;
   update)
     case "${2:-}" in
-      --desligar) mkdir -p "$(dirname "$NOTIFY_CONF")"; echo "NOTIFY=0" > "$NOTIFY_CONF"; echo "o work não vai mais perguntar sobre versões novas; work update continua funcionando."; exit 0 ;;
-      --ligar) rm -f "$NOTIFY_CONF"; echo "o work volta a avisar sobre versões novas."; exit 0 ;;
+      --desligar) setting_set NOTIFY 0; echo "o work não vai mais perguntar sobre versões novas; work update continua funcionando."; exit 0 ;;
+      --ligar) setting_unset NOTIFY; echo "o work volta a avisar sobre versões novas."; exit 0 ;;
       --check|--verificar) check_in_background; exit 0 ;;
     esac
     update 1; exit $? ;;
@@ -397,6 +426,7 @@ case "${1:-}" in
     fi
     exec bash "$CODE/uninstall.sh" --all "$@" ;;
   _sync|sincronizar) sync_windows; exit 0 ;;
+  _settings) apply_settings; exit 0 ;;
   _panel) shift; exec "$LIB/work-panel" "$@" ;;
   _menu) shift; menu "$@"; exit 0 ;;
   *)

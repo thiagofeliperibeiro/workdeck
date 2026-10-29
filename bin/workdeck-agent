@@ -2,10 +2,8 @@
 set -uo pipefail
 
 . "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
-CONFIG_DIR="$WORKDECK_CONFIG"
-CONFIG="$CONFIG_DIR/agent.conf"
 
-load_config() { AGENT_CMD=""; [ -f "$CONFIG" ] && . "$CONFIG"; }
+load_config() { AGENT_CMD="$(setting_get AGENT_CMD)"; }
 
 is_workdeck_command() {
   case "$(basename "${1%% *}")" in
@@ -118,8 +116,7 @@ case "${1:-}" in
     cmd="${2:?use: workdeck-agent --set <comando>}"
     is_workdeck_command "$cmd" && { echo "'$cmd' é um comando do workdeck, não um agente de IA."; exit 1; }
     type -P "${cmd%% *}" >/dev/null || { echo "'${cmd%% *}' não está no PATH."; exit 1; }
-    mkdir -p "$CONFIG_DIR"
-    printf 'AGENT_CMD="%s"\n' "$cmd" > "$CONFIG"
+    setting_set AGENT_CMD "$cmd"
     echo "agente definido: $cmd"
     exit 0
     ;;

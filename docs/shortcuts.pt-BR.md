@@ -48,6 +48,20 @@ kitty escolhido na instalação, você ganha também atalhos em `cmd` no Mac
 (`cmd+1…9` vai para a janela, `cmd+d` divide ao lado, `cmd+h` abre o menu). O
 que cada terminal ganha está em [terminals/README.pt-BR.md](../terminals/README.pt-BR.md).
 
+## Saber qual painel está ativo
+
+Com dois painéis lado a lado, o tmux pinta só metade da borda compartilhada na
+cor do painel ativo, e fica fácil perder de vista onde está o foco. Para um
+traço fino na cor de destaque do tema sobre o painel ativo, acrescente isto ao
+`~/.config/workdeck/settings.conf` e aperte <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>r</kbd>:
+
+```
+ACTIVE_PANE="line"
+```
+
+O traço ocupa uma linha no topo da janela. `"none"`, o padrão, mantém as
+bordas do tema.
+
 ## Criar ou trocar um atalho
 
 Ponha o `bind` no seu `~/.tmux.conf`, **depois** do bloco do workdeck: o que

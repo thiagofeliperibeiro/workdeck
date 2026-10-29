@@ -7,7 +7,7 @@
 workdeck neither ships nor starts any agent: you start yours as usual, in a
 pane of the project window (`claude`, `codex`, `copilot`, `aider`, `gemini`…).
 `work review` uses the AI open there. If there is none, it uses the one chosen
-during installation, stored in `~/.config/workdeck/agent.conf`.
+during installation, stored as `AGENT_CMD` in `~/.config/workdeck/settings.conf`.
 
 To change it without being asked, run the installer with `--agent <command>`.
 

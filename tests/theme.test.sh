@@ -8,21 +8,21 @@ theme_applied() {
 
 test_default_theme() {
   install_workdeck >/dev/null || fail "install exited with an error"
-  assert_equal "$(cat "$CONFIG/theme")" catppuccin-mocha "saved theme"
+  assert_equal "$(saved_setting THEME)" catppuccin-mocha "saved theme"
   assert "catppuccin colors are in tmux.conf" theme_applied catppuccin-mocha
 }
 
 test_chosen_theme_is_kept() {
   install_workdeck --theme nord >/dev/null || fail "install with --theme nord"
   install_workdeck >/dev/null || fail "reinstall without --theme"
-  assert_equal "$(cat "$CONFIG/theme")" nord "theme after reinstall"
+  assert_equal "$(saved_setting THEME)" nord "theme after reinstall"
   assert "nord colors stay in tmux.conf" theme_applied nord
 }
 
 test_invalid_saved_theme_falls_back_to_default() {
-  echo does-not-exist > "$CONFIG/theme"
+  save_setting THEME does-not-exist
   install_workdeck >/dev/null || fail "install exited with an error"
-  assert_equal "$(cat "$CONFIG/theme")" catppuccin-mocha "saved theme"
+  assert_equal "$(saved_setting THEME)" catppuccin-mocha "saved theme"
 }
 
 test_unknown_theme_fails() {

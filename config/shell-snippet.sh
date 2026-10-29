@@ -2,7 +2,7 @@
 # Works in bash and zsh.
 export PATH="$HOME/.local/bin:$PATH"
 
-if [ -n "${ZSH_VERSION:-}" ] && grep -qx yes "${XDG_CONFIG_HOME:-$HOME/.config}/workdeck/zsh" 2>/dev/null; then
+if [ -n "${ZSH_VERSION:-}" ] && command grep -a -m1 '^ZSH=".*"$' "${XDG_CONFIG_HOME:-$HOME/.config}/workdeck/settings.conf" 2>/dev/null | command grep -qx 'ZSH="yes"'; then
   if [ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
     export ZSH="$HOME/.oh-my-zsh"
     ZSH_THEME="${WORKDECK_ZSH_THEME:-robbyrussell}"
