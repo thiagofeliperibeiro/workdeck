@@ -41,7 +41,7 @@ if [ -n "${ZSH_VERSION:-}" ]; then
       compadd add remove update kill
     elif [[ ${words[2]} == add ]]; then
       _directories
-    elif [[ ${words[2]} == remove ]]; then
+    elif [[ ${words[2]} == remove || ${words[2]} == rm ]]; then
       compadd -- ${(f)"$(_work_projects)"}
     fi
   }
@@ -53,7 +53,7 @@ elif [ -n "${BASH_VERSION:-}" ]; then
       COMPREPLY=($(compgen -W "add remove update kill" -- "$cur"))
     elif [ "${COMP_WORDS[1]}" = add ]; then
       COMPREPLY=($(compgen -d -- "$cur"))
-    elif [ "${COMP_WORDS[1]}" = remove ]; then
+    elif [ "${COMP_WORDS[1]}" = remove ] || [ "${COMP_WORDS[1]}" = rm ]; then
       COMPREPLY=($(compgen -W "$(_work_projects)" -- "$cur"))
     fi
   }

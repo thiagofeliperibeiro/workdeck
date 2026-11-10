@@ -11,7 +11,7 @@ msg_settings_notify_agents="# Notificação do sistema quando um agente termina 
 msg_work_help="Os comandos são:
   work                abre a sessão, ou volta para ela
   work add <pasta>    acrescenta um projeto
-  work remove <nome>  tira um projeto do work
+  work remove <nome>  tira um projeto do work (atalho: work rm)
   work update         atualiza o workdeck
   work kill           fecha a sessão inteira
   work uninstall      desinstala tudo o que o workdeck instalou"

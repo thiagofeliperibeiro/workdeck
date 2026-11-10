@@ -33,6 +33,7 @@ que aparece no painel:
 
 ```bash
 work remove api           # Tab completa o nome
+work rm api               # o mesmo, mais curto
 ```
 
 Pelo menu (<kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd>), "Remover um projeto…"

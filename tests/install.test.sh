@@ -143,4 +143,6 @@ test_snippet_completes_project_names_after_work_remove() {
   assert_equal "$output" "api app" "names offered after work remove"
   output="$(bash --norc -c ". '$REPO/config/shell-snippet.sh'; COMP_WORDS=(work re); COMP_CWORD=1; _work; echo \"\${COMPREPLY[*]}\"")"
   assert_equal "$output" "remove" "commands starting with re"
+  output="$(bash --norc -c ". '$REPO/config/shell-snippet.sh'; COMP_WORDS=(work rm a); COMP_CWORD=2; _work; echo \"\${COMPREPLY[*]}\"")"
+  assert_equal "$output" "api app" "names offered after work rm"
 }

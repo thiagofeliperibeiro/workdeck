@@ -807,7 +807,7 @@ project_dir() {
 case "${1:-}" in
   "") ;;
   add) shift; add_project "${1:-.}"; exit $? ;;
-  remove) shift; remove_project "${1:-}"; exit $? ;;
+  remove|rm) shift; remove_project "${1:-}"; exit $? ;;
   _remove-at) shift; remove_project_at "${1:-}" "${2:-}" "${3:-}"; exit $? ;;
   _remove-menu) shift; remove_menu "${1:-}" "${2:-}"; exit 0 ;;
   update)

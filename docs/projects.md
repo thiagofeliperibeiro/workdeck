@@ -34,6 +34,7 @@ shown in the panel:
 
 ```bash
 work remove api           # Tab completes the name
+work rm api               # the same, shorter
 ```
 
 In the menu (<kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd>), "Remove a project…"

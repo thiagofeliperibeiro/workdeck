@@ -220,3 +220,10 @@ test_remove_from_the_menu_drops_the_chosen_project() {
   assert_contains "$menu" "Remover um projeto" "the menu opens again"
   assert_not_contains "$menu" "old" "the removed project in the menu"
 }
+
+test_work_rm_is_an_alias_of_remove() {
+  remove_session
+  output="$(work rm api 2>&1)" || fail "work rm exited with an error: $output"
+  assert_contains "$output" "api saiu do seu work"
+  assert_equal "$(tr '\n' ' ' < "$CONFIG/projects.conf")" "painel|~|work-panel old|~/gone web|~/web " "projects.conf"
+}
