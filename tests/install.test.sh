@@ -135,3 +135,14 @@ test_refuses_to_install_on_windows() {
   assert "work was not installed" test ! -e "$HOME/.local/bin/work"
   if grep -q '^THEME=' "$CONFIG/settings.conf" 2>/dev/null; then fail "the installer wrote settings before refusing"; fi
 }
+
+test_snippet_completes_project_names_after_work_remove() {
+  mkdir -p "$CONFIG"
+  printf 'painel|~|work-panel\napi|~/api\n# web|~/web\napp|~/app\n' > "$CONFIG/projects.conf"
+  output="$(bash --norc -c ". '$REPO/config/shell-snippet.sh'; COMP_WORDS=(work remove a); COMP_CWORD=2; _work; echo \"\${COMPREPLY[*]}\"")"
+  assert_equal "$output" "api app" "names offered after work remove"
+  output="$(bash --norc -c ". '$REPO/config/shell-snippet.sh'; COMP_WORDS=(work re); COMP_CWORD=1; _work; echo \"\${COMPREPLY[*]}\"")"
+  assert_equal "$output" "remove review" "commands starting with re"
+  output="$(bash --norc -c ". '$REPO/config/shell-snippet.sh'; COMP_WORDS=(work rm a); COMP_CWORD=2; _work; echo \"\${COMPREPLY[*]}\"")"
+  assert_equal "$output" "api app" "names offered after work rm"
+}

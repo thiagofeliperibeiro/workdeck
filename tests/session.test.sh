@@ -28,6 +28,7 @@ test_menu_says_how_to_close() {
   WD_MENU_LOG="$BASE/menu" work _menu "$client" "$(tmux display -p -t work:painel '#{pane_id}')"
   assert_contains "$(cat "$BASE/menu")" "-q ou Esc fecha o menu"
   assert_contains "$(cat "$BASE/menu")" "painel"
+  assert_contains "$(cat "$BASE/menu")" "Remover um projeto…"
 }
 
 test_work_without_code_explains_what_to_do() {
@@ -157,4 +158,72 @@ test_dragging_keeps_the_panel_first() {
   work _save-order
   assert_equal "$(tmux list-windows -t work -F '#W' | head -1)" painel "the first window"
   assert_equal "$(head -1 "$CONFIG/projects.conf")" "painel|~|work-panel" "the first line of projects.conf"
+}
+
+remove_session() {
+  install_workdeck >/dev/null || fail "install exited with an error"
+  mkdir -p "$HOME/api" "$HOME/web"
+  printf 'painel|~|work-panel\napi|~/api\nold|~/gone\nweb|~/web\n' > "$CONFIG/projects.conf"
+  tmux new-session -d -s work -n painel
+  tmux set -w -t work:painel @wd_panel 1
+  API_WIN="$(tmux new-window -d -P -F '#{window_id}' -t work: -n api -c "$HOME/api")"
+  tmux set -w -t "$API_WIN" @project "$HOME/api"
+}
+
+test_work_remove_drops_the_project_and_closes_its_window() {
+  remove_session
+  output="$(work remove api 2>&1)" || fail "work remove exited with an error: $output"
+  assert_contains "$output" "api saiu do seu work"
+  assert_equal "$(tr '\n' ' ' < "$CONFIG/projects.conf")" "painel|~|work-panel old|~/gone web|~/web " "projects.conf"
+  assert_equal "$(tmux list-windows -t work -F '#W' | tr '\n' ' ')" "painel " "windows"
+}
+
+test_work_remove_drops_a_project_whose_folder_is_gone() {
+  remove_session
+  work remove old >/dev/null 2>&1 || fail "work remove exited with an error"
+  assert_equal "$(tr '\n' ' ' < "$CONFIG/projects.conf")" "painel|~|work-panel api|~/api web|~/web " "projects.conf"
+}
+
+test_work_remove_of_an_unknown_name_lists_the_projects() {
+  remove_session
+  if output="$(work remove nada 2>&1)"; then fail "work remove should fail for an unknown name"; fi
+  assert_contains "$output" "não achei o projeto nada no seu work"
+  assert_contains "$output" "api, old, web"
+  assert_equal "$(wc -l < "$CONFIG/projects.conf" | tr -d ' ')" 4 "lines in projects.conf"
+}
+
+test_remove_menu_lists_projects_and_flags_removed_folders() {
+  remove_session
+  WD_MENU_LOG="$BASE/menu" work _remove-menu client "$API_WIN"
+  menu="$(cat "$BASE/menu")"
+  assert_contains "$menu" "Remover um projeto"
+  assert_contains "$menu" "old (pasta removida)"
+  assert_contains "$menu" "run-shell \"work _remove-at 2 'client' '$API_WIN'\""
+}
+
+test_remove_menu_goes_back_with_esc_and_closes_with_q() {
+  remove_session
+  WD_MENU_LOG="$BASE/menu" work _remove-menu client "$API_WIN"
+  menu="$(cat "$BASE/menu")"
+  assert_contains "$menu" "← Voltar ao menu
+Escape
+run-shell \"work _menu 'client' '$API_WIN'\""
+  assert_contains "$menu" "Fechar
+q"
+}
+
+test_remove_from_the_menu_drops_the_chosen_project() {
+  remove_session
+  WD_MENU_LOG="$BASE/menu" work _remove-at 2 client "$API_WIN" >/dev/null 2>&1 || fail "work _remove-at exited with an error"
+  assert_equal "$(tr '\n' ' ' < "$CONFIG/projects.conf")" "painel|~|work-panel api|~/api web|~/web " "projects.conf"
+  menu="$(cat "$BASE/menu" 2>/dev/null)"
+  assert_contains "$menu" "Remover um projeto" "the menu opens again"
+  assert_not_contains "$menu" "old" "the removed project in the menu"
+}
+
+test_work_rm_is_an_alias_of_remove() {
+  remove_session
+  output="$(work rm api 2>&1)" || fail "work rm exited with an error: $output"
+  assert_contains "$output" "api saiu do seu work"
+  assert_equal "$(tr '\n' ' ' < "$CONFIG/projects.conf")" "painel|~|work-panel old|~/gone web|~/web " "projects.conf"
 }

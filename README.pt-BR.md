@@ -138,6 +138,7 @@ work review
 |---|---|
 | `work` | Abre a sessão, ou volta para ela |
 | `work add [caminho]` | Acrescenta um projeto como janela |
+| `work remove <nome>`, `work rm <nome>` | Tira um projeto e fecha a janela dele |
 | `work review [branch\|staged] [--chat]` | Um agente do zero revisa a mudança num painel separado antes do commit |
 | `work update` | Mostra o que mudou na versão nova e atualiza |
 | `work kill` | Fecha a sessão inteira |

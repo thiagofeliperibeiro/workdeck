@@ -79,3 +79,23 @@ test_workdeck_block_is_one_line_inside_tclock() {
   assert_contains "$output" "workdeck"
   assert_contains "$output" "Ctrl+b h abre o menu"
 }
+
+test_projects_panel_shows_the_branch_of_a_worktree() {
+  install_workdeck >/dev/null || fail "install exited with an error"
+  git -C "$HOME" init -q -b main api
+  git -C "$HOME/api" -c user.name=t -c user.email=t@t commit -q --allow-empty -m initial
+  git -C "$HOME/api" worktree add -q -b feat-x "$HOME/api.feat-x"
+  printf 'api.feat-x|~/api.feat-x\n' > "$CONFIG/projects.conf"
+  output="$("$CONFIG/panels/20-projetos" | sed 's/\x1b\[[0-9;]*m//g')"
+  assert_contains "$output" "feat-x"
+  assert_not_contains "$output" "sem git"
+}
+
+test_projects_panel_flags_a_removed_folder() {
+  install_workdeck >/dev/null || fail "install exited with an error"
+  printf 'old|~/gone\n' > "$CONFIG/projects.conf"
+  output="$("$CONFIG/panels/20-projetos" | sed 's/\x1b\[[0-9;]*m//g')"
+  assert_contains "$output" "pasta removida"
+  assert_contains "$output" "para tirar da lista: Ctrl+b h, Remover um projeto"
+  assert_not_contains "$output" "sem git"
+}

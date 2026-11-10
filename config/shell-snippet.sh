@@ -17,12 +17,19 @@ if [ -n "${ZSH_VERSION:-}" ] && command grep -a -m1 '^ZSH=".*"$' "${XDG_CONFIG_H
   fi
 fi
 
+_work_projects() {
+  command awk -F'|' '!/^[[:space:]]*#/ && NF >= 2 && $3 == "" { print $1 }' \
+    "${XDG_CONFIG_HOME:-$HOME/.config}/workdeck/projects.conf" 2>/dev/null
+}
+
 if [ -n "${ZSH_VERSION:-}" ]; then
   _work() {
     if (( CURRENT == 2 )); then
-      compadd add review update kill
+      compadd add remove review update kill
     elif [[ ${words[2]} == add ]]; then
       _directories
+    elif [[ ${words[2]} == remove || ${words[2]} == rm ]]; then
+      compadd -- ${(f)"$(_work_projects)"}
     fi
   }
   (( $+functions[compdef] )) && compdef _work work
@@ -30,9 +37,11 @@ elif [ -n "${BASH_VERSION:-}" ]; then
   _work() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     if [ "$COMP_CWORD" = 1 ]; then
-      COMPREPLY=($(compgen -W "add review update kill" -- "$cur"))
+      COMPREPLY=($(compgen -W "add remove review update kill" -- "$cur"))
     elif [ "${COMP_WORDS[1]}" = add ]; then
       COMPREPLY=($(compgen -d -- "$cur"))
+    elif [ "${COMP_WORDS[1]}" = remove ] || [ "${COMP_WORDS[1]}" = rm ]; then
+      COMPREPLY=($(compgen -W "$(_work_projects)" -- "$cur"))
     fi
   }
   complete -o filenames -F _work work
