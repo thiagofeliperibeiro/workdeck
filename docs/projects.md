@@ -27,6 +27,19 @@ Close the project window: `exit` in the last pane, or
 `work` no longer opens it. Closing only one of the split panes, or the agent,
 removes nothing. To bring it back, run `work add` again.
 
+A project whose folder no longer exists, such as a removed worktree, stays on
+the list and shows "folder removed" in the panel, so a project on an
+unmounted disk is not lost. To drop it, or any other project, use the name
+shown in the panel:
+
+```bash
+work remove api           # Tab completes the name
+```
+
+In the menu (<kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd>), "Remove a project…"
+lists the projects; click one, or press its number, to remove it. An open
+window closes too.
+
 ## `projects.conf`
 
 Projects are stored in `~/.config/workdeck/projects.conf`, one line per window:

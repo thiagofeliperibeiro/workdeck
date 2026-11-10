@@ -96,5 +96,6 @@ test_projects_panel_flags_a_removed_folder() {
   printf 'old|~/gone\n' > "$CONFIG/projects.conf"
   output="$("$CONFIG/panels/20-projetos" | sed 's/\x1b\[[0-9;]*m//g')"
   assert_contains "$output" "pasta removida"
+  assert_contains "$output" "para tirar da lista: Ctrl+b h, Remover um projeto"
   assert_not_contains "$output" "sem git"
 }

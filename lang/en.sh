@@ -11,6 +11,7 @@ msg_settings_notify_agents="# System notification when an agent finishes in a wi
 msg_work_help="The commands are:
   work                opens the session, or goes back to it
   work add <folder>   adds a project
+  work remove <name>  removes a project
   work update         updates workdeck
   work kill           closes the whole session
   work uninstall      removes everything workdeck installed"
@@ -31,6 +32,11 @@ msg_update_notify_off="work will no longer ask about new versions; work update s
 msg_update_notify_on="work will tell you about new versions again."
 msg_menu_add="Add a project…"
 msg_menu_add_prompt="project path (Esc cancels):"
+msg_menu_remove="Remove a project…"
+msg_menu_remove_title="Remove a project"
+msg_menu_remove_none="no projects to remove"
+msg_menu_remove_back="← Back to the menu"
+msg_menu_remove_close="Close"
 msg_menu_notify_on="Turn on the alert when an agent finishes"
 msg_menu_notify_off="Turn off the alert when an agent finishes"
 msg_menu_update="Update workdeck"
@@ -54,6 +60,10 @@ msg_add_missing="folder not found: %s"
 msg_add_exists="%s is already in your work, as %s"
 msg_add_done="%s joined your work as %s"
 msg_add_window_open="the %s window is already open in the %s session"
+msg_remove_usage="say which project to remove: work remove <name>"
+msg_remove_missing="project %s is not in your work"
+msg_remove_projects="the projects are: %s"
+msg_remove_done="%s left your work"
 msg_kill_done="session %s closed"
 msg_kill_none="no %s session open"
 msg_uninstall_missing="the uninstaller was not found in %s"
@@ -221,6 +231,7 @@ msg_panel_chmod="Remember chmod +x."
 msg_panel_projects_none="no projects yet"
 msg_panel_no_git="no git"
 msg_panel_dir_missing="folder removed"
+msg_panel_dir_missing_hint="to drop it from the list: Ctrl+b h, Remove a project"
 msg_panel_changed="● %s changed"
 msg_panel_clean="✓ clean"
 msg_panel_projects="projects"

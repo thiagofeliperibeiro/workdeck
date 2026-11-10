@@ -136,6 +136,7 @@ peça ao próprio agente, como o `/code-review` no Claude Code.
 |---|---|
 | `work` | Abre a sessão, ou volta para ela |
 | `work add [caminho]` | Acrescenta um projeto como janela |
+| `work remove <nome>` | Tira um projeto e fecha a janela dele |
 | `work update` | Mostra o que mudou na versão nova e atualiza |
 | `work kill` | Fecha a sessão inteira |
 | `work uninstall` | Desinstala tudo o que o workdeck instalou |

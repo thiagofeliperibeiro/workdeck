@@ -26,6 +26,19 @@ Feche a janela do projeto: `exit` no último painel, ou
 não abre mais. Fechar só um dos painéis divididos, ou o agente, não tira nada.
 Para voltar, `work add` de novo.
 
+Um projeto cuja pasta não existe mais, como uma worktree removida, continua na
+lista e aparece como "pasta removida" no painel, para que um projeto num disco
+desmontado não se perca. Para tirar esse ou qualquer outro projeto, use o nome
+que aparece no painel:
+
+```bash
+work remove api           # Tab completa o nome
+```
+
+Pelo menu (<kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd>), "Remover um projeto…"
+lista os projetos; clique num deles, ou aperte o número, para tirar. Se a
+janela estiver aberta, ela fecha junto.
+
 ## O `projects.conf`
 
 Os projetos ficam em `~/.config/workdeck/projects.conf`, uma linha por janela:

@@ -20,6 +20,7 @@ CODE="$WORKDECK_CODE"
 UPDATE_CACHE="$WORKDECK_CACHE/update"
 VERSION_URL="${WORKDECK_VERSION_URL:-https://www.workdeck.dev/api/version}"
 SESSION="${WORKDECK_SESSION:-work}"
+MENU_DIGIT_KEYS=9
 
 if [ -n "${TERM:-}" ] && command -v infocmp >/dev/null && ! infocmp "$TERM" >/dev/null 2>&1; then
   for d in /Applications/kitty.app/Contents/Resources/kitty/terminfo "$HOME/Applications/kitty.app/Contents/Resources/kitty/terminfo" "$HOME/.local/kitty.app/share/terminfo" "$HOME/.terminfo"; do
@@ -208,12 +209,12 @@ offer_update() {
 }
 
 menu() {
-  local client="$1" pane="$2" session id idx name active mark a height lines=10 args=() shortcuts notify mod
+  local client="$1" pane="$2" session id idx name active mark a height lines=11 args=() shortcuts notify mod
   session="$(tmux display -p -c "$client" '#{session_name}')"
   while IFS='|' read -r id idx active name; do
     mark="  "; [ "$active" = 1 ] && mark="● "
     lines=$((lines + 1))
-    if [ "$idx" -le 9 ]; then
+    if [ "$idx" -le "$MENU_DIGIT_KEYS" ]; then
       args+=("$mark${name//#/##}" "$idx" "select-window -t $id")
     else
       args+=("$mark${name//#/##}" "" "select-window -t $id")
@@ -223,6 +224,7 @@ menu() {
   [ "$(setting_get NOTIFY_AGENTS no)" = yes ] && notify="$(msg menu_notify_off)"
   args+=(""
     "$(msg menu_add)" p "command-prompt -p '$(msg menu_add_prompt)' \"run-shell \\\"work add '%%'\\\"\""
+    "$(msg menu_remove)" x "run-shell \"work _remove-menu '#{client_name}' '#{pane_id}'\""
     "$notify" n "run-shell \"work _notify-agents\""
     "$(msg menu_update)" u "display-popup -E -w 90 -h 30 \"bash -c 'work update; printf \\\"  \\\\033[2m$(msg menu_press_key)\\\\033[0m\\\"; read -rsn1'\""
     ""
@@ -694,9 +696,120 @@ add_project() {
   fi
 }
 
+# Project lines are the ones without a command; the panel line has one.
+project_names() {
+  local entry name dir cmd
+  read_config
+  for entry in ${windows[@]+"${windows[@]}"}; do
+    IFS="|" read -r name dir cmd <<< "$entry"
+    [ -n "$cmd" ] || echo "$name"
+  done
+}
+
+close_project_window() {
+  local id project
+  tmux has-session -t "$SESSION" 2>/dev/null || return 0
+
+  while IFS="|" read -r id project; do
+    if [ "$project" = "$1" ]; then
+      tmux kill-window -t "$id"
+    fi
+  done < <(tmux list-windows -t "$SESSION" -F '#{window_id}|#{@project}')
+}
+
+remove_project() {
+  local target="${1:-}" entry name dir cmd removed_dir="" kept=()
+  if [ -z "$target" ]; then
+    msgln remove_usage
+    return 1
+  fi
+
+  read_config
+  for entry in ${windows[@]+"${windows[@]}"}; do
+    IFS="|" read -r name dir cmd <<< "$entry"
+    if [ -z "$cmd" ] && [ -z "$removed_dir" ] && [ "$name" = "$target" ]; then
+      removed_dir="$(expand_path "$dir")"
+      continue
+    fi
+    kept+=("$entry")
+  done
+
+  if [ -z "$removed_dir" ]; then
+    msgln remove_missing "$target"
+    msgln remove_projects "$(project_names | paste -sd, - | sed 's/,/, /g')"
+    return 1
+  fi
+
+  printf '%s\n' ${kept[@]+"${kept[@]}"} > "$CONFIG"
+  close_project_window "$removed_dir"
+  refresh_panel
+  msgln remove_done "$target"
+}
+
+# The menu passes a position instead of the name, so no name needs quoting
+# inside a tmux command. The menu opens again, so several projects can go in
+# a row.
+remove_project_at() {
+  local position="$1" client="$2" pane="$3" name message
+  name="$(project_names | sed -n "${position}p")"
+  [ -n "$name" ] || return 1
+
+  message="$(remove_project "$name" 2>&1)" || true
+  tmux display-message -d 4000 "$message"
+  remove_menu "$client" "$(client_pane "$client" "$pane")"
+}
+
+# The pane the menu came from may have closed with the removed project's
+# window; the client's current pane takes its place.
+client_pane() {
+  tmux display -p -c "$1" '#{pane_id}' 2>/dev/null || echo "$2"
+}
+
+remove_menu() {
+  local client="$1" pane="$2" name dir label key position=0 args=()
+  while IFS= read -r name; do
+    position=$((position + 1))
+    dir="$(project_dir "$name")"
+    label="${name//#/##}"
+    if [ ! -d "$dir" ]; then
+      label="$label ($(msg panel_dir_missing))"
+    fi
+
+    key=""
+    if [ "$position" -le "$MENU_DIGIT_KEYS" ]; then
+      key="$position"
+    fi
+    args+=("$label" "$key" "run-shell \"work _remove-at $position '$client' '$pane'\"")
+  done < <(project_names)
+
+  if [ ${#args[@]} -eq 0 ]; then
+    args=("-$(msg menu_remove_none)" "" "")
+  fi
+  # Items with their own key take Escape and q before tmux closes the menu.
+  args+=(""
+    "$(msg menu_remove_back)" Escape "run-shell \"work _menu '$client' '$pane'\""
+    "$(msg menu_remove_close)" q "")
+  tmux display-menu -c "$client" -t "$pane" -x C -y C -T "#[align=centre] $(msg menu_remove_title) " "${args[@]}"
+}
+
+project_dir() {
+  local entry name dir cmd
+  read_config
+  for entry in ${windows[@]+"${windows[@]}"}; do
+    IFS="|" read -r name dir cmd <<< "$entry"
+    if [ -z "$cmd" ] && [ "$name" = "$1" ]; then
+      expand_path "$dir"
+      return 0
+    fi
+  done
+}
+
 case "${1:-}" in
   "") ;;
   add) shift; add_project "${1:-.}"; exit $? ;;
+  remove) shift; remove_project "${1:-}"; exit $? ;;
+  _remove-at) shift; remove_project_at "${1:-}" "${2:-}" "${3:-}"; exit $? ;;
+  _remove-menu) shift; remove_menu "${1:-}" "${2:-}"; exit 0 ;;
   update)
     case "${2:-}" in
       --off|--desligar) setting_set NOTIFY 0; msgln update_notify_off; exit 0 ;;

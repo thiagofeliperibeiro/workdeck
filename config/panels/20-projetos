@@ -10,6 +10,7 @@ print_without_git() {
 }
 
 found=0
+missing=0
 while IFS= read -r line; do
   line="${line%%#*}"; [ -z "${line// }" ] && continue
   IFS="|" read -r name dir cmd <<< "$line"
@@ -19,6 +20,7 @@ while IFS= read -r line; do
 
   if [ ! -d "$dir" ]; then
     print_without_git "$name" "$(msg panel_dir_missing)"
+    missing=1
     continue
   fi
 
@@ -37,3 +39,7 @@ while IFS= read -r line; do
   printf '%-14s %s%-20s%s %s\n' "$name" "$purple" "${branch:-?}" "$x" "$status"
 done < "$CONFIG"
 [ "$found" = 1 ] || echo "${dim}$(msg panel_projects_none)${x}"
+
+if [ "$missing" = 1 ]; then
+  echo "${dim}$(msg panel_dir_missing_hint)${x}"
+fi
