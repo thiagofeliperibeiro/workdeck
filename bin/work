@@ -224,6 +224,15 @@ terminal_shortcut_modifier() {
   if [ "$(uname -s)" = Darwin ]; then echo "⌘"; else echo "Ctrl+Shift+"; fi
 }
 
+# Claude starts with its diff panel open. /diff runs inside Claude and sends
+# nothing to the model. CLAUDE_DIFF_PANEL="no" turns this off.
+agent_start_command() {
+  case "$(basename "${1%% *}")" in
+    claude) [ "$(setting_get CLAUDE_DIFF_PANEL yes)" = no ] || { printf '%s "/diff"\n' "$1"; return 0; } ;;
+  esac
+  printf '%s\n' "$1"
+}
+
 open_agent_pane() {
   local pane="${1:-${TMUX_PANE:-}}" agent_cmd new
   agent_cmd="$(setting_get AGENT_CMD)"
@@ -231,6 +240,7 @@ open_agent_pane() {
     tmux display-message -d 6000 "$(msg agent_pane_none)"
     return 0
   fi
+  agent_cmd="$(agent_start_command "$agent_cmd")"
   split_grid "$pane"
   new="$(tmux display -p -t "$(tmux display -p -t "$pane" '#{window_id}')" '#{pane_id}')"
   (

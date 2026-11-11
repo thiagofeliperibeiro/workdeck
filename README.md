@@ -4,8 +4,9 @@
 
 **A framework for working with AI coding agents in the terminal, built on tmux.**
 
-One window per project, your agent beside the code and a panel with the state
-of everything, in a session that survives closing the terminal.
+One window per project, your agent beside the code with the changed files in
+view, a panel with the state of everything, in a session that survives closing
+the terminal.
 
 **English** · [Português](README.pt-BR.md)
 
@@ -38,6 +39,7 @@ project with its own mess. workdeck puts all of it in one place.
 - **One window per project.** `work` opens all of them at once; <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> switches between them.
 - **Your agent next to the code.** Works with any CLI agent: Claude Code, Codex, Copilot CLI, Aider, Gemini. None is bundled.
 - **A panel with what matters.** The branch and changes of each project, plus anything else you want to see.
+- **See what changed.** With Claude Code, the diff panel opens beside the conversation, so you review each change before the commit with the agent's own review commands.
 - **Know when an agent finishes.** While you work in one window, a ✦ in the status bar marks the window whose agent finished or is waiting for you, with an optional system notification.
 - **See your plan limits.** The status bar shows how much of the 5-hour and weekly limits of Claude Code or Codex you have used.
 - **Nothing gets lost.** Closed the terminal or lost the connection? Run `work` and everything is where you left it, agent included.
@@ -46,13 +48,16 @@ project with its own mess. workdeck puts all of it in one place.
 
 ## How it works
 
-Each project is a window. Inside it, the agent sits next to your shell:
+Each project is a window. Inside it, your agent runs with the changed files
+beside the conversation (the Claude Code diff panel). Before the commit, review
+the change there, with the agent's own review commands such as `/code-review`:
 
 ```
 ┌─ your terminal ──────────────────────────────────────────────┐
 │                               │                              │
-│  your AI agent                │  your shell                  │
-│  (claude, codex…)             │  git, tests, server          │
+│  your AI agent                │  changed files               │
+│  (claude, codex…)             │  src/api.ts           +12 -3 │
+│  > /code-review               │  src/auth.ts           +4    │
 │                               │                              │
 ├──────────────────────────────────────────────────────────────┤
 │ 1 panel  2 api  3 web  4 mobile                 Shift+← →    │
@@ -65,8 +70,8 @@ changes of all of them.
 The workflow:
 
 ```
-work add ~/api  →  project window  →  agent beside it  →  commit
-   once              always open        writes the code     you
+work add ~/api  →  project window  →  agent beside it  →  diff panel  →  commit
+   once              always open        writes the code     you review    you
 ```
 
 ## Installation
@@ -117,6 +122,9 @@ work add                   # without a path, uses the current folder
 Each project becomes a window. Start your agent in one of them (`claude`,
 `codex`…) and work as usual.
 
+**4. Before committing, review the change** in the diff panel beside the agent,
+or ask the agent itself, such as `/code-review` in Claude Code.
+
 > **Lost?** <kbd>Ctrl</kbd>+<kbd>b</kbd> then <kbd>h</kbd> opens the menu with
 > the projects, actions and shortcuts. <kbd>q</kbd> or <kbd>Esc</kbd> closes it.
 
@@ -152,6 +160,16 @@ In Warp, iTerm2, the system terminal or any other, the tmux shortcuts apply:
 <kbd>Ctrl</kbd>+<kbd>b</kbd>, release, then <kbd>h</kbd>) and
 <kbd>Shift</kbd>+arrows switch projects and panes. Every shortcut is in
 [docs/shortcuts.md](docs/shortcuts.md).
+
+### The diff panel
+
+With Claude Code, the agent opens with its diff panel beside the conversation:
+the files changed in the project, and what changed in each one. workdeck turns
+on the Claude fullscreen renderer the panel needs and starts Claude with
+`/diff`, both when you press <kbd>⌘</kbd>+<kbd>A</kbd> in kitty and when you
+type `claude` in a pane. To review before the commit, use the agent's own
+commands, such as `/code-review`.
+[How it works →](docs/projects.md#the-diff-panel-in-claude-code)
 
 ### Customizable panel
 
@@ -225,13 +243,14 @@ none of it. Every feature serves one flow:
 - **Agent:** the agent in each project, the ✦ and the alert when it finishes,
   the usage limits in the status bar, and the panel with the state of
   everything.
-- **Review:** the agent's own review commands before the commit.
+- **Review:** the Claude Code diff panel beside the agent, and the agent's own
+  review commands before the commit.
 
 It is not an editor or IDE extension, not a terminal and not an AI agent.
 tmux is the engine underneath, and kitty gives the best experience.
 
 workdeck is a starting point. It provides the structure (session, windows,
-panel) and leaves the rest to you: your projects, your panels, your
+panel, diff panel) and leaves the rest to you: your projects, your panels, your
 agent. Everything lives in plain text files, and everything it writes can be
 undone.
 

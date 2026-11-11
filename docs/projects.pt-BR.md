@@ -125,6 +125,9 @@ sozinho, então abrir muitos projetos não liga vários agentes ao mesmo tempo.
 precisar de mais painéis, e <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> abre um
 painel com o seu agente já rodando.
 
+No Claude Code, o agente abre com o painel de diff ao lado da conversa,
+mostrando os arquivos que você alterou: veja [O painel de diff no Claude Code](#o-painel-de-diff-no-claude-code).
+
 ### Um shell ao lado do agente
 
 Para abrir a janela de cada projeto com o agente e um shell lado a lado,
@@ -155,6 +158,29 @@ uma com comentário depois do valor, é ignorada. Caracteres de controle são
 removidos antes de digitar, então um valor nunca roda sozinho. Sem esse
 arquivo, o painel abre como um shell comum. Como o servidor nunca sobe sozinho,
 as portas não entram em conflito quando muitos projetos abrem juntos.
+
+## O painel de diff no Claude Code
+
+O Claude Code tem um painel de diff, aberto com `/diff`, que lista os arquivos
+alterados no projeto e mostra o que mudou em cada um. Dá para navegar pelos
+arquivos sem sair da conversa. O workdeck abre esse painel para você:
+
+- <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> inicia o Claude como `claude "/diff"`.
+- Digitar `claude` sem argumentos num painel do workdeck faz o mesmo, por meio
+  de uma função `claude` que o instalador acrescenta ao bloco do workdeck no
+  seu `.zshrc` ou `.bashrc`. Fora do workdeck, e com qualquer argumento, como
+  `claude --resume`, o `claude` roda como sempre.
+
+O `/diff` roda dentro do Claude e não envia nada ao modelo. Para iniciar o
+Claude sem o painel, acrescente `CLAUDE_DIFF_PANEL="no"` ao
+`~/.config/workdeck/settings.conf`.
+
+O painel precisa do renderizador fullscreen do Claude Code. O instalador
+configura `"tui": "fullscreen"` em `~/.claude/settings.json` (ou em
+`$CLAUDE_CONFIG_DIR`) quando você ainda não escolheu um renderizador, o que
+equivale a rodar `/tui fullscreen`. Para voltar ao renderizador padrão, rode
+`/tui default` no Claude; o workdeck respeita a sua escolha. O `work uninstall`
+remove a configuração que ele acrescentou.
 
 ## Outra sessão
 

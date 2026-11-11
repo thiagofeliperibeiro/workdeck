@@ -184,6 +184,10 @@ settings_ensure_template() {
     settings_end_with_newline
     printf '\n%s\n%s\n' "$(msg settings_panel_clock)" '#PANEL_CLOCK="yes"' >> "$WORKDECK_SETTINGS"
   fi
+  if ! grep -aqE '^#?CLAUDE_DIFF_PANEL=' "$WORKDECK_SETTINGS"; then
+    settings_end_with_newline
+    printf '\n%s\n%s\n' "$(msg settings_claude_diff_panel)" '#CLAUDE_DIFF_PANEL="no"' >> "$WORKDECK_SETTINGS"
+  fi
   if ! grep -aqE '^#?NOTIFY_AGENTS=' "$WORKDECK_SETTINGS"; then
     settings_end_with_newline
     printf '\n%s\n%s\n' "$(msg settings_notify_agents)" '#NOTIFY_AGENTS="yes"' >> "$WORKDECK_SETTINGS"

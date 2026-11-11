@@ -41,6 +41,7 @@ uma flag, como `--theme` ou `--terminal`.
 | `ZSH` | `yes`, `no` | O zsh do workdeck |
 | `NOTIFY` | `0` | `0` desliga o aviso de versão nova (`work update --off`) |
 | `ACTIVE_PANE` | `none` (padrão), `line` | Um traço fino sobre o painel ativo, na cor de destaque do tema |
+| `CLAUDE_DIFF_PANEL` | `yes` (padrão), `no` | O Claude abre com o painel de diff quando iniciado pelo <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> ou por um `claude` sem argumentos no tmux ([Projetos](projects.pt-BR.md#o-painel-de-diff-no-claude-code)) |
 | `NOTIFY_AGENTS` | `yes`, `no` (padrão) | Uma notificação do sistema quando um agente termina numa janela que você não está olhando ([Projetos](projects.pt-BR.md)) |
 | `PROJECT_LAYOUT` | `none` (padrão), `agent-shell` | Abre a janela de cada projeto com um painel só, para o agente; `agent-shell` acrescenta um shell ao lado ([Projetos](projects.pt-BR.md)) |
 
