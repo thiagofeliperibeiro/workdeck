@@ -6,6 +6,16 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.0.1
+
+### Português
+
+- O `work update` volta a funcionar quando o workdeck foi instalado a partir de um clone por SSH sem chave carregada, que dava "não consegui falar com o repositório". Ele tenta de novo por HTTPS e passa a usar esse endereço. Se ainda falhar, mostra o erro do git. Se o seu `work update` ainda falha, rode uma vez `git -C ~/.local/share/workdeck remote set-url origin https://github.com/thiagofeliperibeiro/workdeck.git`.
+
+### English
+
+- `work update` works again when workdeck was installed from an SSH clone with no key loaded, which showed "could not reach the workdeck repository". It tries again over HTTPS and keeps that address. If it still fails, it shows git's error. If your `work update` still fails, run `git -C ~/.local/share/workdeck remote set-url origin https://github.com/thiagofeliperibeiro/workdeck.git` once.
+
 ## v3.0.0
 
 ### Português
