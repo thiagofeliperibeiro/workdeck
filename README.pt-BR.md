@@ -4,8 +4,8 @@
 
 **Um framework para trabalhar com agentes de IA no terminal, construído sobre o tmux.**
 
-Uma janela por projeto, o agente ao lado e um painel com o estado de tudo —
-numa sessão que não se perde.
+Uma janela por projeto, o agente ao lado do código com os arquivos alterados à
+vista, um painel com o estado de tudo — numa sessão que não se perde.
 
 [English](README.md) · **Português**
 
@@ -37,6 +37,7 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 - **Uma janela por projeto.** `work` abre todos de uma vez; <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> troca entre eles.
 - **O agente ao lado do código.** Funciona com qualquer agente de CLI — Claude Code, Codex, Copilot CLI, Aider, Gemini. Nenhum vem embutido.
 - **Um painel com o que importa.** Branch e mudanças de cada projeto, e o que mais você quiser ver.
+- **Veja o que mudou.** No Claude Code, o painel de diff abre ao lado da conversa, e você revisa cada mudança antes do commit com os comandos de review do próprio agente.
 - **Saiba quando um agente termina.** Enquanto você trabalha numa janela, uma ✦ na barra marca a janela cujo agente terminou ou está esperando você, com notificação do sistema opcional.
 - **Veja os limites do seu plano.** A barra mostra quanto dos limites de 5 horas e semanal do Claude Code ou do Codex você já usou.
 - **Nada se perde.** Fechou o terminal ou caiu a conexão? `work` e tudo está onde estava, agente incluso.
@@ -45,13 +46,17 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 
 ## Como funciona
 
-Cada projeto é uma janela. Dentro dela, o agente fica ao lado do seu shell:
+Cada projeto é uma janela. Dentro dela, o seu agente roda com os arquivos
+alterados ao lado da conversa (o painel de diff do Claude Code). Antes do
+commit, revise a mudança ali, com os comandos de review do próprio agente, como
+o `/code-review`:
 
 ```
 ┌─ seu terminal ───────────────────────────────────────────────┐
 │                               │                              │
-│  seu agente de IA             │  seu shell                   │
-│  (claude, codex…)             │  git, testes, servidor       │
+│  seu agente de IA             │  arquivos alterados          │
+│  (claude, codex…)             │  src/api.ts           +12 -3 │
+│  > /code-review               │  src/auth.ts           +4    │
 │                               │                              │
 ├──────────────────────────────────────────────────────────────┤
 │ 1 painel  2 api  3 web  4 mobile                Shift+← →    │
@@ -64,8 +69,8 @@ mudanças de todos eles.
 O ciclo de trabalho:
 
 ```
-work add ~/api  →  janela do projeto  →  agente ao lado  →  commit
-   uma vez           sempre aberta        escreve o código    você
+work add ~/api  →  janela do projeto  →  agente ao lado  →  painel de diff  →  commit
+   uma vez           sempre aberta        escreve o código    você revisa       você
 ```
 
 ## Instalação
@@ -116,6 +121,9 @@ work add                   # sem caminho, usa a pasta atual
 Cada projeto vira uma janela. Abra o seu agente numa delas (`claude`, `codex`…)
 e trabalhe como sempre.
 
+**4. Antes do commit, revise a mudança** no painel de diff ao lado do agente, ou
+peça ao próprio agente, como o `/code-review` no Claude Code.
+
 > **Ficou perdido?** <kbd>Ctrl</kbd>+<kbd>b</kbd> e depois <kbd>h</kbd> abre o
 > menu com os projetos, as ações e os atalhos. <kbd>q</kbd> ou <kbd>Esc</kbd> fecha.
 
@@ -151,6 +159,16 @@ No Warp, no iTerm2, no terminal do sistema ou em qualquer outro, valem os atalho
 <kbd>Ctrl</kbd>+<kbd>b</kbd>, solte e aperte <kbd>h</kbd>) e
 <kbd>Shift</kbd>+setas trocam de projeto e de painel. Todos os atalhos estão em
 [docs/shortcuts.pt-BR.md](docs/shortcuts.pt-BR.md).
+
+### O painel de diff
+
+No Claude Code, o agente abre com o painel de diff ao lado da conversa: os
+arquivos alterados no projeto e o que mudou em cada um. O workdeck liga o
+renderizador fullscreen do Claude, que o painel precisa, e inicia o Claude com
+`/diff`, tanto pelo <kbd>⌘</kbd>+<kbd>A</kbd> no kitty quanto quando você digita
+`claude` num painel. Para revisar antes do commit, use os comandos do próprio
+agente, como o `/code-review`.
+[Como funciona →](docs/projects.pt-BR.md#o-painel-de-diff-no-claude-code)
 
 ### Painel personalizável
 
@@ -222,13 +240,14 @@ agente e não substitui nenhum. Cada recurso serve a um fluxo:
   terminal.
 - **Agente:** o agente em cada projeto, a ✦ e o aviso quando ele termina, os
   limites de uso na barra e o painel com o estado de tudo.
-- **Review:** os comandos de review do próprio agente antes do commit.
+- **Review:** o painel de diff do Claude Code ao lado do agente, e os comandos
+  de review do próprio agente antes do commit.
 
 Ele não é extensão de editor ou IDE, não é um terminal e não é um agente de IA.
 O tmux é o motor por baixo, e o kitty dá a melhor experiência.
 
 O workdeck é um ponto de partida. Ele traz a estrutura — sessão, janelas,
-painel — e deixa o resto com você: os seus projetos, os seus painéis, o
+painel, painel de diff — e deixa o resto com você: os seus projetos, os seus painéis, o
 seu agente. Tudo fica em arquivos de texto simples, e tudo o que ele escreve
 pode ser desfeito.
 

@@ -157,12 +157,13 @@ test_template_keeps_the_users_edits() {
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#NOTIFY_AGENTS="yes"' "the notification example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#KITTY_OPENS_WORK="no"' "the kitty example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#PANEL_CLOCK="yes"' "the clock example is added"
-  write_settings 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"\n'
+  assert_contains "$(cat "$WORKDECK_SETTINGS")" '#CLAUDE_DIFF_PANEL="no"' "the diff panel example is added"
+  write_settings 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"\nCLAUDE_DIFF_PANEL="no"\n'
   settings_ensure_template
-  assert_equal "$(cat "$WORKDECK_SETTINGS")" "$(printf 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"')" "active keys are left alone"
-  write_settings '#ACTIVE_PANE="none"\n#PROJECT_LAYOUT="none"\n#KITTY_OPENS_WORK="yes"\n#PANEL_CLOCK="no"\n#NOTIFY_AGENTS="no"\n'
+  assert_equal "$(cat "$WORKDECK_SETTINGS")" "$(printf 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"\nCLAUDE_DIFF_PANEL="no"')" "active keys are left alone"
+  write_settings '#ACTIVE_PANE="none"\n#PROJECT_LAYOUT="none"\n#KITTY_OPENS_WORK="yes"\n#PANEL_CLOCK="no"\n#NOTIFY_AGENTS="no"\n#CLAUDE_DIFF_PANEL="yes"\n'
   settings_ensure_template
-  assert_equal "$(cat "$WORKDECK_SETTINGS")" "$(printf '#ACTIVE_PANE="none"\n#PROJECT_LAYOUT="none"\n#KITTY_OPENS_WORK="yes"\n#PANEL_CLOCK="no"\n#NOTIFY_AGENTS="no"')" "commented keys are left alone"
+  assert_equal "$(cat "$WORKDECK_SETTINGS")" "$(printf '#ACTIVE_PANE="none"\n#PROJECT_LAYOUT="none"\n#KITTY_OPENS_WORK="yes"\n#PANEL_CLOCK="no"\n#NOTIFY_AGENTS="no"\n#CLAUDE_DIFF_PANEL="yes"')" "commented keys are left alone"
 }
 
 test_set_and_unset_write_through_a_symlinked_file() {

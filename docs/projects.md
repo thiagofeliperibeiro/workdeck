@@ -123,6 +123,9 @@ at once. <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Enter</kbd> splits the window when
 you need more panes, and <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> opens a pane
 with your agent already running.
 
+With Claude Code, the agent opens with the diff panel beside the conversation,
+showing the files you changed: see [The diff panel in Claude Code](#the-diff-panel-in-claude-code).
+
 ### A shell beside the agent
 
 To open each project window with the agent and a shell side by side, add this
@@ -154,6 +157,29 @@ with a comment after the value, is ignored. Control characters are removed
 before typing, so a value never runs on its own. Without that file, the pane
 opens as a plain shell. Since the server never starts on its own, ports do not
 clash when many projects open at once.
+
+## The diff panel in Claude Code
+
+Claude Code has a diff panel, opened with `/diff`, that lists the files changed
+in the project and shows what changed in each one. You can move through the
+files without leaving the conversation. workdeck opens it for you:
+
+- <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> starts Claude as `claude "/diff"`.
+- Typing `claude` with no arguments in a workdeck pane does the same, through a
+  `claude` function that the installer adds to the workdeck block of your
+  `.zshrc` or `.bashrc`. Outside workdeck, and with any argument, such as
+  `claude --resume`, `claude` runs as usual.
+
+`/diff` runs inside Claude and sends nothing to the model. To start Claude
+without the panel, add `CLAUDE_DIFF_PANEL="no"` to
+`~/.config/workdeck/settings.conf`.
+
+The panel needs the Claude Code fullscreen renderer. The installer sets
+`"tui": "fullscreen"` in `~/.claude/settings.json` (or in `$CLAUDE_CONFIG_DIR`)
+when you have not chosen a renderer yet, which is the same as running
+`/tui fullscreen`. To go back to the default renderer, run `/tui default` in
+Claude; workdeck keeps your choice. `work uninstall` removes the setting it
+added.
 
 ## Another session
 

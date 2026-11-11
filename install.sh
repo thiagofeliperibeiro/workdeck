@@ -967,9 +967,9 @@ configure_agent() {
   finish_step
 }
 
-# workdeck sets statusLine in the Claude Code settings, for the usage bars,
-# only for people who use Claude. The file is backed up once, and recorded as
-# created when workdeck made it.
+# workdeck sets two keys in the Claude Code settings, only for people who use
+# Claude: statusLine, for the usage bars, and tui, for the diff panel. The
+# file is backed up once, and recorded as created when workdeck made it.
 configure_claude() {
   local file="$CLAUDE_SETTINGS" rc=0 backup
   [ -d "$(dirname "$file")" ] || command -v claude >/dev/null || return 0
@@ -997,6 +997,7 @@ configure_claude() {
     [ -z "$backup" ] || say "$(msg install_backup "${backup#"$HOME"/}")"
   fi
   configure_claude_statusline "$file"
+  configure_claude_tui "$file"
 }
 
 # Claude Code passes its 5-hour and weekly limits only to its statusLine
@@ -1024,6 +1025,20 @@ configure_claude_statusline() {
     ""|*/workdeck-statusline) say "$(msg install_claude_statusline "$(short_path "$file")")" ;;
     *) say "$(msg install_claude_statusline_chained "$(short_path "$file")")" ;;
   esac
+}
+
+# The /diff panel shows beside the conversation only in the fullscreen
+# renderer. A tui value already in the file is the user's choice and stays,
+# including one changed with /tui after an earlier install.
+configure_claude_tui() {
+  local file="$1"
+  if json_get "$file" tui >/dev/null; then
+    grep -qF "claude-tui|$file|" "$MANIFEST" 2>/dev/null || say "$(msg install_claude_tui_kept)"
+    return 0
+  fi
+  json_set "$file" tui '"fullscreen"' || return 0
+  record claude-tui "$file"
+  say "$(msg install_claude_tui "$(short_path "$file")")"
 }
 
 enable_integration() {

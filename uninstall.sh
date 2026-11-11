@@ -89,6 +89,15 @@ if [ -f "$MANIFEST" ]; then
         esac
         run rm -f "$CLAUDE_PREVIOUS_STATUSLINE"
         ;;
+      claude-tui)
+        if [ "$(json_get "$target" tui 2>/dev/null || true)" = '"fullscreen"' ]; then
+          if [ "$DRY" = 1 ]; then
+            say "[dry-run] tiraria o tui de ${target#"$HOME"/}"
+          else
+            json_delete "$target" tui && say "tui removido de ${target#"$HOME"/}"
+          fi
+        fi
+        ;;
       claude-settings) CLAUDE_CREATED="$target" ;;
       kitty) ;;
       warp-theme)

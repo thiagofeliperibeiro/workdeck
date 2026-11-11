@@ -43,7 +43,7 @@ test_files_for() {
     bin/work-panel|config/panels/*) printf '%s\n' panels lang ;;
     bin/work) printf '%s\n' session panes split agents keys update lang ;;
     config/tmux.conf) printf '%s\n' keys panes split agents session ;;
-    config/shell-snippet.sh) echo install ;;
+    config/shell-snippet.sh) printf '%s\n' install diff ;;
     terminals/*) printf '%s\n' terminal kitty keys ;;
     themes/*) echo theme ;;
   esac
