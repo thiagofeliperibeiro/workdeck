@@ -17,21 +17,24 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
   return (
     <TerminalWindow>
         <div className="grid h-[560px] grid-rows-[1fr_auto] gap-0 font-mono text-[11.5px] leading-relaxed sm:h-[380px] sm:text-xs">
-          <motion.div layout className={cn("grid min-h-0 gap-1.5 p-1.5", agentOpen ? "grid-cols-1 grid-rows-[auto_1fr] sm:grid-cols-2 sm:grid-rows-1" : "grid-cols-1")}>
-            <Pane title="shell" active={focus === "shell"}>
-              <Prompt text="work" typing={s === 0} done={s >= 1} caret={s === 0} />
-              {s >= 1 && (
-                <Line className="text-ctp-overlay1">
-                  {demo.session} <span className="text-ctp-mauve">work</span> · {demo.windows}
-                </Line>
+          <motion.div layout className={cn("grid min-h-0 gap-1.5 p-1.5", agentOpen && !diffOpen ? "grid-cols-1 grid-rows-[auto_1fr] sm:grid-cols-2 sm:grid-rows-1" : "grid-cols-1")}>
+            <AnimatePresence>
+              {!diffOpen && (
+                <Pane title="shell" active={focus === "shell"}>
+                  <Prompt text="work" typing={s === 0} done={s >= 1} caret={s === 0} />
+                  {s >= 1 && (
+                    <Line className="text-ctp-overlay1">
+                      {demo.session} <span className="text-ctp-mauve">work</span> · {demo.windows}
+                    </Line>
+                  )}
+                  {s >= 2 && <Line className="text-ctp-overlay1">{demo.agentHint}</Line>}
+                </Pane>
               )}
-              {s >= 2 && <Line className="text-ctp-overlay1">{demo.agentHint}</Line>}
-              {diffOpen && <Line className="text-ctp-overlay1">{demo.diffHint}</Line>}
-            </Pane>
+            </AnimatePresence>
 
             <AnimatePresence>
               {agentOpen && (
-                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-rows-[1fr_auto]" : "grid-rows-1")}>
+                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-cols-[3fr_2fr]" : "grid-cols-1")}>
                   <Pane title={demo.agentPane} active={focus === "agent"}>
                     <Line>
                       <span className="text-ctp-peach">› </span>
@@ -52,7 +55,7 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
                   </Pane>
                   <AnimatePresence>
                     {diffOpen && (
-                      <motion.div key="diff" layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                      <motion.div key="diff" layout className="grid min-h-0 min-w-0" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
                         <Pane title={demo.diffPane} active={false}>
                           <Line className="text-ctp-overlay1">{demo.diffSummary} <span className="text-ctp-green">+18</span> <span className="text-ctp-red">-2</span></Line>
                           <Line className="text-ctp-subtext0" delay={0.1}>  src/auth/email.ts  <span className="text-ctp-green">+14</span></Line>

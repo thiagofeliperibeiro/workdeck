@@ -83,10 +83,10 @@ export function CycleDemo({ cycle, demo }: { cycle: Dictionary["cycle"]; demo: D
           animate={{ scale: agentDone && !reduced ? 1.45 : 1 }}
           transition={{ duration: 0.7, ease: [0.45, 0, 0.2, 1] }}
         >
-          <motion.div layout className={cn("grid min-h-0 gap-1.5 p-1.5", agentOpen ? "grid-cols-1 grid-rows-[1fr_auto] sm:grid-cols-2 sm:grid-rows-1" : "grid-cols-1")}>
+          <motion.div layout className={cn("grid min-h-0 gap-1.5 p-1.5", agentOpen ? cn("grid-cols-1 grid-rows-[1fr_auto] sm:grid-rows-1", diffOpen ? "sm:grid-cols-[3fr_1fr]" : "sm:grid-cols-2") : "grid-cols-1")}>
             <AnimatePresence>
               {agentOpen && (
-                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-rows-[1fr_auto]" : "grid-rows-1")}>
+                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-cols-[3fr_2fr]" : "grid-cols-1")}>
                   <Pane title={demo.agentPane} active={focus === "agent"}>
                     {s >= 8 && (
                       <Line>
@@ -109,7 +109,7 @@ export function CycleDemo({ cycle, demo }: { cycle: Dictionary["cycle"]; demo: D
                   </Pane>
                   <AnimatePresence>
                     {diffOpen && (
-                      <motion.div key="diff" layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                      <motion.div key="diff" layout className="grid min-h-0 min-w-0" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
                         <Pane title={demo.diffPane} active={false}>
                           <Line className="text-ctp-overlay1">{demo.diffSummary} <span className="text-ctp-green">+18</span> <span className="text-ctp-red">-2</span></Line>
                           <Line className="text-ctp-subtext0" delay={0.1}>  src/auth/email.ts  <span className="text-ctp-green">+14</span></Line>

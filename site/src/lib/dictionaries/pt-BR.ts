@@ -152,7 +152,6 @@ export const ptBR = {
     windows: "4 janelas",
     agentHint: "Ctrl+b v · claude no painel ao lado →",
     agentDone: "o agente terminou",
-    diffHint: "o painel de diff abriu ao lado do agente →",
     diffPane: "diff · claude",
     diffSummary: "2 arquivos alterados",
     reviewFound: "2 achados",

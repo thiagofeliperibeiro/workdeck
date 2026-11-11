@@ -153,7 +153,6 @@ export const en: Dictionary = {
     windows: "4 windows",
     agentHint: "Ctrl+b v · claude in the pane beside →",
     agentDone: "the agent finished",
-    diffHint: "the diff panel opened beside the agent →",
     diffPane: "diff · claude",
     diffSummary: "2 files changed",
     reviewFound: "2 findings",
