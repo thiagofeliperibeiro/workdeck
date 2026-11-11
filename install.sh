@@ -953,7 +953,6 @@ configure_agent() {
     done
     if [ ${#found[@]} -eq 0 ]; then
       say "$(msg install_no_agent)"
-      say "$(msg install_review_uses_open)"
       summary "$(msg install_no_agent_summary)"
     else
       run "$ROOT/bin/workdeck-agent" --set "${found[0]}" >/dev/null && say "$(msg install_agent "${found[0]}")"

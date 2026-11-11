@@ -29,7 +29,7 @@ Abra a sua IA na pasta do projeto e:
   - bmad-help   diz o que fazer a seguir, a qualquer momento;
   - bmad-build  começa uma mudança, a partir do que você descrever.
 
-Para o work review usar o review do BMAD, diga isso no CLAUDE.md (ou no
-AGENTS.md) do projeto. Documentação: https://github.com/bmad-code-org/BMAD-METHOD
+Para revisar com o review do BMAD, peça ao agente ou diga isso no CLAUDE.md
+(ou no AGENTS.md) do projeto. Documentação: https://github.com/bmad-code-org/BMAD-METHOD
 EOF
 }

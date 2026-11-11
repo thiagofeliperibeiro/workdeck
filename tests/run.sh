@@ -38,9 +38,9 @@ test_files_for() {
     tests/*.test.sh) basename "$1" .test.sh ;;
     install.sh|get.sh|instalar.sh) printf '%s\n' install terminal kitty theme settings uninstall update lang ;;
     uninstall.sh) printf '%s\n' uninstall terminal ;;
-    bin/workdeck-agent) printf '%s\n' review agents ;;
+    bin/workdeck-agent) printf '%s\n' install agents ;;
     bin/work-panel|config/panels/*) printf '%s\n' panels lang ;;
-    bin/work) printf '%s\n' session panes split agents review keys update lang ;;
+    bin/work) printf '%s\n' session panes split agents keys update lang ;;
     config/tmux.conf) printf '%s\n' keys panes split agents session ;;
     config/shell-snippet.sh) echo install ;;
     terminals/*) printf '%s\n' terminal kitty keys ;;

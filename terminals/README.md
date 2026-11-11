@@ -2,7 +2,7 @@
 
 # Terminals
 
-tmux is the only dependency, so `work`, the panel, the review and the tmux
+tmux is the only dependency, so `work`, the panel and the tmux
 shortcuts behave the same in any terminal. For the best experience, use
 [kitty](https://sw.kovidgoyal.net/kitty/): it is the terminal where workdeck
 adds its own shortcuts and, if you want, its theme and font.
@@ -34,7 +34,7 @@ The installer adds a block to your `~/.config/kitty/kitty.conf` with:
   agent finished comes from kitty, and clicking it brings kitty to the front.
 - **The workdeck shortcuts**, <kbd>⌘</kbd> on a Mac and
   <kbd>Ctrl</kbd>+<kbd>Shift</kbd> on Linux: H menu, P add a project, 1…9 go to
-  a project, A agent, T terminal, Z zoom, W close, R review. The full table is
+  a project, A agent, T terminal, Z zoom, W close. The full table is
   in [docs/shortcuts.md](../docs/shortcuts.md).
 - **Option as Alt** on a Mac, for the direct Alt shortcuts.
 - **Shift+Enter** in the extended format, so agents such as Claude Code get a

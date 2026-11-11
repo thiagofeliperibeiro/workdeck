@@ -176,15 +176,6 @@ settings_ensure_template() {
 ' "$(msg settings_layout_1)" "$(msg settings_layout_2)" "$(msg settings_layout_3)" \
       '#PROJECT_LAYOUT="none"' >> "$WORKDECK_SETTINGS"
   fi
-  if ! grep -aqE '^#?REVIEW_AGENT_CMD=' "$WORKDECK_SETTINGS"; then
-    settings_end_with_newline
-    printf '
-%s
-%s
-%s
-' "$(msg settings_review_agent_1)" "$(msg settings_review_agent_2)" \
-      '#REVIEW_AGENT_CMD="claude --model opus"' >> "$WORKDECK_SETTINGS"
-  fi
   if ! grep -aqE '^#?KITTY_OPENS_WORK=' "$WORKDECK_SETTINGS"; then
     settings_end_with_newline
     printf '\n%s\n%s\n' "$(msg settings_kitty_opens_work)" '#KITTY_OPENS_WORK="no"' >> "$WORKDECK_SETTINGS"
@@ -272,7 +263,7 @@ migrate_legacy_config() {
       "$dir/.install-manifest" > "$dir/.install-manifest.tmp" \
       && mv "$dir/.install-manifest.tmp" "$dir/.install-manifest"
   fi
-  rm -f "$WORKDECK_CACHE/atualizacao" "$WORKDECK_CACHE/pedido-de-review.md"
+  rm -f "$WORKDECK_CACHE/atualizacao" "$WORKDECK_CACHE/pedido-de-review.md" "$WORKDECK_CACHE/review-request.md"
   migrate_choice_files
   return 0
 }

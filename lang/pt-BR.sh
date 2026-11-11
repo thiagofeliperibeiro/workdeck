@@ -10,7 +10,6 @@ msg_settings_notify_agents="# Notificação do sistema quando um agente termina 
 msg_work_help="Os comandos são:
   work                abre a sessão, ou volta para ela
   work add <pasta>    acrescenta um projeto
-  work review         o seu agente revisa a mudança antes do commit
   work update         atualiza o workdeck
   work kill           fecha a sessão inteira
   work uninstall      desinstala tudo o que o workdeck instalou"
@@ -30,7 +29,6 @@ msg_update_notify_off="o work não vai mais perguntar sobre versões novas; work
 msg_update_notify_on="o work volta a avisar sobre versões novas."
 msg_menu_add="Adicionar um projeto…"
 msg_menu_add_prompt="caminho do projeto (Esc cancela):"
-msg_menu_review="Self code review da mudança"
 msg_menu_notify_on="Ligar o aviso quando um agente termina"
 msg_menu_notify_off="Desligar o aviso quando um agente termina"
 msg_menu_update="Atualizar o workdeck"
@@ -158,8 +156,7 @@ msg_install_step_agent="agente de IA"
 msg_install_agent="agente: %s"
 msg_install_agent_set="agente já configurado: %s"
 msg_install_no_agent="nenhum agente de IA encontrado no PATH"
-msg_install_review_uses_open="o work review usa a IA que estiver aberta na janela"
-msg_install_no_agent_summary="nenhum no PATH; o review usa a IA aberta na janela"
+msg_install_no_agent_summary="nenhum no PATH"
 msg_install_unknown_integration="não conheço a integração '%s'"
 msg_install_integration_present="%s já está instalada"
 msg_install_dry_integration="[dry-run] instalaria %s"
@@ -195,68 +192,6 @@ msg_install_navigation="  Para navegar: Shift+← / Shift+→ troca de projeto e
 msg_install_windows="O workdeck roda em macOS e Linux. No Windows, use pelo WSL: abra o Ubuntu do WSL e rode a instalação de lá."
 msg_install_ask_language="Em que idioma o workdeck mostra as mensagens?"
 
-msg_review_command_ignored="ignorei o REVIEW_COMMAND de %s: no projeto, só vale um comando de barra sem argumentos, como /bmad-code-review. Para mais que isso, use REVIEW_COMMAND no ~/.config/workdeck/settings.conf."
-msg_review_md_ignored="o review.md não vai para o /code-review; ponha essas regras no CLAUDE.md do projeto, que ele segue."
-msg_review_claude_busy="o claude ainda está trabalhando; rode o work review quando ele terminar."
-msg_review_claude_blocked="o chat do claude não está livre: responda a pergunta que estiver aberta ou apague o que estiver digitado, e rode o work review de novo."
-msg_review_started="o review começou no chat do claude: %s"
-msg_review_pasted="colei no chat do %s: %s"
-msg_review_press_enter="confira e aperte Enter lá para começar o review."
-msg_review_unknown="não conheço '%s'. Use: work review, work review staged ou work review branch, com --chat se quiser o review no chat do agente"
-msg_review_not_git="%s não é um repositório git, então não há o que revisar."
-msg_review_go_to_project="Vá para a janela de um projeto (Shift+→) e rode de novo."
-msg_review_nothing="nada mudou desde o último commit; não há o que revisar."
-msg_review_nothing_staged="nada no stage (git add); não há o que revisar."
-msg_review_scope_uncommitted="o que ainda não foi commitado"
-msg_review_commands_uncommitted="git diff HEAD, e os arquivos novos de git ls-files --others --exclude-standard"
-msg_review_scope_staged="o que está no stage, pronto para o commit"
-msg_review_scope_branch="tudo o que esta branch mudou em relação a %s"
-msg_review_commands_branch="git diff %s...HEAD, mais o que ainda não foi commitado (git diff HEAD)"
-msg_review_request="Faça um code review desta mudança antes do commit. Seja direto: aponte o
-problema e a correção, sem elogio e sem explicação longa. Eu peço detalhes
-depois de corrigir, se precisar.
-
-O que revisar: %s, na branch %s. Para ver a mudança: %s.
-Leia também o código que a mudança toca (quem chama, quem é chamado, os testes).
-
-Se as suas instruções (CLAUDE.md, AGENTS.md, skills ou comandos instalados)
-apontam um agente ou skill de review, ou PRDs e stories desta mudança (o nome da
-branch costuma ter o número da tarefa), siga-os. O roteiro abaixo cobre o resto.
-
-Procure: bugs e casos de borda; segurança (segredos, entrada sem validação,
-injeção); código arriscado sem teste; desempenho com dados reais; código morto,
-duplicado ou de depuração; arquivos fora do escopo da mudança.
-
-Responda exatamente neste formato:
-
-Usei: <agente ou skill e documentos, ou \"roteiro padrão\">
-
-🔴 arquivo:linha — o problema, em uma frase
-   → a correção, em uma frase
-🟠 arquivo:linha — o problema, em uma frase
-   → a correção, em uma frase
-🟢 o que você conferiu e está certo, em uma linha
-
-- 🔴 bug: quebra, perde dado, abre falha de segurança ou não faz o que a
-  mudança promete. Corrigir antes do commit.
-- 🟠 atenção: funciona, mas é arriscado, lento, sem teste ou sobra. Vale
-  corrigir, pode ficar para depois.
-- 🟢 ok: no máximo três linhas, só com o que importa.
-
-Vermelhos primeiro, depois laranjas. Não invente problema: sem nada a apontar,
-responda só com a linha \"Usei\" e um 🟢. Termine com uma linha de veredito:
-
-🟢 pode commitar
-🟠 pode commitar; os laranjas ficam para depois
-🔴 corrija os vermelhos antes do commit
-
-Se esta conversa já tem uma revisão anterior desta branch, comece a lista com
-\"🟢 corrigido: …\" para o que foi resolvido e mantenha o que continua aberto.
-
-Não altere arquivos e não faça commit: só revise. Responda em português."
-msg_review_extra="Instruções de quem pediu a revisão, que valem mais que as de cima:"
-msg_agent_unknown="não sei qual IA usar: abra a sua (claude, codex…) num painel desta janela e rode de novo."
-msg_agent_clipboard="o pedido está na área de transferência e em %s: cole na IA que vai abrir."
 msg_agent_none="nenhum agente definido"
 msg_agent_is_workdeck="'%s' é um comando do workdeck, não um agente"
 msg_agent_not_in_path="'%s' não está no PATH"
@@ -293,7 +228,7 @@ msg_panel_start="%sPara começar%s, no terminal aqui embaixo:"
 msg_panel_add_project="work add ~/projeto"
 msg_panel_add_project_hint="cada projeto vira uma janela; Tab completa o caminho"
 msg_panel_outside_kitty="%sNo kitty%s, o workdeck abre direto e tem atalhos de uma letra. Aqui, use Ctrl+b h."
-msg_panel_menu_hint="%s abre o menu: projetos, agente, terminal e review"
+msg_panel_menu_hint="%s abre o menu: projetos, agente e terminal"
 msg_panel_custom_hint="Para pôr o seu no painel: um executável em ~/.config/workdeck/panels/"
 msg_panel_guide="  guia: github.com/thiagofeliperibeiro/workdeck/blob/main/docs/panels.pt-BR.md"
 
@@ -301,18 +236,15 @@ msg_tmux_unused_key="tecla sem uso no workdeck — Ctrl+b h abre o menu"
 msg_tmux_reloaded="tmux.conf recarregado"
 msg_install_zsh_summary="oh-my-zsh (robbyrussell) e zinit"
 msg_changelog_heading="Português"
-msg_settings_review_agent_1="# Agente que faz o work review, num painel embaixo do chat. Use outro modelo ou outra IA para"
-msg_settings_review_agent_2="# não repetir os pontos cegos de quem escreveu o código. Vazio: o review usa o seu agente."
-msg_review_scope_unpushed="os commits desta branch que ainda não subiram"
 msg_install_other_summary="outro terminal, atalhos do tmux"
 msg_install_open_kitty_reload_hint="carrega os atalhos e os comandos do workdeck"
 msg_install_open_new_window="abra uma janela nova"
 msg_install_open_new_window_hint="carrega os comandos do workdeck"
 msg_menu_agent="Abrir o agente num painel novo"
 msg_menu_key_terminal_1="%sH menu    %sP projeto    %sA agente    %sT terminal"
-msg_menu_key_terminal_2="%sZ zoom    %sW fechar     %sR review    %s1…9 projeto"
+msg_menu_key_terminal_2="%sZ zoom    %sW fechar     %s1…9 projeto"
 msg_agent_pane_none="nenhum agente definido: rode ./install.sh --agent claude (ou o seu agente)"
-msg_install_ask_kitty="Quer os atalhos do workdeck no kitty (⌘H menu, ⌘P projeto, ⌘R review…)?
+msg_install_ask_kitty="Quer os atalhos do workdeck no kitty (⌘H menu, ⌘P projeto, ⌘A agente…)?
 Se o kitty ainda não estiver instalado, a configuração já fica pronta."
 msg_install_ask_kitty_linux="Quer os atalhos do workdeck no kitty (Ctrl+Shift+H menu, Ctrl+Shift+P projeto…)?
 Se o kitty ainda não estiver instalado, a configuração já fica pronta."
@@ -354,5 +286,5 @@ No Mac, ele é compilado com o Rust que você já tem e leva alguns minutos. [s/
 msg_install_ask_clock_mac_no_rust="Quer o painel com o relógio tclock (o relógio no alto e os blocos embaixo)?
 No Mac, ele precisa do Rust, que não está instalado: rode brew install rust e a
 instalação de novo para ter o relógio. [s/N] "
-msg_panel_compact_keys="%sH menu  ·  %sP projeto  ·  %sR review"
+msg_panel_compact_keys="%sH menu  ·  %sP projeto  ·  %sA agente"
 msg_panel_compact_menu="%s abre o menu"

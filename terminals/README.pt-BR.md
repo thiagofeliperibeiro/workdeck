@@ -2,7 +2,7 @@
 
 # Terminais
 
-A única dependência é o tmux, então o `work`, o painel, o review e os atalhos do
+A única dependência é o tmux, então o `work`, o painel e os atalhos do
 tmux funcionam igual em qualquer terminal. Para a melhor experiência, use o
 [kitty](https://sw.kovidgoyal.net/kitty/): é o terminal em que o workdeck cria
 atalhos próprios e, se você quiser, coloca o tema e a fonte dele.
@@ -35,7 +35,7 @@ A instalação acrescenta um bloco ao seu `~/.config/kitty/kitty.conf` com:
   agente terminou sai pelo kitty, e clicar nele traz o kitty para a frente.
 - **Os atalhos do workdeck**, <kbd>⌘</kbd> no Mac e
   <kbd>Ctrl</kbd>+<kbd>Shift</kbd> no Linux: H menu, P adicionar projeto, 1…9
-  ir para o projeto, A agente, T terminal, Z zoom, W fechar, R review. A tabela
+  ir para o projeto, A agente, T terminal, Z zoom, W fechar. A tabela
   completa está em [docs/shortcuts.pt-BR.md](../docs/shortcuts.pt-BR.md).
 - **Option como Alt** no Mac, para os atalhos diretos com Alt.
 - **Shift+Enter** no formato estendido, para que agentes como o Claude Code

@@ -10,7 +10,6 @@ msg_settings_notify_agents="# System notification when an agent finishes in a wi
 msg_work_help="The commands are:
   work                opens the session, or goes back to it
   work add <folder>   adds a project
-  work review         your agent reviews the change before the commit
   work update         updates workdeck
   work kill           closes the whole session
   work uninstall      removes everything workdeck installed"
@@ -30,7 +29,6 @@ msg_update_notify_off="work will no longer ask about new versions; work update s
 msg_update_notify_on="work will tell you about new versions again."
 msg_menu_add="Add a project…"
 msg_menu_add_prompt="project path (Esc cancels):"
-msg_menu_review="Self code review of the change"
 msg_menu_notify_on="Turn on the alert when an agent finishes"
 msg_menu_notify_off="Turn off the alert when an agent finishes"
 msg_menu_update="Update workdeck"
@@ -158,8 +156,7 @@ msg_install_step_agent="AI agent"
 msg_install_agent="agent: %s"
 msg_install_agent_set="agent already set: %s"
 msg_install_no_agent="no AI agent found in the PATH"
-msg_install_review_uses_open="work review uses the AI open in the window"
-msg_install_no_agent_summary="none in the PATH; review uses the AI open in the window"
+msg_install_no_agent_summary="none in the PATH"
 msg_install_unknown_integration="unknown integration '%s'"
 msg_install_integration_present="%s is already installed"
 msg_install_dry_integration="[dry-run] would install %s"
@@ -195,69 +192,6 @@ msg_install_navigation="  To move around: Shift+← / Shift+→ switches project
 msg_install_windows="workdeck runs on macOS and Linux. On Windows, use it through WSL: open the WSL Ubuntu and run the installer from there."
 msg_install_ask_language="Which language should workdeck use for its messages?"
 
-msg_review_command_ignored="ignored the REVIEW_COMMAND in %s: in a project, only a slash command without arguments works, such as /bmad-code-review. For more than that, use REVIEW_COMMAND in ~/.config/workdeck/settings.conf."
-msg_review_md_ignored="review.md does not reach /code-review; put those rules in the project's CLAUDE.md, which it follows."
-msg_review_claude_busy="claude is still working; run work review when it finishes."
-msg_review_claude_blocked="the claude chat is not free: answer the open question or clear what is typed, and run work review again."
-msg_review_started="the review started in the claude chat: %s"
-msg_review_pasted="pasted into the %s chat: %s"
-msg_review_press_enter="check it and press Enter there to start the review."
-msg_review_unknown="unknown option '%s'. Use: work review, work review staged or work review branch, with --chat for the review in the agent chat"
-msg_review_not_git="%s is not a git repository, so there is nothing to review."
-msg_review_go_to_project="Go to a project window (Shift+→) and run it again."
-msg_review_nothing="nothing changed since the last commit; there is nothing to review."
-msg_review_nothing_staged="nothing staged (git add); there is nothing to review."
-msg_review_scope_uncommitted="what has not been committed yet"
-msg_review_commands_uncommitted="git diff HEAD, plus the new files from git ls-files --others --exclude-standard"
-msg_review_scope_staged="what is staged, ready for the commit"
-msg_review_scope_branch="everything this branch changed compared to %s"
-msg_review_commands_branch="git diff %s...HEAD, plus what has not been committed yet (git diff HEAD)"
-msg_review_request="Review this change before the commit. Be direct: point out the problem
-and the fix, with no praise and no long explanation. I ask for details after
-fixing, if I need them.
-
-What to review: %s, on the %s branch. To see the change: %s.
-Also read the code the change touches (callers, callees, tests).
-
-If your instructions (CLAUDE.md, AGENTS.md, installed skills or commands) point
-to a review agent or skill, or to PRDs and stories for this change (the branch
-name usually has the task number), follow them. The checklist below covers the
-rest.
-
-Look for: bugs and edge cases; security (secrets, unvalidated input,
-injection); risky code without tests; performance with real data; dead,
-duplicated or debugging code; files outside the scope of the change.
-
-Answer exactly in this format:
-
-Used: <agent or skill and documents, or \"default checklist\">
-
-🔴 file:line — the problem, in one sentence
-   → the fix, in one sentence
-🟠 file:line — the problem, in one sentence
-   → the fix, in one sentence
-🟢 what you checked and is right, in one line
-
-- 🔴 bug: breaks, loses data, opens a security hole or does not do what the
-  change promises. Fix before the commit.
-- 🟠 attention: works, but is risky, slow, untested or leftover. Worth
-  fixing, can wait.
-- 🟢 ok: three lines at most, only what matters.
-
-Reds first, then oranges. Do not invent problems: with nothing to point out,
-answer only with the \"Used\" line and a 🟢. End with a verdict line:
-
-🟢 ready to commit
-🟠 ready to commit; the oranges can wait
-🔴 fix the reds before the commit
-
-If this conversation already has an earlier review of this branch, start the
-list with \"🟢 fixed: …\" for what was resolved and keep what is still open.
-
-Do not change files and do not commit: only review. Answer in English."
-msg_review_extra="Instructions from whoever asked for the review, which take precedence over the ones above:"
-msg_agent_unknown="no AI to use: open yours (claude, codex…) in a pane of this window and run it again."
-msg_agent_clipboard="the request is in the clipboard and in %s: paste it into the AI that opens."
 msg_agent_none="no agent set"
 msg_agent_is_workdeck="'%s' is a workdeck command, not an agent"
 msg_agent_not_in_path="'%s' is not in the PATH"
@@ -294,7 +228,7 @@ msg_panel_start="%sTo start%s, in the terminal below:"
 msg_panel_add_project="work add ~/project"
 msg_panel_add_project_hint="each project becomes a window; Tab completes the path"
 msg_panel_outside_kitty="%sIn kitty%s, workdeck opens right away and has one-letter shortcuts. Here, use Ctrl+b h."
-msg_panel_menu_hint="%s opens the menu: projects, agent, terminal and review"
+msg_panel_menu_hint="%s opens the menu: projects, agent and terminal"
 msg_panel_custom_hint="To add yours to the panel: an executable in ~/.config/workdeck/panels/"
 msg_panel_guide="  guide: github.com/thiagofeliperibeiro/workdeck/blob/main/docs/panels.md"
 
@@ -302,18 +236,15 @@ msg_tmux_unused_key="key not used in workdeck — Ctrl+b h opens the menu"
 msg_tmux_reloaded="tmux.conf reloaded"
 msg_install_zsh_summary="oh-my-zsh (robbyrussell) and zinit"
 msg_changelog_heading="English"
-msg_settings_review_agent_1="# Agent that runs work review, in a pane below the chat. Use another model or another AI so"
-msg_settings_review_agent_2="# the review does not repeat the blind spots of whoever wrote the code. Empty: your agent reviews."
-msg_review_scope_unpushed="the commits of this branch that were not pushed yet"
 msg_install_other_summary="other terminal, tmux shortcuts"
 msg_install_open_kitty_reload_hint="loads the workdeck shortcuts and commands"
 msg_install_open_new_window="open a new window"
 msg_install_open_new_window_hint="loads the workdeck commands"
 msg_menu_agent="Open the agent in a new pane"
 msg_menu_key_terminal_1="%sH menu    %sP project    %sA agent    %sT terminal"
-msg_menu_key_terminal_2="%sZ zoom    %sW close      %sR review   %s1…9 project"
+msg_menu_key_terminal_2="%sZ zoom    %sW close      %s1…9 project"
 msg_agent_pane_none="no agent set: run ./install.sh --agent claude (or your agent)"
-msg_install_ask_kitty="Do you want the workdeck shortcuts in kitty (⌘H menu, ⌘P project, ⌘R review…)?
+msg_install_ask_kitty="Do you want the workdeck shortcuts in kitty (⌘H menu, ⌘P project, ⌘A agent…)?
 If kitty is not installed yet, the configuration is ready for it."
 msg_install_ask_kitty_linux="Do you want the workdeck shortcuts in kitty (Ctrl+Shift+H menu, Ctrl+Shift+P project…)?
 If kitty is not installed yet, the configuration is ready for it."
@@ -355,5 +286,5 @@ On a Mac, it is built with the Rust you already have and takes a few minutes. [y
 msg_install_ask_clock_mac_no_rust="Do you want the panel with the tclock clock (the clock on top and the blocks below)?
 On a Mac, it needs Rust, which is not installed: run brew install rust and the
 installer again to get the clock. [y/N] "
-msg_panel_compact_keys="%sH menu  ·  %sP project  ·  %sR review"
+msg_panel_compact_keys="%sH menu  ·  %sP project  ·  %sA agent"
 msg_panel_compact_menu="%s opens the menu"
