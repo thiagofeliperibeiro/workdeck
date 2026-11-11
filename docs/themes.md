@@ -5,6 +5,13 @@
 Each theme colors tmux and, if you accept the look at install time, kitty too.
 The Warp version of each theme stays in `themes/` for manual use.
 
+While the session is open, `work` also asks the terminal to use the theme
+background, so the margin around tmux does not show the terminal's own color
+(such as the purple of the Ubuntu terminal). The terminal gets its color back
+when you detach or run `work kill`. This uses the standard OSC 11 and OSC 111
+sequences; a terminal without them keeps its margin color and nothing else
+changes.
+
 | Theme | Background | Character |
 |---|---|---|
 | `catppuccin-mocha` | `#1e1e2e` | Pastel by design. The default. |
@@ -26,7 +33,8 @@ Create three files in `themes/`:
 
 - `<name>.conf` with the kitty colors (`background`, `foreground`,
   `color0`–`color15`);
-- `<name>.tmux` with the tmux colors (status bar, active window, pane borders);
+- `<name>.tmux` with the tmux colors (status bar, active window, pane borders,
+  whose background is the same as the `window-style` one);
 - `<name>.warp.yaml` with the Warp colors (`accent`, `cursor`, `background`,
   `foreground` and `terminal_colors`). Its `name` is `workdeck <name>`, which is
   how the theme shows up in the Warp theme picker.

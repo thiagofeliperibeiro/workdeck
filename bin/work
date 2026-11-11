@@ -28,6 +28,14 @@ if [ -n "${TERM:-}" ] && command -v infocmp >/dev/null && ! infocmp "$TERM" >/de
   infocmp "$TERM" >/dev/null 2>&1 || export TERM=xterm-256color
 fi
 
+# The terminal's own background shows in the margin around tmux. While the
+# session is attached, the terminal takes the theme's background (OSC 11) and
+# gets its own back on the way out, after a detach or work kill (OSC 111).
+# Terminals without these sequences ignore them.
+theme_background() {
+  tmux show -gwv window-style 2>/dev/null | sed -n 's/.*bg=\(#[0-9a-fA-F]\{6\}\).*/\1/p'
+}
+
 expand_path() {
   local dir="${1/#\~/$HOME}"
   dir="${dir//\$\{HOME\}/$HOME}"
@@ -777,5 +785,11 @@ start_watcher
 if [ -n "${TMUX:-}" ]; then
   tmux switch-client -t "$SESSION"
 else
-  tmux attach -t "$SESSION"
+  background="$(theme_background)"
+  [ -t 1 ] || background=""
+  [ -z "$background" ] || printf '\033]11;%s\033\\' "$background"
+  attach_status=0
+  tmux attach -t "$SESSION" || attach_status=$?
+  [ -z "$background" ] || printf '\033]111\033\\'
+  exit "$attach_status"
 fi

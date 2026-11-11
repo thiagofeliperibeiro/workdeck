@@ -30,3 +30,12 @@ test_unknown_theme_fails() {
   assert_contains "$output" "tema 'foo' não existe"
   assert_contains "$output" "nord"
 }
+
+test_pane_borders_use_the_window_background() {
+  local theme background
+  for theme in "$REPO"/themes/*.tmux; do
+    background="$(sed -n 's/^setw -g window-style "bg=\(#[0-9a-f]*\),.*/\1/p' "$theme")"
+    assert "$(basename "$theme") has a window background" test -n "$background"
+    assert_equal "$(grep -c "border-style \"fg=#[0-9a-f]*,bg=$background\"" "$theme")" 2 "borders of $(basename "$theme")"
+  done
+}

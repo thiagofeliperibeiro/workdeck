@@ -7,8 +7,8 @@ set -g @wd_muted "#81a1c1"
 # In Nord the status bar is LIGHTER than the background: the palette has
 # nothing below nord0, so hierarchy comes from elevation.
 set -g status-style "bg=#3b4252,fg=#81a1c1"
-setw -g pane-border-style "fg=#3b4252"
-setw -g pane-active-border-style "fg=#81a1c1"
+setw -g pane-border-style "fg=#3b4252,bg=#2e3440"
+setw -g pane-active-border-style "fg=#81a1c1,bg=#2e3440"
 set -g message-style "bg=#5e81ac,fg=#eceff4,bold"
 set -g mode-style "bg=#434c5e,fg=#eceff4"
 setw -g window-style "bg=#2e3440,fg=#d8dee9"
