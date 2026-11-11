@@ -39,6 +39,7 @@ tmux, que funcionam em qualquer terminal:
 | Zoom no painel | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>z</kbd> |
 | Fechar o painel | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>x</kbd> |
 | Sair e deixar a sessão rodando | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>d</kbd> |
+| Mandar <kbd>Ctrl</kbd>+<kbd>b</kbd> para o programa do painel | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Ctrl</kbd>+<kbd>b</kbd> |
 
 <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd> quer dizer: aperte
 <kbd>Ctrl</kbd>+<kbd>b</kbd>, solte e aperte a tecla. Eles também funcionam no
@@ -46,6 +47,10 @@ kitty, para quem já usa tmux. O mouse também funciona: clique numa
 janela na barra de baixo, ou num painel, arraste a borda para redimensionar e
 arraste uma aba para reordenar os projetos; a ordem fica salva para o próximo
 `work`.
+
+Programas do painel que também usam <kbd>Ctrl</kbd>+<kbd>b</kbd> recebem a
+tecla quando você aperta duas vezes. No Claude Code, <kbd>Ctrl</kbd>+<kbd>b</kbd>
+<kbd>Ctrl</kbd>+<kbd>b</kbd> manda um comando em execução para o segundo plano.
 
 No menu, cada projeto usa o número da janela como tecla. <kbd>q</kbd> ou
 <kbd>Esc</kbd> fecha.

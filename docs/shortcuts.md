@@ -40,12 +40,17 @@ which work in any terminal:
 | Zoom the pane | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>z</kbd> |
 | Close the pane | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>x</kbd> |
 | Detach and leave the session running | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>d</kbd> |
+| Send <kbd>Ctrl</kbd>+<kbd>b</kbd> to the program in the pane | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Ctrl</kbd>+<kbd>b</kbd> |
 
 <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd> means: press
 <kbd>Ctrl</kbd>+<kbd>b</kbd>, release, then the key. These also work in kitty
 , for whoever already uses tmux. The mouse works too: click a window
 in the bottom bar, or a pane, drag a border to resize, and drag a tab to reorder
 your projects; the order is saved for the next `work`.
+
+Programs in the pane that use <kbd>Ctrl</kbd>+<kbd>b</kbd> themselves get it
+when you press it twice. In Claude Code, <kbd>Ctrl</kbd>+<kbd>b</kbd>
+<kbd>Ctrl</kbd>+<kbd>b</kbd> sends a running command to the background.
 
 In the menu, each project uses its window number as the key. <kbd>q</kbd> or
 <kbd>Esc</kbd> closes it.

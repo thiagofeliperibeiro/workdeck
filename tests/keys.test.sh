@@ -28,6 +28,11 @@ test_reloading_the_config_drops_an_old_option_left_and_right_binding() {
   assert_not_contains "$(tmux list-keys -T root)" "M-Right " "Option+Right binding after reload"
 }
 
+test_pressing_ctrl_b_twice_sends_ctrl_b_to_the_pane() {
+  start_tmux_with_installed_config
+  assert_contains "$(tmux list-keys -T prefix C-b 2>&1)" "send-prefix" "Ctrl+b Ctrl+b binding"
+}
+
 test_kitty_sends_shift_enter_in_the_extended_format() {
   assert_contains "$(cat "$REPO/terminals/kitty.conf")" 'send_text all \x1b[13;2u' "Shift+Enter mapping"
 }
