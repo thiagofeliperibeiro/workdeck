@@ -3,8 +3,8 @@ usage_lib() { . "$REPO/lib/common.sh"; . "$REPO/lib/json.sh"; . "$REPO/lib/usage
 claude_input() {
   local now
   now="$(date +%s)"
-  printf '{"model":{"id":"x"},"rate_limits": {"five_hour": {"used_percentage": %s, "resets_at": %s}, "seven_day": {"used_percentage": 12, "resets_at": %s}}}' \
-    "${1:-42.6}" "$((now + 3600))" "$((now + 86400))"
+  printf '{"model":{"id":"x"},"rate_limits": {"five_hour": {"used_percentage": 42.6, "resets_at": %s}, "seven_day": {"used_percentage": 12, "resets_at": %s}}}' \
+    "$((now + 3600))" "$((now + 86400))"
 }
 
 codex_log() {

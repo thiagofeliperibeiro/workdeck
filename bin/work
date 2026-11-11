@@ -787,9 +787,9 @@ if [ -n "${TMUX:-}" ]; then
 else
   background="$(theme_background)"
   [ -t 1 ] || background=""
-  [ -z "$background" ] || printf '\033]11;%s\033\\' "$background"
+  [ -z "$background" ] || printf '\033]11;%s\007' "$background"
   attach_status=0
   tmux attach -t "$SESSION" || attach_status=$?
-  [ -z "$background" ] || printf '\033]111\033\\'
+  [ -z "$background" ] || printf '\033]111\007'
   exit "$attach_status"
 fi
