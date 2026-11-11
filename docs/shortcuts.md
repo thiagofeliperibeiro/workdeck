@@ -18,7 +18,6 @@ a Mac, <kbd>Ctrl</kbd>+<kbd>Shift</kbd> in kitty on Linux.
 | Open a terminal in a new pane (2, 3, then 4 panes in a grid) | <kbd>⌘</kbd>+<kbd>T</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> |
 | Zoom the pane, and again to restore | <kbd>⌘</kbd>+<kbd>Z</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
 | Close the pane | <kbd>⌘</kbd>+<kbd>W</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> |
-| Run `work review` | <kbd>⌘</kbd>+<kbd>R</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
 
 The letters are meant to be remembered: **H**elp, **P**roject, **A**gent,
 **T**erminal, **Z**oom, **R**eview, and <kbd>W</kbd> closes, as in any Mac

@@ -26,7 +26,7 @@ instalar.sh           forwards to get.sh, so the old install URL keeps working
 lib/common.sh         paths and helpers shared by every script
 bin/work              the only command on the PATH
 bin/work-panel        the panel
-bin/workdeck-agent    starts the AI agent and the review in a pane
+bin/workdeck-agent    checks and saves the agent command (AGENT_CMD)
 config/               tmux.conf, the shell block and the built-in panels
 themes/               the kitty, tmux and Warp colors of each theme
 terminals/            the kitty configuration and the terminals guide

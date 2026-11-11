@@ -5,12 +5,11 @@
 workdeck is a framework for working with AI coding agents in the terminal, built on tmux. In
 spirit it is to tmux what oh-my-zsh is to zsh: it takes a powerful tool that is hard to set up and
 ships it ready to use, with a way to extend it. Unlike a tmux configuration framework, most of it
-is tooling rather than configuration: the `work` command, `work review`, the context panel and a
+is tooling rather than configuration: the `work` command, the context panel and a
 reversible install.
 
 tmux is the engine (sessions, windows, panes, keys); workdeck is the workflow on top of it: one
-window per project, a CLI agent beside the code, a context panel, `work review` before every
-commit, and an install that `work uninstall` fully reverts.
+window per project, a CLI agent beside the code, a context panel, and an install that `work uninstall` fully reverts.
 
 It is not a terminal, not a fork of tmux, not an editor integration and not an AI agent.
 
@@ -37,7 +36,7 @@ changes that only touch `site/`, and the `site` workflow runs only for those.
 | What | Language |
 |---|---|
 | Code: identifiers, functions, variables, file and folder names, comments, tests, CI | English |
-| What the user sees in the terminal: CLI output, prompts, `--help`, panel titles, the AI review request, tmux messages | English and Brazilian Portuguese, in `lang/en.sh` and `lang/pt-BR.sh`, printed with `msg KEY args`; the user picks one at install (`LANGUAGE` in `settings.conf`) |
+| What the user sees in the terminal: CLI output, prompts, `--help`, panel titles, tmux messages | English and Brazilian Portuguese, in `lang/en.sh` and `lang/pt-BR.sh`, printed with `msg KEY args`; the user picks one at install (`LANGUAGE` in `settings.conf`) |
 | `CHANGELOG.md`, shown by `work update` in the user's language | Both: each version has a `### Português` section and then an `### English` one. Portuguese comes first because versions before v1.6.0 print the start of the section as it is |
 | Not translated yet: integration texts, `uninstall.sh`, `get.sh` | Brazilian Portuguese |
 | READMEs and guides (`README.md`, `docs/`, `integrations/README.md`, `terminals/README.md`) | Both: `<name>.md` in English, `<name>.pt-BR.md` in Brazilian Portuguese |

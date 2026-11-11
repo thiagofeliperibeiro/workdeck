@@ -17,7 +17,6 @@ Se você aceitou o kitty na instalação, o workdeck cria atalhos próprios nele
 | Abrir um terminal num painel novo (2, 3 e depois 4 painéis em grade) | <kbd>⌘</kbd>+<kbd>T</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> |
 | Zoom no painel, e de novo para voltar | <kbd>⌘</kbd>+<kbd>Z</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> |
 | Fechar o painel | <kbd>⌘</kbd>+<kbd>W</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> |
-| Rodar o `work review` | <kbd>⌘</kbd>+<kbd>R</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
 
 As letras foram escolhidas para lembrar: **H**elp, **P**rojeto, **A**gente,
 **T**erminal, **Z**oom, **R**eview, e <kbd>W</kbd> fecha, como em qualquer app

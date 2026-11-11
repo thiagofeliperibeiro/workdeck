@@ -13,8 +13,6 @@ Quase tudo no workdeck é para ser trocado.
 | O destaque do painel ativo | `ACTIVE_PANE="line"` em `~/.config/workdeck/settings.conf` | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>r</kbd> |
 | O agente de IA, o terminal e as outras escolhas salvas | `~/.config/workdeck/settings.conf` | rode a instalação de novo |
 | O que aparece no painel | `~/.config/workdeck/panels/` | nada, ele relê sozinho |
-| Qual review o `work review` roda | `REVIEW_COMMAND` no `~/.config/workdeck/settings.conf` ou `.workdeck/review.conf` | — |
-| O que o pedido de review do workdeck pede | `~/.config/workdeck/review.md` ou `.workdeck/review.md` | — |
 | O tema do oh-my-zsh | `export WORKDECK_ZSH_THEME=<tema>` no `.zshrc` | reabra o terminal |
 | O nome da sessão | `export WORKDECK_SESSION=outro` | — |
 | Algo que não existe aqui | um fork, com o seu comando no `bin/work` | `./install.sh` no fork |
@@ -38,15 +36,13 @@ uma flag, como `--theme` ou `--terminal`.
 | `PANEL_CLOCK` | `yes`, `no` (padrão) | O painel com o relógio tclock no alto ([Painéis](panels.pt-BR.md)) |
 | `KITTY_OPENS_WORK` | `yes` (padrão), `no` | O kitty abre direto no `work`; vale ao rodar a instalação |
 | `THEME` | o nome de um tema | As cores do tmux |
-| `AGENT_CMD` | um comando | A IA que o `work review` usa quando nenhuma está aberta |
+| `AGENT_CMD` | um comando | O agente que o <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> abre num painel novo |
 | `INTEGRATIONS` | `none` ou uma lista | As integrações opcionais |
 | `ZSH` | `yes`, `no` | O zsh do workdeck |
 | `NOTIFY` | `0` | `0` desliga o aviso de versão nova (`work update --off`) |
 | `ACTIVE_PANE` | `none` (padrão), `line` | Um traço fino sobre o painel ativo, na cor de destaque do tema |
-| `REVIEW_COMMAND` | um comando, como `/code-review high` | O que o `work review` cola no chat do agente ([Review](review.pt-BR.md)) |
 | `NOTIFY_AGENTS` | `yes`, `no` (padrão) | Uma notificação do sistema quando um agente termina numa janela que você não está olhando ([Projetos](projects.pt-BR.md)) |
 | `PROJECT_LAYOUT` | `agent-shell` (padrão), `none` | Abre a janela de cada projeto com o agente e um shell lado a lado; `none` abre um painel só ([Projetos](projects.pt-BR.md)) |
-| `REVIEW_AGENT_CMD` | um comando, como `claude --model opus` | O agente que faz o `work review`, no painel separado ([Review](review.pt-BR.md)) |
 
 Só valem linhas exatamente no formato `CHAVE="valor"`: `CHAVE=valor`,
 `CHAVE = "valor"` e linhas comentadas são ignoradas, e vale a primeira linha de

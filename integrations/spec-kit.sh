@@ -19,6 +19,6 @@ O Spec Kit usa o comando specify, distribuído pelo uv (Python).
   3. Na pasta do projeto: specify init --here
 
 Ele cria os comandos /speckit.* dentro do seu agente. O workdeck não depende
-dele: o work review funciona com ou sem.
+dele: tudo funciona com ou sem.
 EOF
 }

@@ -78,17 +78,6 @@ test_english_panel_status_bar_and_window() {
   assert_contains "$output" "Ctrl+b h opens the menu"
 }
 
-test_english_review_request() {
-  english_install
-  mkdir -p "$HOME/api"
-  git -C "$HOME/api" init -q
-  echo 'export const a = 1' > "$HOME/api/index.ts"
-  (cd "$HOME/api" && work review >/dev/null 2>&1)
-  text="$(cat "$HOME/.cache/workdeck/review-request.md")"
-  assert_contains "$text" "What to review: what has not been committed yet"
-  assert_contains "$text" "Answer in English."
-}
-
 test_reinstall_renames_the_panel_window_line() {
   install_workdeck --lang pt-BR >/dev/null || fail "first install"
   printf 'painel|~|work-panel\napi|~/api\n' > "$CONFIG/projects.conf"

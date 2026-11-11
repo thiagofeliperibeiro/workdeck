@@ -20,7 +20,7 @@ fi
 if [ -n "${ZSH_VERSION:-}" ]; then
   _work() {
     if (( CURRENT == 2 )); then
-      compadd add review update kill
+      compadd add update kill
     elif [[ ${words[2]} == add ]]; then
       _directories
     fi
@@ -30,7 +30,7 @@ elif [ -n "${BASH_VERSION:-}" ]; then
   _work() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     if [ "$COMP_CWORD" = 1 ]; then
-      COMPREPLY=($(compgen -W "add review update kill" -- "$cur"))
+      COMPREPLY=($(compgen -W "add update kill" -- "$cur"))
     elif [ "${COMP_WORDS[1]}" = add ]; then
       COMPREPLY=($(compgen -d -- "$cur"))
     fi

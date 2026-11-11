@@ -4,8 +4,8 @@
 
 **Um framework para trabalhar com agentes de IA no terminal, construído sobre o tmux.**
 
-Uma janela por projeto, o agente ao lado, um painel com o estado de tudo
-e um code review antes de cada commit — numa sessão que não se perde.
+Uma janela por projeto, o agente ao lado e um painel com o estado de tudo —
+numa sessão que não se perde.
 
 [English](README.md) · **Português**
 
@@ -37,7 +37,6 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 - **Uma janela por projeto.** `work` abre todos de uma vez; <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> troca entre eles.
 - **O agente ao lado do código.** Funciona com qualquer agente de CLI — Claude Code, Codex, Copilot CLI, Aider, Gemini. Nenhum vem embutido.
 - **Um painel com o que importa.** Branch e mudanças de cada projeto, e o que mais você quiser ver.
-- **Review antes do commit.** `work review` pede ao seu agente uma revisão da mudança, com o review dele ou o seu.
 - **Saiba quando um agente termina.** Enquanto você trabalha numa janela, uma ✦ na barra marca a janela cujo agente terminou ou está esperando você, com notificação do sistema opcional.
 - **Nada se perde.** Fechou o terminal ou caiu a conexão? `work` e tudo está onde estava, agente incluso.
 - **Qualquer terminal, melhor no kitty.** O workdeck roda sobre o tmux, a única dependência, então o `work` funciona igual no Warp, no iTerm2 ou no terminal que vem no sistema. No kitty, ele ainda cria atalhos de uma letra.
@@ -45,19 +44,14 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 
 ## Como funciona
 
-Cada projeto é uma janela. Dentro dela, o agente fica ao lado do seu shell.
-Quando o agente termina, o `work review` abre o review num painel embaixo, com
-um agente do zero:
+Cada projeto é uma janela. Dentro dela, o agente fica ao lado do seu shell:
 
 ```
 ┌─ seu terminal ───────────────────────────────────────────────┐
 │                               │                              │
 │  seu agente de IA             │  seu shell                   │
 │  (claude, codex…)             │  git, testes, servidor       │
-│                               │  $ work review               │
-├──────────────────────────────────────────────────────────────┤
-│  review · um agente do zero, sem o chat                      │
-│  ● src/api.ts:42 — o token vai para o log                    │
+│                               │                              │
 ├──────────────────────────────────────────────────────────────┤
 │ 1 painel  2 api  3 web  4 mobile                Shift+← →    │
 └──────────────────────────────────────────────────────────────┘
@@ -69,8 +63,8 @@ mudanças de todos eles.
 O ciclo de trabalho:
 
 ```
-work add ~/api  →  janela do projeto  →  agente ao lado  →  work review  →  commit
-   uma vez           sempre aberta        escreve o código    revisa antes      você
+work add ~/api  →  janela do projeto  →  agente ao lado  →  commit
+   uma vez           sempre aberta        escreve o código    você
 ```
 
 ## Instalação
@@ -121,12 +115,6 @@ work add                   # sem caminho, usa a pasta atual
 Cada projeto vira uma janela. Abra o seu agente numa delas (`claude`, `codex`…)
 e trabalhe como sempre.
 
-**4. Antes do commit, peça uma revisão:**
-
-```bash
-work review
-```
-
 > **Ficou perdido?** <kbd>Ctrl</kbd>+<kbd>b</kbd> e depois <kbd>h</kbd> abre o
 > menu com os projetos, as ações e os atalhos. <kbd>q</kbd> ou <kbd>Esc</kbd> fecha.
 
@@ -138,7 +126,6 @@ work review
 |---|---|
 | `work` | Abre a sessão, ou volta para ela |
 | `work add [caminho]` | Acrescenta um projeto como janela |
-| `work review [branch\|staged] [--chat]` | Um agente do zero revisa a mudança num painel separado antes do commit |
 | `work update` | Mostra o que mudou na versão nova e atualiza |
 | `work kill` | Fecha a sessão inteira |
 | `work uninstall` | Desinstala tudo o que o workdeck instalou |
@@ -157,29 +144,12 @@ Linux.
 | Projeto anterior / próximo | <kbd>Shift</kbd>+<kbd>←</kbd> / <kbd>→</kbd> | <kbd>Shift</kbd>+<kbd>←</kbd> / <kbd>→</kbd> |
 | Abrir o agente / um terminal | <kbd>⌘</kbd>+<kbd>A</kbd> / <kbd>T</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> / <kbd>T</kbd> |
 | Zoom / fechar o painel | <kbd>⌘</kbd>+<kbd>Z</kbd> / <kbd>W</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> / <kbd>W</kbd> |
-| Rodar o `work review` | <kbd>⌘</kbd>+<kbd>R</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
 
 No Warp, no iTerm2, no terminal do sistema ou em qualquer outro, valem os atalhos do tmux:
 <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>h</kbd> abre o menu (aperte
 <kbd>Ctrl</kbd>+<kbd>b</kbd>, solte e aperte <kbd>h</kbd>) e
 <kbd>Shift</kbd>+setas trocam de projeto e de painel. Todos os atalhos estão em
 [docs/shortcuts.pt-BR.md](docs/shortcuts.pt-BR.md).
-
-### Self code review
-
-Quando o agente termina, o `work review` (ou <kbd>⌘</kbd>+<kbd>R</kbd> no kitty)
-abre um painel separado com um agente que começa do zero: ele lê só a mudança e
-o código em volta, e não a conversa que escreveu o código, então não repete os
-mesmos pontos cegos. Com o `REVIEW_AGENT_CMD`, ele pode ser outro modelo ou
-outra IA.
-
-A resposta vem com uma bolinha por achado: 🔴 bug para corrigir antes do commit,
-🟠 atenção que pode ficar para depois, 🟢 ok. O seu comando de review, como o do
-[BMAD](https://github.com/bmad-code-org/BMAD-METHOD), pode rodar ali no lugar, e
-o `work review --chat` faz um review rápido no chat que você já está usando.
-
-O review só aponta; não altera nada.
-[Como funciona e como personalizar →](docs/review.pt-BR.md)
 
 ### Painel personalizável
 
@@ -234,7 +204,6 @@ exato de antes da instalação. [Detalhes →](docs/installation.pt-BR.md#desins
 | [Instalação](docs/installation.pt-BR.md) | Opções do instalador, o zsh, onde fica cada arquivo, desinstalar |
 | [Projetos](docs/projects.pt-BR.md) | Adicionar, tirar e reordenar; o `projects.conf` |
 | [Atalhos](docs/shortcuts.pt-BR.md) | Todos os atalhos, os extras do terminal e como criar os seus |
-| [Review](docs/review.pt-BR.md) | Como o `work review` funciona e como personalizar |
 | [Painéis](docs/panels.pt-BR.md) | Os painéis que vêm prontos e como fazer os seus |
 | [Temas](docs/themes.pt-BR.md) | Os temas e como criar um |
 | [Agente e integrações](docs/integrations.pt-BR.md) | O agente de IA, BMAD, Spec Kit e ai-memory |
@@ -252,13 +221,13 @@ agente e não substitui nenhum. Cada recurso serve a um fluxo:
   terminal.
 - **Agente:** o agente ao lado do shell, a ✦ e o aviso quando ele termina, e o
   painel com o estado de tudo.
-- **Review:** o `work review` antes do commit, com o seu próprio agente.
+- **Review:** os comandos de review do próprio agente antes do commit.
 
 Ele não é extensão de editor ou IDE, não é um terminal e não é um agente de IA.
 O tmux é o motor por baixo, e o kitty dá a melhor experiência.
 
 O workdeck é um ponto de partida. Ele traz a estrutura — sessão, janelas,
-painel, review — e deixa o resto com você: os seus projetos, os seus painéis, o
+painel — e deixa o resto com você: os seus projetos, os seus painéis, o
 seu agente. Tudo fica em arquivos de texto simples, e tudo o que ele escreve
 pode ser desfeito.
 

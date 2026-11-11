@@ -170,131 +170,6 @@ offer_update() {
   fi
 }
 
-configured_review_command() {
-  local file="$1/.workdeck/review.conf" value
-  REVIEW_COMMAND="" REVIEW_WARNING=""
-  value="$(config_get "$file" REVIEW_COMMAND)"
-  case "$value" in
-    /*[!A-Za-z0-9._:-]*|/) ;;
-    /*) REVIEW_COMMAND="$value"; return 0 ;;
-  esac
-  [ -z "$value" ] || REVIEW_WARNING="$(msg review_command_ignored "$(short_path "$file")")"
-  REVIEW_COMMAND="$(setting_get REVIEW_COMMAND)"
-}
-
-tell() {
-  if [ -n "${WORKDECK_FROM_MENU:-}" ]; then tmux display-message -d 6000 "$*"; else printf '%s\n' "$@"; fi
-}
-
-review_in_chat() {
-  local root="$1" target="$2" base="$3" extra="$4" active pane agent cmd note=""
-  [ -n "${TMUX:-}" ] || return 1
-  [ "$target" != staged ] || return 1
-  active="$("$LIB/workdeck-agent" --active)"
-  [ -n "$active" ] || return 1
-  pane="${active%% *}"
-  agent="${active#* }"
-  configured_review_command "$root"
-  cmd="$REVIEW_COMMAND"
-  if [ -z "$cmd" ] && [ "$agent" = claude ]; then
-    case "$target" in
-      uncommitted) cmd="/code-review" ;;
-      branch) cmd="/code-review $base...HEAD" ;;
-    esac
-  fi
-  if [ -z "$cmd" ]; then
-    [ -z "$REVIEW_WARNING" ] || tell "$REVIEW_WARNING"
-    return 1
-  fi
-  case "$cmd" in
-    /code-review*) [ -z "$extra" ] || note="$(msg review_md_ignored)" ;;
-  esac
-  if [ "$agent" = claude ]; then
-    case "$("$LIB/workdeck-agent" --claude-state "$pane")" in
-      busy) tell "$(msg review_claude_busy)"; return 0 ;;
-      blocked) tell "$(msg review_claude_blocked)"; return 0 ;;
-    esac
-    if "$LIB/workdeck-agent" --submit "$pane" "$cmd"; then
-      tell ${REVIEW_WARNING:+"$REVIEW_WARNING"} "$(msg review_started "$cmd")" ${note:+"$note"}
-      return 0
-    fi
-  else
-    "$LIB/workdeck-agent" --send "$pane" "$cmd"
-  fi
-  tell ${REVIEW_WARNING:+"$REVIEW_WARNING"} "$(msg review_pasted "$agent" "$cmd")" "$(msg review_press_enter)" ${note:+"$note"}
-  return 0
-}
-
-unpushed_commits() { git rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo 0; }
-
-review() {
-  local target="" use_pane=1 only_commits=0 arg base="" description commands request root branch extra f
-  for arg in "$@"; do
-    case "$arg" in
-      --pane) use_pane=1 ;;
-      --chat) use_pane=0 ;;
-      *) if [ -z "$target" ]; then target="$arg"; else msgln review_unknown "$arg"; return 1; fi ;;
-    esac
-  done
-  target="${target:-uncommitted}"
-  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    msgln review_not_git "$(short_path "$PWD")"
-    msgln review_go_to_project
-    return 1
-  fi
-  case "$target" in
-    uncommitted|"")
-      if [ -z "$(git status --porcelain)" ]; then
-        if [ "$(unpushed_commits)" -gt 0 ]; then only_commits=1; else msgln review_nothing; return 0; fi
-      fi
-      description="$(msg review_scope_uncommitted)"
-      commands="$(msg review_commands_uncommitted)" ;;
-    staged)
-      if git diff --cached --quiet; then msgln review_nothing_staged; return 0; fi
-      description="$(msg review_scope_staged)"
-      commands="git diff --cached" ;;
-    branch)
-      base="$(git symbolic-ref -q --short refs/remotes/origin/HEAD 2>/dev/null || echo main)"
-      description="$(msg review_scope_branch "$base")"
-      commands="$(msg review_commands_branch "$base")" ;;
-    *)
-      msgln review_unknown "$target"
-      return 1 ;;
-  esac
-  root="$(git rev-parse --show-toplevel)"
-  branch="$(git branch --show-current 2>/dev/null)"
-  branch="${branch:-$(git rev-parse --short HEAD)}"
-  extra=""
-  for f in "$(dirname "$CONFIG")/review.md" "$root/.workdeck/review.md"; do
-    [ -s "$f" ] && extra="$extra$(cat "$f")"$'\n'
-  done
-  [ -z "$(setting_get REVIEW_AGENT_CMD)" ] || use_pane=1
-  if [ "$use_pane" = 0 ] && review_in_chat "$root" "$target" "$base" "$extra"; then
-    return 0
-  fi
-  if [ "$only_commits" = 1 ]; then
-    description="$(msg review_scope_unpushed)"
-    commands="git diff @{upstream}...HEAD"
-  fi
-  request="$WORKDECK_CACHE/review-request.md"
-  mkdir -p "$(dirname "$request")"
-  configured_review_command "$root"
-  [ "$use_pane" = 0 ] || [ -z "$REVIEW_WARNING" ] || tell "$REVIEW_WARNING"
-  if [ -n "$REVIEW_COMMAND" ] && [ "$target" != staged ]; then
-    printf '%s\n' "$REVIEW_COMMAND" > "$request"
-    "$LIB/workdeck-agent" --request "$request" "REVIEW" "$root:$branch"
-    return $?
-  fi
-  {
-    msg review_request "$description" "$branch" "$commands"
-    echo
-    if [ -n "$extra" ]; then
-      printf '\n%s\n%s' "$(msg review_extra)" "$extra"
-    fi
-  } > "$request"
-  "$LIB/workdeck-agent" --request "$request" "REVIEW" "$root:$branch"
-}
-
 menu() {
   local client="$1" pane="$2" session id idx name active mark a height lines=10 args=() shortcuts notify mod
   session="$(tmux display -p -c "$client" '#{session_name}')"
@@ -311,7 +186,6 @@ menu() {
   [ "$(setting_get NOTIFY_AGENTS no)" = yes ] && notify="$(msg menu_notify_off)"
   args+=(""
     "$(msg menu_add)" p "command-prompt -p '$(msg menu_add_prompt)' \"run-shell \\\"work add '%%'\\\"\""
-    "$(msg menu_review)" r "run-shell -c '#{pane_current_path}' 'WORKDECK_FROM_MENU=1 TMUX_PANE=#{pane_id} work review'"
     "$notify" n "run-shell \"work _notify-agents\""
     "$(msg menu_update)" u "display-popup -E -w 90 -h 30 \"bash -c 'work update; printf \\\"  \\\\033[2m$(msg menu_press_key)\\\\033[0m\\\"; read -rsn1'\""
     ""
@@ -323,7 +197,7 @@ menu() {
   if [ -n "$mod" ]; then
     shortcuts=(
       "$(msg menu_key_terminal_1 "$mod" "$mod" "$mod" "$mod")"
-      "$(msg menu_key_terminal_2 "$mod" "$mod" "$mod" "$mod")"
+      "$(msg menu_key_terminal_2 "$mod" "$mod" "$mod")"
       "$(msg menu_key_windows)"
       "$(msg menu_key_panes)"
     )
@@ -776,7 +650,6 @@ add_project() {
 case "${1:-}" in
   "") ;;
   add) shift; add_project "${1:-.}"; exit $? ;;
-  review) shift; review "$@"; exit $? ;;
   update)
     case "${2:-}" in
       --off|--desligar) setting_set NOTIFY 0; msgln update_notify_off; exit 0 ;;

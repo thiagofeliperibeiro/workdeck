@@ -13,8 +13,6 @@ Almost everything in workdeck is meant to be changed.
 | The active pane highlight | `ACTIVE_PANE="line"` in `~/.config/workdeck/settings.conf` | <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>r</kbd> |
 | The AI agent, terminal and other saved choices | `~/.config/workdeck/settings.conf` | run the installer again |
 | What the panel shows | `~/.config/workdeck/panels/` | nothing, it rereads on its own |
-| Which review `work review` runs | `REVIEW_COMMAND` in `~/.config/workdeck/settings.conf` or `.workdeck/review.conf` | — |
-| What the workdeck review request asks for | `~/.config/workdeck/review.md` or `.workdeck/review.md` | — |
 | The oh-my-zsh theme | `export WORKDECK_ZSH_THEME=<theme>` in `.zshrc` | reopen the terminal |
 | The session name | `export WORKDECK_SESSION=other` | — |
 | Something not listed here | a fork, with your command in `bin/work` | `./install.sh` in the fork |
@@ -38,15 +36,13 @@ flag such as `--theme` or `--terminal`.
 | `PANEL_CLOCK` | `yes`, `no` (default) | The panel with the tclock clock on top ([Panels](panels.md)) |
 | `KITTY_OPENS_WORK` | `yes` (default), `no` | kitty opens straight into `work`; applied when you run the installer |
 | `THEME` | a theme name | The tmux colors |
-| `AGENT_CMD` | a command | The AI that `work review` uses when none is open |
+| `AGENT_CMD` | a command | The agent that <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> opens in a new pane |
 | `INTEGRATIONS` | `none` or a list | The optional integrations |
 | `ZSH` | `yes`, `no` | The workdeck zsh |
 | `NOTIFY` | `0` | `0` stops the new version notice (`work update --off`) |
 | `ACTIVE_PANE` | `none` (default), `line` | A thin line over the active pane, in the theme accent |
-| `REVIEW_COMMAND` | a command, such as `/code-review high` | What `work review` pastes into the agent chat ([Review](review.md)) |
 | `NOTIFY_AGENTS` | `yes`, `no` (default) | A system notification when an agent finishes in a window you are not looking at ([Projects](projects.md)) |
 | `PROJECT_LAYOUT` | `agent-shell` (default), `none` | Opens each project window with the agent and a shell side by side; `none` opens a single pane ([Projects](projects.md)) |
-| `REVIEW_AGENT_CMD` | a command, such as `claude --model opus` | The agent that runs `work review`, in the separate pane ([Review](review.md)) |
 
 Only exact `KEY="value"` lines count: `KEY=value`, `KEY = "value"` and
 commented lines are ignored, and the first line of a key wins. Older versions
