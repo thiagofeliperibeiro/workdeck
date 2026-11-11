@@ -6,6 +6,16 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.1.1
+
+### Português
+
+- Os limites de uso do agente ficam no lado direito da segunda linha da barra, junto da branch, do atalho do menu e do relógio.
+
+### English
+
+- The agent usage limits sit on the right of the second line of the bar, next to the branch, the menu key and the clock.
+
 ## v3.1.0
 
 ### Português
