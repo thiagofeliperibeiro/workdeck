@@ -51,3 +51,11 @@ test_dragging_a_project_lights_it_up_until_it_is_dropped() {
   tmux set -gu @wd_drag
   assert_not_contains "$(tmux display -p -t keys '#{E:window-status-current-format}')" "bg=" "project after the drop"
 }
+
+test_the_status_bar_has_a_second_line_for_usage_and_the_clock() {
+  start_tmux_with_installed_config
+  assert_equal "$(tmux show -gv status)" 2 "status lines"
+  assert_equal "$(tmux show -gv status-right)" "" "status-right on the first line"
+  assert_contains "$(tmux show -gv 'status-format[1]')" "work _usage" "the second line"
+  assert_contains "$(tmux show -gv 'status-format[1]')" "%H:%M" "the clock on the second line"
+}

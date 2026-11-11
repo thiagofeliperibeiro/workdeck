@@ -63,7 +63,8 @@ o `/code-review`:
 └──────────────────────────────────────────────────────────────┘
 ```
 
-A barra de baixo lista os projetos. A janela 1 é o painel, com a branch e as
+A barra de baixo lista os projetos na primeira linha, e o uso do agente, a
+branch e o relógio na segunda. A janela 1 é o painel, com a branch e as
 mudanças de todos eles.
 
 O ciclo de trabalho:

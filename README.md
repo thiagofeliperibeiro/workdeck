@@ -64,7 +64,8 @@ the change there, with the agent's own review commands such as `/code-review`:
 └──────────────────────────────────────────────────────────────┘
 ```
 
-The bottom bar lists the projects. Window 1 is the panel, with the branch and
+The bottom bar lists the projects on its first line, and the agent usage,
+branch and clock on the second. Window 1 is the panel, with the branch and
 changes of all of them.
 
 The workflow:
