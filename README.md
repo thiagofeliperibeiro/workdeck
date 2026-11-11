@@ -39,6 +39,7 @@ project with its own mess. workdeck puts all of it in one place.
 - **Your agent next to the code.** Works with any CLI agent: Claude Code, Codex, Copilot CLI, Aider, Gemini. None is bundled.
 - **A panel with what matters.** The branch and changes of each project, plus anything else you want to see.
 - **Know when an agent finishes.** While you work in one window, a ✦ in the status bar marks the window whose agent finished or is waiting for you, with an optional system notification.
+- **See your plan limits.** The status bar shows how much of the 5-hour and weekly limits of Claude Code or Codex you have used.
 - **Nothing gets lost.** Closed the terminal or lost the connection? Run `work` and everything is where you left it, agent included.
 - **Any terminal, best in kitty.** workdeck runs on tmux, its only dependency, so `work` works the same in Warp, iTerm2 or the terminal your system ships with. In kitty, it also adds one-letter shortcuts.
 - **Set up with one command, undone with another.** Installs tmux if it is missing, offers the kitty shortcuts and look; `work uninstall` reverts all of it.
@@ -221,8 +222,9 @@ none of it. Every feature serves one flow:
 
 - **Project:** one window per project, back as you left it after closing the
   terminal.
-- **Agent:** the agent next to the shell, the ✦ and the alert when it finishes,
-  and the panel with the state of everything.
+- **Agent:** the agent in each project, the ✦ and the alert when it finishes,
+  the usage limits in the status bar, and the panel with the state of
+  everything.
 - **Review:** the agent's own review commands before the commit.
 
 It is not an editor or IDE extension, not a terminal and not an AI agent.

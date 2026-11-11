@@ -5,8 +5,8 @@
 workdeck is a framework for working with AI coding agents in the terminal, built on tmux. In
 spirit it is to tmux what oh-my-zsh is to zsh: it takes a powerful tool that is hard to set up and
 ships it ready to use, with a way to extend it. Unlike a tmux configuration framework, most of it
-is tooling rather than configuration: the `work` command, the context panel and a
-reversible install.
+is tooling rather than configuration: the `work` command, the context panel, the agent usage bar
+and a reversible install.
 
 tmux is the engine (sessions, windows, panes, keys); workdeck is the workflow on top of it: one
 window per project, a CLI agent beside the code, a context panel, and an install that `work uninstall` fully reverts.

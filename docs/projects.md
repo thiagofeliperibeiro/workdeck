@@ -87,6 +87,33 @@ NOTIFY_AGENTS="yes"
 
 It uses `osascript` on macOS and `notify-send` on Linux, when installed.
 
+## Agent usage limits
+
+The right side of the status bar shows how much of your Claude or Codex plan
+you have used, with a bar for the 5-hour window and one for the weekly window:
+
+```
+claude 5h ▰▰▱▱▱ 42% · 7d ▰▱▱▱▱ 12% · main · ctrl+b h menu · 14:05
+```
+
+It shows the agent running in the window you are looking at. In a window
+without one, it shows the agent you used last. A bar turns red at 90%, and a
+window whose reset time has passed is left out until the agent reports again.
+
+- **Claude Code** passes these numbers only to its status line command. The
+  installer sets `statusLine` in `~/.claude/settings.json` (or in
+  `$CLAUDE_CONFIG_DIR`) to `~/.local/share/workdeck/bin/workdeck-statusline`.
+  A status line you already had still shows in Claude, because workdeck runs it
+  after saving the limits. `work uninstall` puts your previous `statusLine`
+  back. The numbers come only with a Claude subscription (Pro or Max) and
+  appear after the first answer of a session.
+- **Codex** writes the limits to its session logs, in
+  `~/.codex/sessions` (or in `$CODEX_HOME`). workdeck reads them and changes
+  nothing in the Codex configuration. They come only with a ChatGPT plan.
+
+Cursor and the other agents do not expose limits that workdeck can read, so
+the status bar shows nothing for them.
+
 ## Two panes per project
 
 Each project window opens with the agent and a shell side by side. Every

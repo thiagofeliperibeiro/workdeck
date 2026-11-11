@@ -687,6 +687,7 @@ case "${1:-}" in
   _split) shift; split_grid "${1:-}"; exit 0 ;;
   _agent) shift; open_agent_pane "${1:-}"; exit 0 ;;
   _settings) apply_settings; exit 0 ;;
+  _usage) shift; . "$LIB/../lib/usage.sh"; usage_status "${1:-}"; exit 0 ;;
   _panel) shift; exec "$LIB/work-panel" "$@" ;;
   _menu) shift; menu "$@"; exit 0 ;;
   -h|--help|help) msgln work_help; exit 0 ;;

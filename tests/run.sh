@@ -39,6 +39,7 @@ test_files_for() {
     install.sh|get.sh|instalar.sh) printf '%s\n' install terminal kitty theme settings uninstall update lang ;;
     uninstall.sh) printf '%s\n' uninstall terminal ;;
     bin/workdeck-agent) printf '%s\n' install agents ;;
+    bin/workdeck-statusline) echo usage ;;
     bin/work-panel|config/panels/*) printf '%s\n' panels lang ;;
     bin/work) printf '%s\n' session panes split agents keys update lang ;;
     config/tmux.conf) printf '%s\n' keys panes split agents session ;;
