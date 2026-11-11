@@ -209,7 +209,7 @@ offer_update() {
 }
 
 menu() {
-  local client="$1" pane="$2" session id idx name active mark a height lines=11 args=() shortcuts notify mod
+  local client="$1" pane="$2" session id idx name active mark a height lines=10 args=() shortcuts notify mod
   session="$(tmux display -p -c "$client" '#{session_name}')"
   while IFS='|' read -r id idx active name; do
     mark="  "; [ "$active" = 1 ] && mark="● "
