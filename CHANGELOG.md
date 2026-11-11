@@ -6,6 +6,26 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.0.0
+
+### Português
+
+- O `work review` saiu, junto com o `Ctrl+b R`, o `⌘R` do kitty, o item do menu e as configurações `REVIEW_COMMAND`, `REVIEW_AGENT_CMD` e `review.md`, que não são mais lidas. Para revisar antes do commit, use os comandos do próprio agente, como o `/code-review` do Claude Code.
+- A janela de cada projeto abre com um painel só, para o agente. Para voltar a ter o shell ao lado, acrescente `PROJECT_LAYOUT="agent-shell"` ao `~/.config/workdeck/settings.conf`.
+- O Claude Code abre com o painel de diff ao lado da conversa, mostrando os arquivos alterados. Isso vale pelo `Ctrl+b A` e quando você digita `claude` sem argumentos num painel do tmux. A instalação liga o renderizador fullscreen do Claude, que o painel precisa, se você ainda não escolheu outro. Para desligar, use `CLAUDE_DIFF_PANEL="no"`.
+- A barra de baixo mostra quanto você já usou dos limites de 5 horas e semanal do Claude Code ou do Codex, com uma barra para cada um. No Claude, a instalação configura a `statusLine`; uma statusline que você já tinha continua aparecendo.
+- A margem em volta do tmux e as bordas entre os painéis ficam com a cor do tema, sem mostrar a cor do terminal (como o roxo do terminal do Ubuntu).
+- Depois de atualizar, abra um terminal novo para o `claude` abrir com o painel de diff.
+
+### English
+
+- `work review` is gone, along with `Ctrl+b R`, the kitty `⌘R`, the menu item and the `REVIEW_COMMAND`, `REVIEW_AGENT_CMD` and `review.md` settings, which are no longer read. To review before the commit, use the agent's own commands, such as `/code-review` in Claude Code.
+- Each project window opens with a single pane, for the agent. To get the shell beside it back, add `PROJECT_LAYOUT="agent-shell"` to `~/.config/workdeck/settings.conf`.
+- Claude Code opens with its diff panel beside the conversation, showing the changed files. This applies to `Ctrl+b A` and to typing `claude` with no arguments in a tmux pane. The install turns on the Claude fullscreen renderer the panel needs, unless you already chose another one. To turn it off, use `CLAUDE_DIFF_PANEL="no"`.
+- The bottom bar shows how much of the 5-hour and weekly limits of Claude Code or Codex you have used, with a bar for each. For Claude, the install sets `statusLine`; a status line you already had still shows.
+- The margin around tmux and the borders between panes take the theme color instead of the terminal's (such as the purple of the Ubuntu terminal).
+- After updating, open a new terminal so `claude` opens with the diff panel.
+
 ## v2.5.4
 
 ### Português
