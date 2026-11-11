@@ -27,15 +27,16 @@ describe.each(locales)("site content in %s", (locale) => {
 
   test("the commands are workdeck's, without duplicates", () => {
     const names = commands.map((c) => c.cmd.split(" ").slice(0, 2).join(" "))
-    expect(names).toEqual(["work", "work add", "work review", "work update", "work kill", "work uninstall"])
+    expect(names).toEqual(["work", "work add", "work update", "work kill", "work uninstall"])
     expect(unique(commands.map((c) => c.cmd))).toBe(true)
     for (const c of commands) expect(c.desc.length).toBeGreaterThan(0)
   })
 
-  test("the workflow has four steps, from work add to work review", () => {
+  test("the workflow has four steps, from work add to the diff panel", () => {
     expect(cycle).toHaveLength(4)
     expect(cycle[0].label).toBe("work add ~/api")
-    expect(cycle[3].label).toBe("work review")
+    expect(cycle[3].code).toBe(false)
+    expect(cycle[3].desc).toContain("/code-review")
     for (const c of cycle) expect(c.desc.length).toBeGreaterThan(0)
   })
 
