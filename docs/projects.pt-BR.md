@@ -116,10 +116,23 @@ novo.
 O Cursor e os outros agentes não expõem limites que o workdeck consiga ler,
 então a barra não mostra nada para eles.
 
-## Dois painéis por projeto
+## A janela do projeto
 
-A janela de cada projeto abre com o agente e um shell lado a lado. Todo `work`
-que abre a sessão abre todos os seus projetos assim.
+A janela de cada projeto abre com um painel só, um shell comum pronto para você
+abrir o agente (como `claude`) nos projetos em que for trabalhar. Nada sobe
+sozinho, então abrir muitos projetos não liga vários agentes ao mesmo tempo.
+<kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Enter</kbd> divide a janela quando você
+precisar de mais painéis, e <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> abre um
+painel com o seu agente já rodando.
+
+### Um shell ao lado do agente
+
+Para abrir a janela de cada projeto com o agente e um shell lado a lado,
+acrescente ao `~/.config/workdeck/settings.conf` e rode `work kill` e `work`:
+
+```
+PROJECT_LAYOUT="agent-shell"
+```
 
 ```
 ┌──────────────┬──────────────┐
@@ -129,32 +142,19 @@ que abre a sessão abre todos os seus projetos assim.
 └──────────────┴──────────────┘
 ```
 
-- **1, o agente:** um shell comum, pronto para você abrir o agente (como
-  `claude`) nos projetos em que for trabalhar.
-- **2, o shell:** para git, testes e o servidor. O comando do
-  `.workdeck/project.conf` do projeto aparece digitado, também sem rodar:
-
-  ```
-  SERVER_COMMAND="npm run dev"
-  ```
-
-  O arquivo segue as mesmas regras do `settings.conf`: uma `CHAVE="valor"` por
-  linha, com comentários em linhas próprias. Uma linha em outro formato, como
-  uma com comentário depois do valor, é ignorada. Caracteres de controle são
-  removidos antes de digitar, então um valor nunca roda sozinho. Sem esse
-  arquivo, o painel abre como um shell comum.
-
-O comando do servidor é digitado quando o shell mostra o prompt. Nada sobe sozinho,
-então abrir muitos projetos não liga vários agentes nem servidores ao mesmo
-tempo, e as portas não entram em conflito. <kbd>Ctrl</kbd>+<kbd>b</kbd>
-<kbd>Enter</kbd> divide mais a janela quando você precisar de mais painéis.
-
-Para abrir a janela de cada projeto com um painel só, acrescente ao
-`~/.config/workdeck/settings.conf` e rode `work kill` e `work`:
+O shell é para git, testes e o servidor. O comando do `.workdeck/project.conf`
+do projeto aparece digitado quando o shell mostra o prompt, sem rodar:
 
 ```
-PROJECT_LAYOUT="none"
+SERVER_COMMAND="npm run dev"
 ```
+
+O arquivo segue as mesmas regras do `settings.conf`: uma `CHAVE="valor"` por
+linha, com comentários em linhas próprias. Uma linha em outro formato, como
+uma com comentário depois do valor, é ignorada. Caracteres de controle são
+removidos antes de digitar, então um valor nunca roda sozinho. Sem esse
+arquivo, o painel abre como um shell comum. Como o servidor nunca sobe sozinho,
+as portas não entram em conflito quando muitos projetos abrem juntos.
 
 ## Outra sessão
 

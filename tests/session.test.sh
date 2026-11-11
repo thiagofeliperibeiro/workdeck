@@ -46,6 +46,7 @@ project_with_server_command() {
 test_project_layout_types_only_the_server_command() {
   install_workdeck >/dev/null || fail "install exited with an error"
   echo 'AGENT_CMD="echo agente-no-ar"' >> "$CONFIG/settings.conf"
+  echo 'PROJECT_LAYOUT="agent-shell"' >> "$CONFIG/settings.conf"
   project_with_server_command
   work add "$HOME/api" >/dev/null || fail "work add exited with an error"
   open_work_in_terminal work
@@ -98,9 +99,8 @@ test_project_layout_warns_about_an_unknown_value() {
   assert_contains "$(work add "$HOME/api" 2>&1)" "PROJECT_LAYOUT=\"agent-server-terminal\" não existe"
 }
 
-test_project_layout_none_opens_a_single_pane() {
+test_project_layout_opens_a_single_pane_by_default() {
   install_workdeck >/dev/null || fail "install exited with an error"
-  echo 'PROJECT_LAYOUT="none"' >> "$CONFIG/settings.conf"
   mkdir -p "$HOME/api"
   work add "$HOME/api" >/dev/null || fail "work add exited with an error"
   open_work_in_terminal work

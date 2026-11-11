@@ -174,7 +174,7 @@ settings_ensure_template() {
 %s
 %s
 ' "$(msg settings_layout_1)" "$(msg settings_layout_2)" "$(msg settings_layout_3)" \
-      '#PROJECT_LAYOUT="none"' >> "$WORKDECK_SETTINGS"
+      '#PROJECT_LAYOUT="agent-shell"' >> "$WORKDECK_SETTINGS"
   fi
   if ! grep -aqE '^#?KITTY_OPENS_WORK=' "$WORKDECK_SETTINGS"; then
     settings_end_with_newline
