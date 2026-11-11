@@ -91,14 +91,14 @@ Ela usa o `osascript` no macOS e o `notify-send` no Linux, quando instalado.
 ## Limites de uso do agente
 
 A barra tem duas linhas, para que uma lista longa de projetos nunca esprema o
-resto. A primeira traz a sessão e os projetos. A segunda mostra, à esquerda,
+resto. A primeira traz a sessão e os projetos. A segunda mostra, à direita,
 quanto do seu plano do Claude ou do Codex você já usou, com uma barra para a
-janela de 5 horas e outra para a semanal, e à direita a branch, o atalho do
-menu e o relógio:
+janela de 5 horas e outra para a semanal, seguido da branch, do atalho do menu
+e do relógio:
 
 ```
  ❯_ work   1 painel  2 api  3 web  4 mobile  5 admin  6 docs
- claude 5h ▰▰▱▱▱ 42% · 7d ▰▱▱▱▱ 12%          main · ctrl+b h menu · 14:05
+          claude 5h ▰▰▱▱▱ 42% · 7d ▰▱▱▱▱ 12% · main · ctrl+b h menu · 14:05
 ```
 
 Ela mostra o agente aberto na janela que você está olhando. Numa janela sem

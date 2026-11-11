@@ -91,13 +91,13 @@ It uses `osascript` on macOS and `notify-send` on Linux, when installed.
 
 The status bar has two lines, so a long list of projects never squeezes the
 rest. The first holds the session and the projects. The second shows, on the
-left, how much of your Claude or Codex plan you have used, with a bar for the
-5-hour window and one for the weekly window, and on the right the branch, the
-menu key and the clock:
+right, how much of your Claude or Codex plan you have used, with a bar for the
+5-hour window and one for the weekly window, followed by the branch, the menu
+key and the clock:
 
 ```
  ❯_ work   1 painel  2 api  3 web  4 mobile  5 admin  6 docs
- claude 5h ▰▰▱▱▱ 42% · 7d ▰▱▱▱▱ 12%          main · ctrl+b h menu · 14:05
+          claude 5h ▰▰▱▱▱ 42% · 7d ▰▱▱▱▱ 12% · main · ctrl+b h menu · 14:05
 ```
 
 It shows the agent running in the window you are looking at. In a window

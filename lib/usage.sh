@@ -154,7 +154,7 @@ usage_render() {
       color = pct >= 90 ? "red" : accent
       out = out (out == "" ? "" : " #[fg=" muted "]· ") "#[fg=" muted "]" $1 " #[fg=" color "]" bar "#[fg=" dim "]" rest " #[fg=" muted "]" pct "%"
     }
-    END { if (out != "") printf "#[fg=%s] %s %s", muted, agent, out }'
+    END { if (out != "") printf "#[fg=%s]%s %s #[fg=%s]· ", muted, agent, out, muted }'
 }
 
 # work _usage WINDOW: the usage segment of the status bar, or nothing.
