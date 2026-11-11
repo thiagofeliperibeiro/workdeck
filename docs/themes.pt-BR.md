@@ -5,6 +5,13 @@
 Cada tema pinta o tmux e, se você aceitar o visual na instalação, o kitty
 também. A versão de cada tema para o Warp fica em `themes/`, para usar à mão.
 
+Enquanto a sessão está aberta, o `work` também pede ao terminal que use o fundo
+do tema, para que a margem em volta do tmux não mostre a cor do próprio
+terminal (como o roxo do terminal do Ubuntu). O terminal volta à cor dele
+quando você sai da sessão ou roda `work kill`. Isso usa as sequências padrão
+OSC 11 e OSC 111; um terminal que não as conhece mantém a cor da margem, e nada
+mais muda.
+
 | Tema | Fundo | Jeito |
 |---|---|---|
 | `catppuccin-mocha` | `#1e1e2e` | Pastel por construção. O padrão. |
@@ -26,7 +33,8 @@ Crie três arquivos em `themes/`:
 
 - `<nome>.conf` com as cores do kitty (`background`, `foreground`,
   `color0`–`color15`);
-- `<nome>.tmux` com as do tmux (barra, janela ativa, bordas de painel);
+- `<nome>.tmux` com as do tmux (barra, janela ativa, bordas de painel, com o
+  mesmo fundo do `window-style`);
 - `<nome>.warp.yaml` com as do Warp (`accent`, `cursor`, `background`,
   `foreground` e `terminal_colors`). O `name` é `workdeck <nome>`, que é como o
   tema aparece no seletor do Warp.
