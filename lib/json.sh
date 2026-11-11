@@ -3,6 +3,7 @@
 # byte as it was. Only well-formed objects are handled; anything else makes
 # the functions fail without touching the file.
 
+# shellcheck disable=SC2016 # awk code, expanded by awk and not by the shell
 JSON_TOP_AWK='
 function fail() { bad = 1; exit 1 }
 { s = s (NR > 1 ? "\n" : "") $0 }

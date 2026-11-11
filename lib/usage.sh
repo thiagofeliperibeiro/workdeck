@@ -7,6 +7,7 @@
 
 USAGE_DIR="$WORKDECK_CACHE/usage"
 USAGE_AGENTS="claude codex"
+# shellcheck disable=SC2034 # read by install.sh, uninstall.sh and bin/workdeck-statusline
 CLAUDE_PREVIOUS_STATUSLINE="$WORKDECK_CONFIG/claude-statusline.json"
 
 # usage_number FLAT_OBJECT FIELD: the number in "FIELD":N, or nothing.
@@ -18,7 +19,7 @@ usage_number() {
 # nested object for the fields read here.
 usage_object() {
   case "$1" in *"\"$2\":{"*) ;; *) return 1 ;; esac
-  local rest="${1#*\"$2\":\{}"
+  local rest="${1#*\""$2"\":\{}"
   printf '%s\n' "${rest%%\}*}"
 }
 
@@ -32,7 +33,7 @@ usage_save_claude() {
     part="$(usage_object "$limits" "$name")" || continue
     pct="$(usage_number "$part" used_percentage)"
     reset="$(usage_number "$part" resets_at)"
-    [ -n "$pct" ] && [ -n "$reset" ] || continue
+    if [ -z "$pct" ] || [ -z "$reset" ]; then continue; fi
     out="$out$label $pct ${reset%.*}"$'\n'
   done
   [ -n "$out" ] || return 0
@@ -134,7 +135,7 @@ usage_pick_agent() {
   [ -z "$agent" ] || { printf '%s\n' "$agent"; return 0; }
   for agent in $USAGE_AGENTS; do
     file="$(usage_source "$agent")"
-    [ -n "$file" ] && [ -f "$file" ] || continue
+    if [ -z "$file" ] || [ ! -f "$file" ]; then continue; fi
     if [ -z "$newest" ] || [ "$file" -nt "$newest" ]; then newest="$file"; best="$agent"; fi
   done
   [ -z "$best" ] || printf '%s\n' "$best"
