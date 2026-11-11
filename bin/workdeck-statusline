@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Claude Code runs this as its statusLine command. It keeps the subscription
+# limits that Claude Code passes on stdin, for the usage bars in the tmux status
+# bar, and then runs the status line that was set before workdeck, if any.
+set -u
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+. "$ROOT/lib/common.sh"
+. "$ROOT/lib/json.sh"
+. "$ROOT/lib/usage.sh"
+
+input="$(cat)"
+usage_save_claude "$input"
+
+if [ -s "$CLAUDE_PREVIOUS_STATUSLINE" ]; then
+  previous="$(json_string_field "$(cat "$CLAUDE_PREVIOUS_STATUSLINE")" command)"
+  if [ -n "$previous" ]; then
+    printf '%s' "$input" | bash -c "$previous"
+    exit $?
+  fi
+fi
+exit 0

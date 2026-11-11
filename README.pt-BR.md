@@ -38,6 +38,7 @@ projeto com o seu próprio caos. O workdeck organiza isso num só lugar.
 - **O agente ao lado do código.** Funciona com qualquer agente de CLI — Claude Code, Codex, Copilot CLI, Aider, Gemini. Nenhum vem embutido.
 - **Um painel com o que importa.** Branch e mudanças de cada projeto, e o que mais você quiser ver.
 - **Saiba quando um agente termina.** Enquanto você trabalha numa janela, uma ✦ na barra marca a janela cujo agente terminou ou está esperando você, com notificação do sistema opcional.
+- **Veja os limites do seu plano.** A barra mostra quanto dos limites de 5 horas e semanal do Claude Code ou do Codex você já usou.
 - **Nada se perde.** Fechou o terminal ou caiu a conexão? `work` e tudo está onde estava, agente incluso.
 - **Qualquer terminal, melhor no kitty.** O workdeck roda sobre o tmux, a única dependência, então o `work` funciona igual no Warp, no iTerm2 ou no terminal que vem no sistema. No kitty, ele ainda cria atalhos de uma letra.
 - **Pronto em um comando, reversível em outro.** Instala o tmux, se faltar, oferece os atalhos e o visual no kitty; `work uninstall` desfaz tudo.
@@ -219,8 +220,8 @@ agente e não substitui nenhum. Cada recurso serve a um fluxo:
 
 - **Projeto:** uma janela por projeto, que volta como estava depois de fechar o
   terminal.
-- **Agente:** o agente ao lado do shell, a ✦ e o aviso quando ele termina, e o
-  painel com o estado de tudo.
+- **Agente:** o agente em cada projeto, a ✦ e o aviso quando ele termina, os
+  limites de uso na barra e o painel com o estado de tudo.
 - **Review:** os comandos de review do próprio agente antes do commit.
 
 Ele não é extensão de editor ou IDE, não é um terminal e não é um agente de IA.

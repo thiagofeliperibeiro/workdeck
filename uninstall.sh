@@ -14,12 +14,15 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$ROOT/lib/common.sh"
+. "$ROOT/lib/json.sh"
+. "$ROOT/lib/usage.sh"
 CONFIG_DIR="$WORKDECK_CONFIG"
 MANIFEST="$CONFIG_DIR/.install-manifest"
 RESTORE=0
 ALL=0
 DRY=0
 DELETE_CODE=""
+CLAUDE_CREATED=""
 ITERM_TEMPLATE_SUM="$(cksum < "$ROOT/terminals/iterm2.json" 2>/dev/null || true)"
 
 for arg in "$@"; do
@@ -67,6 +70,26 @@ if [ -f "$MANIFEST" ]; then
           fi
         fi
         ;;
+      claude-statusline)
+        current="$(json_get "$target" statusLine 2>/dev/null || true)"
+        command=""
+        [ -z "$current" ] || command="$(json_string_field "$current" command 2>/dev/null || true)"
+        case "$command" in
+          */workdeck-statusline)
+            if [ "$DRY" = 1 ]; then
+              say "[dry-run] devolveria a statusLine de ${target#"$HOME"/}"
+            elif [ -s "$CLAUDE_PREVIOUS_STATUSLINE" ]; then
+              json_set "$target" statusLine "$(cat "$CLAUDE_PREVIOUS_STATUSLINE")" && say "statusLine anterior devolvida em ${target#"$HOME"/}"
+            else
+              json_delete "$target" statusLine && say "statusLine removida de ${target#"$HOME"/}"
+            fi
+            ;;
+          "") ;;
+          *) say "deixei a statusLine de ${target#"$HOME"/}: foi alterada depois da instalação" ;;
+        esac
+        run rm -f "$CLAUDE_PREVIOUS_STATUSLINE"
+        ;;
+      claude-settings) CLAUDE_CREATED="$target" ;;
       kitty) ;;
       warp-theme)
         source_file="$ROOT/themes/$(basename "$target" .yaml | sed 's/^workdeck-//').warp.yaml"
@@ -139,6 +162,10 @@ if [ -f "$MANIFEST" ]; then
         ;;
     esac
   done < "$MANIFEST"
+  if [ -n "$CLAUDE_CREATED" ] && [ "$DRY" = 0 ] && [ -f "$CLAUDE_CREATED" ] && [ "$(tr -d ' \t\r\n' < "$CLAUDE_CREATED")" = "{}" ]; then
+    rm -f "$CLAUDE_CREATED"
+    say "${CLAUDE_CREATED#"$HOME"/} apagado: foi criado pela instalação"
+  fi
 else
   say "sem manifesto de instalação; removendo o que der"
   for f in "$HOME/.tmux.conf" "$HOME/.config/kitty/kitty.conf" \

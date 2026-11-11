@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$ROOT/lib/common.sh"
+. "$ROOT/lib/json.sh"
+. "$ROOT/lib/usage.sh"
 
 CONFIG_DIR="$WORKDECK_CONFIG"
 BIN_DIR="$WORKDECK_BIN"
@@ -15,6 +17,7 @@ APPS_DIR="${WORKDECK_APPS_DIR:-/Applications}"
 KITTY_DOWNLOAD="https://sw.kovidgoyal.net/kitty/binary/"
 ITERM_PROFILE="$HOME/Library/Application Support/iTerm2/DynamicProfiles/workdeck.json"
 KITTY_SESSION="$WORKDECK_CONFIG/kitty-session"
+CLAUDE_SETTINGS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
 
 THEME=""
 LANGUAGE=""
@@ -960,7 +963,67 @@ configure_agent() {
       summary "$(msg install_agent_detected_summary "${found[0]}")"
     fi
   fi
+  configure_claude
   finish_step
+}
+
+# workdeck sets statusLine in the Claude Code settings, for the usage bars,
+# only for people who use Claude. The file is backed up once, and recorded as
+# created when workdeck made it.
+configure_claude() {
+  local file="$CLAUDE_SETTINGS" rc=0 backup
+  [ -d "$(dirname "$file")" ] || command -v claude >/dev/null || return 0
+  if [ -e "$file" ] && [ ! -f "$file" ]; then
+    warn "$(msg install_not_regular "$(short_path "$file")")"
+    return 0
+  fi
+  if [ -f "$file" ]; then
+    json_get "$file" statusLine >/dev/null || rc=$?
+    if [ "$rc" = 1 ]; then
+      warn "$(msg install_claude_settings_unreadable "$(short_path "$file")")"
+      return 0
+    fi
+  fi
+  if [ "$DRY" = 1 ]; then
+    say "$(msg install_dry_claude_settings "$(short_path "$file")")"
+    return 0
+  fi
+  if [ ! -f "$file" ]; then
+    mkdir -p "$(dirname "$file")"
+    printf '{}\n' > "$file"
+    record claude-settings "$file" ":created"
+  elif ! grep -qF "|$file|" "$MANIFEST" 2>/dev/null; then
+    backup="$(backup_file "$file")"
+    [ -z "$backup" ] || say "$(msg install_backup "${backup#"$HOME"/}")"
+  fi
+  configure_claude_statusline "$file"
+}
+
+# Claude Code passes its 5-hour and weekly limits only to its statusLine
+# command, so workdeck points that at bin/workdeck-statusline. A status line set
+# before is kept in CLAUDE_PREVIOUS_STATUSLINE, still runs after workdeck's, and
+# comes back on uninstall.
+configure_claude_statusline() {
+  local file="$1" ours current command=""
+  ours="$CODE/bin/workdeck-statusline"
+  [ -x "$ours" ] || ours="$ROOT/bin/workdeck-statusline"
+  current="$(json_get "$file" statusLine || true)"
+  [ -z "$current" ] || command="$(json_string_field "$current" command || true)"
+  case "$command" in
+    "$ours") say "$(msg install_claude_statusline_set)"; return 0 ;;
+    */workdeck-statusline) ;;
+    "") rm -f "$CLAUDE_PREVIOUS_STATUSLINE" ;;
+    *) mkdir -p "$(dirname "$CLAUDE_PREVIOUS_STATUSLINE")"; printf '%s\n' "$current" > "$CLAUDE_PREVIOUS_STATUSLINE" ;;
+  esac
+  if ! json_set "$file" statusLine "{\"type\": \"command\", \"command\": $(json_quote "$ours")}"; then
+    warn "$(msg install_claude_settings_unreadable "$(short_path "$file")")"
+    return 0
+  fi
+  record claude-statusline "$file"
+  case "$command" in
+    ""|*/workdeck-statusline) say "$(msg install_claude_statusline "$(short_path "$file")")" ;;
+    *) say "$(msg install_claude_statusline_chained "$(short_path "$file")")" ;;
+  esac
 }
 
 enable_integration() {
