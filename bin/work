@@ -68,6 +68,34 @@ quiet_git() {
   GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=5" git -C "$CODE" "$@"
 }
 
+# The same GitHub repository over HTTPS, for an SSH remote.
+github_https_url() {
+  case "$1" in
+    git@github.com:*) printf 'https://github.com/%s\n' "${1#git@github.com:}" ;;
+    ssh://git@github.com/*) printf 'https://github.com/%s\n' "${1#ssh://git@github.com/}" ;;
+  esac
+}
+
+# A copy installed from an SSH clone fetches over SSH, which fails without a
+# key the batch ssh can use. The repository is public, so a GitHub SSH remote
+# is tried again over HTTPS, and the remote keeps the URL that worked. The
+# first line of git's error is left in FETCH_ERROR.
+fetch_updates() {
+  local url https
+  FETCH_ERROR=""
+  FETCH_ERROR="$(quiet_git fetch -q --tags --force --prune --prune-tags origin 2>&1 >/dev/null)" && return 0
+  url="$(git -C "$CODE" config --get remote.origin.url 2>/dev/null || true)"
+  https="$(github_https_url "$url")"
+  [ -n "$https" ] || { FETCH_ERROR="$(printf '%s\n' "$FETCH_ERROR" | head -1)"; return 1; }
+  quiet_git remote set-url origin "$https" || return 1
+  if FETCH_ERROR="$(quiet_git fetch -q --tags --force --prune --prune-tags origin 2>&1 >/dev/null)"; then
+    return 0
+  fi
+  quiet_git remote set-url origin "$url" || true
+  FETCH_ERROR="$(printf '%s\n' "$FETCH_ERROR" | head -1)"
+  return 1
+}
+
 current_version() { git -C "$CODE" describe --tags --abbrev=0 2>/dev/null || true; }
 
 latest_version() {
@@ -113,7 +141,7 @@ check_in_background() {
   (
     latest="$(curl -fsS --max-time 5 -A "workdeck/$(current_version)" "$VERSION_URL" 2>/dev/null | latest_version || true)"
     if [ -z "$latest" ]; then
-      quiet_git fetch -q --tags --force --prune --prune-tags origin || exit 0
+      fetch_updates || exit 0
       latest="$(git -C "$CODE" tag -l 'v*' | latest_version)"
     fi
     cache_set latest "$latest"
@@ -129,8 +157,9 @@ update() {
     msgln update_no_copy_hint
     return 1
   fi
-  if ! quiet_git fetch -q --tags --force --prune --prune-tags origin 2>/dev/null; then
+  if ! fetch_updates; then
     msgln update_unreachable
+    [ -z "$FETCH_ERROR" ] || msgln update_git_error "$FETCH_ERROR"
     return 1
   fi
   latest="$(git -C "$CODE" tag -l 'v*' | latest_version)"

@@ -30,3 +30,24 @@ test_update_check_falls_back_to_git_when_the_site_answers_junk() {
   WORKDECK_VERSION_URL="file://$HOME/version" work update --check >/dev/null 2>&1 || fail "work update --check exited with an error"
   wait_for grep -qE '^latest=v[0-9]+\.[0-9]+\.[0-9]+$' "$HOME/.cache/workdeck/update" || fail "the git fallback did not reach the cache"
 }
+
+test_update_falls_back_to_https_for_a_github_ssh_remote() {
+  git -C "$REPO" tag v1.0.0
+  install_workdeck >/dev/null || fail "the install exited with an error"
+  git -C "$CODE" remote set-url origin git@github.com:owner/workdeck.git
+  # Offline stand-ins: the SSH remote fails at once, the HTTPS one is the test repo.
+  git config --global url."file:///nonexistent/".insteadOf git@github.com:
+  git config --global url."file://$REPO".insteadOf https://github.com/owner/workdeck.git
+  output="$("$HOME/.local/bin/work" update 2>&1 </dev/null)"
+  assert_not_contains "$output" "não consegui falar com o repositório"
+  assert_equal "$(git -C "$CODE" config --get remote.origin.url)" https://github.com/owner/workdeck.git "remote after the update"
+}
+
+test_update_shows_the_git_error_when_the_repository_is_unreachable() {
+  install_workdeck >/dev/null || fail "the install exited with an error"
+  git -C "$CODE" remote set-url origin "file://$HOME/no-such-repo"
+  output="$("$HOME/.local/bin/work" update 2>&1 </dev/null)"
+  assert_contains "$output" "não consegui falar com o repositório"
+  assert_contains "$output" "o git respondeu:"
+  assert_equal "$(git -C "$CODE" config --get remote.origin.url)" "file://$HOME/no-such-repo" "remote left as it was"
+}
