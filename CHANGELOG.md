@@ -6,6 +6,16 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.1.0
+
+### Português
+
+- A barra de baixo tem duas linhas. A primeira traz a sessão e os projetos, com a largura toda, então muitos projetos abertos não espremem mais o resto. A segunda mostra os limites de uso do agente à esquerda e a branch, o atalho do menu e o relógio à direita.
+
+### English
+
+- The bottom bar has two lines. The first holds the session and the projects across the full width, so many open projects no longer squeeze the rest. The second shows the agent usage limits on the left and the branch, menu key and clock on the right.
+
 ## v3.0.1
 
 ### Português
