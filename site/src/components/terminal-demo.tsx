@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence, motion } from "motion/react"
-import { Line, Pane, Prompt, StatusBar, TerminalWindow, useTimeline } from "@/components/terminal-parts"
+import { Caret, Line, Pane, Prompt, StatusBar, TerminalWindow, Typed, useTimeline } from "@/components/terminal-parts"
 import type { Dictionary } from "@/lib/dictionaries"
 import { cn } from "@/lib/utils"
 
@@ -11,8 +11,8 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
   const s = useTimeline(timeline)
 
   const agentOpen = s >= 3
-  const reviewSent = s >= 7
-  const focus = s >= 7 ? "review" : s === 6 ? "shell" : s >= 3 ? "agent" : "shell"
+  const diffOpen = s >= 6
+  const focus = s >= 3 ? "agent" : "shell"
 
   return (
     <TerminalWindow>
@@ -26,13 +26,12 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
                 </Line>
               )}
               {s >= 2 && <Line className="text-ctp-overlay1">{demo.agentHint}</Line>}
-              {s >= 6 && <Prompt text="work review" typing={s === 6} done={s >= 7} caret={s === 6} />}
-              {reviewSent && <Line className="text-ctp-overlay1">{demo.reviewHint}</Line>}
+              {diffOpen && <Line className="text-ctp-overlay1">{demo.diffHint}</Line>}
             </Pane>
 
             <AnimatePresence>
               {agentOpen && (
-                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", s >= 7 ? "grid-rows-[1fr_auto]" : "grid-rows-1")}>
+                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-rows-[1fr_auto]" : "grid-rows-1")}>
                   <Pane title={demo.agentPane} active={focus === "agent"}>
                     <Line>
                       <span className="text-ctp-peach">› </span>
@@ -46,15 +45,18 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
                       </>
                     )}
                     {s >= 5 && <Line className="text-ctp-green">  {demo.done}</Line>}
+                    {s >= 7 && <Line><span className="text-ctp-peach">› </span><span className="text-ctp-text">{s >= 8 ? "/code-review" : <Typed text="/code-review" />}</span><Caret show={s === 7} /></Line>}
+                    {s >= 8 && <Line className="mt-1 text-ctp-text" delay={0.05}>  {demo.reviewFound}</Line>}
+                    {s >= 9 && <Line className="text-ctp-subtext0" delay={0.05}>  email.ts:3   <span className="text-ctp-text">{demo.issueEmail}</span></Line>}
+                    {s >= 10 && <Line className="text-ctp-subtext0" delay={0.05}>  login.ts:13  <span className="text-ctp-text">{demo.issueTest}</span></Line>}
                   </Pane>
                   <AnimatePresence>
-                    {s >= 7 && (
-                      <motion.div key="review" layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                        <Pane title={demo.reviewPane} active>
-                          <Line className="text-ctp-overlay1">{demo.reviewRunning}</Line>
-                          {s >= 8 && <Line className="mt-1 text-ctp-text" delay={0.05}>  {demo.reviewFound}</Line>}
-                          {s >= 9 && <Line className="text-ctp-subtext0" delay={0.05}>  email.ts:3   <span className="text-ctp-text">{demo.issueEmail}</span></Line>}
-                          {s >= 10 && <Line className="text-ctp-subtext0" delay={0.05}>  login.ts:13  <span className="text-ctp-text">{demo.issueTest}</span></Line>}
+                    {diffOpen && (
+                      <motion.div key="diff" layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                        <Pane title={demo.diffPane} active={false}>
+                          <Line className="text-ctp-overlay1">{demo.diffSummary} <span className="text-ctp-green">+18</span> <span className="text-ctp-red">-2</span></Line>
+                          <Line className="text-ctp-subtext0" delay={0.1}>  src/auth/email.ts  <span className="text-ctp-green">+14</span></Line>
+                          <Line className="text-ctp-subtext0" delay={0.2}>  src/auth/login.ts  <span className="text-ctp-green">+4</span> <span className="text-ctp-red">-2</span></Line>
                         </Pane>
                       </motion.div>
                     )}
@@ -64,7 +66,7 @@ export function TerminalDemo({ demo }: { demo: Dictionary["demo"] }) {
             </AnimatePresence>
           </motion.div>
 
-          <StatusBar windows={["painel", "api", "web", "notas"]} active={2} starred={s >= 5 && s < 7 ? 2 : undefined} branch="feature/login" />
+          <StatusBar windows={["painel", "api", "web", "notas"]} active={2} starred={s === 5 ? 2 : undefined} branch="feature/login" />
         </div>
     </TerminalWindow>
   )

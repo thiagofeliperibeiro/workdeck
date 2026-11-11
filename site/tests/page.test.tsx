@@ -90,7 +90,8 @@ describe("home page", () => {
     const keyboard = within(container.querySelector("#atalhos") as HTMLElement)
     expect(keyboard.getByRole("tab", { name: "macOS" })).toBeTruthy()
     expect(keyboard.getByRole("tab", { name: "Linux" })).toBeTruthy()
-    expect(keyboard.getByText("Runs work review")).toBeTruthy()
+    expect(keyboard.getByText("Opens the agent in a new pane, with the diff beside it")).toBeTruthy()
+    expect(keyboard.queryByText(/work review/)).toBeNull()
     expect(keyboard.getByText("Other terminals")).toBeTruthy()
   })
 
