@@ -5,17 +5,30 @@ purple=$'\033[38;5;183m'; green=$'\033[38;5;151m'; yellow=$'\033[38;5;223m'; dim
 
 [ -f "$CONFIG" ] || { echo "${dim}$(msg panel_projects_none)${x}"; exit 0; }
 
+print_without_git() {
+  printf '%-14s %s%-20s%s %s%s%s\n' "$1" "$dim" "-" "$x" "$dim" "$2" "$x"
+}
+
 found=0
+missing=0
 while IFS= read -r line; do
   line="${line%%#*}"; [ -z "${line// }" ] && continue
   IFS="|" read -r name dir cmd <<< "$line"
   [ -n "$cmd" ] && continue
   found=1
   dir="${dir/#\~/$HOME}"; dir="${dir//\$\{HOME\}/$HOME}"; dir="${dir//\$HOME/$HOME}"
-  if [ ! -d "$dir/.git" ]; then
-    printf '%-14s %s%-20s%s %s%s%s\n' "$name" "$dim" "-" "$x" "$dim" "$(msg panel_no_git)" "$x"
+
+  if [ ! -d "$dir" ]; then
+    print_without_git "$name" "$(msg panel_dir_missing)"
+    missing=1
     continue
   fi
+
+  if [ ! -e "$dir/.git" ]; then
+    print_without_git "$name" "$(msg panel_no_git)"
+    continue
+  fi
+
   branch=$(git -C "$dir" branch --show-current 2>/dev/null)
   changed=$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
   if [ "$changed" -gt 0 ]; then
@@ -26,3 +39,7 @@ while IFS= read -r line; do
   printf '%-14s %s%-20s%s %s\n' "$name" "$purple" "${branch:-?}" "$x" "$status"
 done < "$CONFIG"
 [ "$found" = 1 ] || echo "${dim}$(msg panel_projects_none)${x}"
+
+if [ "$missing" = 1 ]; then
+  echo "${dim}$(msg panel_dir_missing_hint)${x}"
+fi

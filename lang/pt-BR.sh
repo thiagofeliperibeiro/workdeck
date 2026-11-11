@@ -11,6 +11,7 @@ msg_settings_notify_agents="# Notificação do sistema quando um agente termina 
 msg_work_help="Os comandos são:
   work                abre a sessão, ou volta para ela
   work add <pasta>    acrescenta um projeto
+  work remove <nome>  tira um projeto do work (atalho: work rm)
   work update         atualiza o workdeck
   work kill           fecha a sessão inteira
   work uninstall      desinstala tudo o que o workdeck instalou"
@@ -31,6 +32,11 @@ msg_update_notify_off="o work não vai mais perguntar sobre versões novas; work
 msg_update_notify_on="o work volta a avisar sobre versões novas."
 msg_menu_add="Adicionar um projeto…"
 msg_menu_add_prompt="caminho do projeto (Esc cancela):"
+msg_menu_remove="Remover um projeto…"
+msg_menu_remove_title="Remover um projeto"
+msg_menu_remove_none="nenhum projeto para remover"
+msg_menu_remove_back="← Voltar ao menu"
+msg_menu_remove_close="Fechar"
 msg_menu_notify_on="Ligar o aviso quando um agente termina"
 msg_menu_notify_off="Desligar o aviso quando um agente termina"
 msg_menu_update="Atualizar o workdeck"
@@ -54,6 +60,10 @@ msg_add_missing="não achei a pasta: %s"
 msg_add_exists="%s já está no seu work, como %s"
 msg_add_done="%s entrou no seu work como %s"
 msg_add_window_open="a janela %s já está aberta na sessão %s"
+msg_remove_usage="diga qual projeto tirar: work remove <nome>"
+msg_remove_missing="não achei o projeto %s no seu work"
+msg_remove_projects="os projetos são: %s"
+msg_remove_done="%s saiu do seu work"
 msg_kill_done="sessão %s fechada"
 msg_kill_none="nenhuma sessão %s aberta"
 msg_uninstall_missing="não achei o desinstalador em %s"
@@ -220,6 +230,8 @@ msg_panel_empty="%s existe mas não tem nenhum executável."
 msg_panel_chmod="Lembre do chmod +x."
 msg_panel_projects_none="nenhum projeto ainda"
 msg_panel_no_git="sem git"
+msg_panel_dir_missing="pasta removida"
+msg_panel_dir_missing_hint="para tirar da lista: Ctrl+b h, Remover um projeto"
 msg_panel_changed="● %s alterado(s)"
 msg_panel_clean="✓ limpo"
 msg_panel_projects="projetos"

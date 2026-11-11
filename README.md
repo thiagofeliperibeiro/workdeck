@@ -137,6 +137,7 @@ or ask the agent itself, such as `/code-review` in Claude Code.
 |---|---|
 | `work` | Opens the session, or returns to it |
 | `work add [path]` | Adds a project as a window |
+| `work remove <name>`, `work rm <name>` | Removes a project and closes its window |
 | `work update` | Shows what changed in the new version and updates |
 | `work kill` | Closes the whole session |
 | `work uninstall` | Removes everything workdeck installed |
