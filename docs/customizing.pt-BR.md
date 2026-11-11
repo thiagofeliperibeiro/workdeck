@@ -42,7 +42,7 @@ uma flag, como `--theme` ou `--terminal`.
 | `NOTIFY` | `0` | `0` desliga o aviso de versão nova (`work update --off`) |
 | `ACTIVE_PANE` | `none` (padrão), `line` | Um traço fino sobre o painel ativo, na cor de destaque do tema |
 | `NOTIFY_AGENTS` | `yes`, `no` (padrão) | Uma notificação do sistema quando um agente termina numa janela que você não está olhando ([Projetos](projects.pt-BR.md)) |
-| `PROJECT_LAYOUT` | `agent-shell` (padrão), `none` | Abre a janela de cada projeto com o agente e um shell lado a lado; `none` abre um painel só ([Projetos](projects.pt-BR.md)) |
+| `PROJECT_LAYOUT` | `none` (padrão), `agent-shell` | Abre a janela de cada projeto com um painel só, para o agente; `agent-shell` acrescenta um shell ao lado ([Projetos](projects.pt-BR.md)) |
 
 Só valem linhas exatamente no formato `CHAVE="valor"`: `CHAVE=valor`,
 `CHAVE = "valor"` e linhas comentadas são ignoradas, e vale a primeira linha de

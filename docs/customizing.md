@@ -42,7 +42,7 @@ flag such as `--theme` or `--terminal`.
 | `NOTIFY` | `0` | `0` stops the new version notice (`work update --off`) |
 | `ACTIVE_PANE` | `none` (default), `line` | A thin line over the active pane, in the theme accent |
 | `NOTIFY_AGENTS` | `yes`, `no` (default) | A system notification when an agent finishes in a window you are not looking at ([Projects](projects.md)) |
-| `PROJECT_LAYOUT` | `agent-shell` (default), `none` | Opens each project window with the agent and a shell side by side; `none` opens a single pane ([Projects](projects.md)) |
+| `PROJECT_LAYOUT` | `none` (default), `agent-shell` | Opens each project window with a single pane, for the agent; `agent-shell` adds a shell beside it ([Projects](projects.md)) |
 
 Only exact `KEY="value"` lines count: `KEY=value`, `KEY = "value"` and
 commented lines are ignored, and the first line of a key wins. Older versions

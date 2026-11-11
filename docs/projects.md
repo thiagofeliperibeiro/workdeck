@@ -114,10 +114,23 @@ window whose reset time has passed is left out until the agent reports again.
 Cursor and the other agents do not expose limits that workdeck can read, so
 the status bar shows nothing for them.
 
-## Two panes per project
+## The project window
 
-Each project window opens with the agent and a shell side by side. Every
-`work` that opens the session opens all your projects this way.
+Each project window opens with a single pane, a plain shell ready for you to
+start the agent (such as `claude`) in the projects you are going to work on.
+Nothing starts on its own, so opening many projects does not start many agents
+at once. <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Enter</kbd> splits the window when
+you need more panes, and <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> opens a pane
+with your agent already running.
+
+### A shell beside the agent
+
+To open each project window with the agent and a shell side by side, add this
+to `~/.config/workdeck/settings.conf`, then run `work kill` and `work`:
+
+```
+PROJECT_LAYOUT="agent-shell"
+```
 
 ```
 ┌──────────────┬──────────────┐
@@ -127,32 +140,20 @@ Each project window opens with the agent and a shell side by side. Every
 └──────────────┴──────────────┘
 ```
 
-- **1, the agent:** a plain shell, ready for you to start the agent (such as
-  `claude`) in the projects you are going to work on.
-- **2, the shell:** for git, tests and the server. The command in the project's
-  `.workdeck/project.conf` is typed in, also without running:
-
-  ```
-  SERVER_COMMAND="npm run dev"
-  ```
-
-  The file follows the same rules as `settings.conf`: one `KEY="value"` per
-  line, comments on lines of their own. A line in any other shape, such as one
-  with a comment after the value, is ignored. Control characters are removed
-  before typing, so a value never runs on its own. Without that file, the pane
-  opens as a plain shell.
-
-The server command is typed once the shell shows its prompt. Nothing starts on its
-own, so opening many projects does not start many agents or servers at once,
-and ports do not clash. <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>Enter</kbd> splits the
-window further when you need more panes.
-
-To open each project window with a single pane, add this to
-`~/.config/workdeck/settings.conf`, then run `work kill` and `work`:
+The shell is for git, tests and the server. The command in the project's
+`.workdeck/project.conf` is typed in once the shell shows its prompt, without
+running:
 
 ```
-PROJECT_LAYOUT="none"
+SERVER_COMMAND="npm run dev"
 ```
+
+The file follows the same rules as `settings.conf`: one `KEY="value"` per
+line, comments on lines of their own. A line in any other shape, such as one
+with a comment after the value, is ignored. Control characters are removed
+before typing, so a value never runs on its own. Without that file, the pane
+opens as a plain shell. Since the server never starts on its own, ports do not
+clash when many projects open at once.
 
 ## Another session
 

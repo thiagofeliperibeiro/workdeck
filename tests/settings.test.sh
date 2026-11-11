@@ -153,7 +153,7 @@ test_template_keeps_the_users_edits() {
   write_settings 'THEME="a"\n'
   settings_ensure_template
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#ACTIVE_PANE="line"' "the example is added next to other keys"
-  assert_contains "$(cat "$WORKDECK_SETTINGS")" '#PROJECT_LAYOUT="none"' "the layout example is added"
+  assert_contains "$(cat "$WORKDECK_SETTINGS")" '#PROJECT_LAYOUT="agent-shell"' "the layout example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#NOTIFY_AGENTS="yes"' "the notification example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#KITTY_OPENS_WORK="no"' "the kitty example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#PANEL_CLOCK="yes"' "the clock example is added"

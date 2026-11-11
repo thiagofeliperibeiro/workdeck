@@ -301,13 +301,13 @@ type_into() {
 
 project_layout() {
   local layout
-  layout="$(setting_get PROJECT_LAYOUT agent-shell)"
+  layout="$(setting_get PROJECT_LAYOUT none)"
   case "$layout" in
     none|agent-shell) echo "$layout" ;;
     agent-server-shell) echo agent-shell ;;
     *)
       { msgln layout_invalid "$layout"; } >&2
-      echo agent-shell ;;
+      echo none ;;
   esac
 }
 
