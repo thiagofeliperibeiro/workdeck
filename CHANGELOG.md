@@ -6,6 +6,20 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.2.0
+
+### Português
+
+- O painel de diff do Claude Code vem desligado: o `Ctrl+b A` e o `claude` digitado num painel do tmux abrem o Claude sem o `/diff`, e cada janela de projeto fica com um terminal só. Para ligar de novo, acrescente `CLAUDE_DIFF_PANEL="yes"` ao `~/.config/workdeck/settings.conf` e rode `work update`.
+- Sem essa configuração, o `work update` tira o renderizador fullscreen que a instalação da v3.0.0 gravou nas configurações do Claude. Um renderizador que você escolheu com `/tui` fica como está.
+- Depois de atualizar, abra um terminal novo para o `claude` voltar a abrir sem o painel.
+
+### English
+
+- The Claude Code diff panel is off by default: `Ctrl+b A` and `claude` typed in a tmux pane start Claude without `/diff`, and each project window has a single terminal. To turn it back on, add `CLAUDE_DIFF_PANEL="yes"` to `~/.config/workdeck/settings.conf` and run `work update`.
+- Without that setting, `work update` takes out the fullscreen renderer the v3.0.0 install set in the Claude settings. A renderer you chose with `/tui` stays as it is.
+- After updating, open a new terminal so `claude` starts without the panel again.
+
 ## v3.1.1
 
 ### Português
