@@ -4,11 +4,13 @@ assert_kitty_shortcuts() {
   assert "the block was written to kitty.conf" grep -q '^# >>> workdeck >>>$' "$(kitty_conf)"
   if [ "$(uname -s)" = Darwin ]; then
     assert "the cmd shortcuts" grep -q '^map cmd+1 ' "$(kitty_conf)"
+    assert "Cmd+Enter opens a pane in workdeck" grep -q '^map cmd+enter  *send_text all \\x02g$' "$(kitty_conf)"
     assert "Option as Alt" grep -q '^macos_option_as_alt' "$(kitty_conf)"
     return 0
   fi
   assert "no cmd shortcuts outside a Mac" test -z "$(grep '^map cmd\|^macos_' "$(kitty_conf)")"
   assert "the Ctrl+Shift shortcuts outside a Mac" grep -q '^map ctrl+shift+h ' "$(kitty_conf)"
+  assert "Ctrl+Shift+Enter opens a pane in workdeck" grep -q '^map ctrl+shift+enter  *send_text all \\x02g$' "$(kitty_conf)"
 }
 
 test_terminal_kitty_installed_gets_the_block() {

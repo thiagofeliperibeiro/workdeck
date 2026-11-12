@@ -35,7 +35,7 @@ A instalação acrescenta um bloco ao seu `~/.config/kitty/kitty.conf` com:
   agente terminou sai pelo kitty, e clicar nele traz o kitty para a frente.
 - **Os atalhos do workdeck**, <kbd>⌘</kbd> no Mac e
   <kbd>Ctrl</kbd>+<kbd>Shift</kbd> no Linux: H menu, P adicionar projeto, 1…9
-  ir para o projeto, A agente, T terminal, Z zoom, W fechar. A tabela
+  ir para o projeto, A agente, T ou Enter terminal, Z zoom, W fechar. A tabela
   completa está em [docs/shortcuts.pt-BR.md](../docs/shortcuts.pt-BR.md).
 - **Option como Alt** no Mac, para os atalhos diretos com Alt.
 - **Shift+Enter** no formato estendido, para que agentes como o Claude Code

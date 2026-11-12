@@ -34,7 +34,7 @@ The installer adds a block to your `~/.config/kitty/kitty.conf` with:
   agent finished comes from kitty, and clicking it brings kitty to the front.
 - **The workdeck shortcuts**, <kbd>⌘</kbd> on a Mac and
   <kbd>Ctrl</kbd>+<kbd>Shift</kbd> on Linux: H menu, P add a project, 1…9 go to
-  a project, A agent, T terminal, Z zoom, W close. The full table is
+  a project, A agent, T or Enter terminal, Z zoom, W close. The full table is
   in [docs/shortcuts.md](../docs/shortcuts.md).
 - **Option as Alt** on a Mac, for the direct Alt shortcuts.
 - **Shift+Enter** in the extended format, so agents such as Claude Code get a
