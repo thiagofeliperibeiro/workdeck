@@ -6,6 +6,16 @@ se quer atualizar. Cada versão é uma tag `vX.Y.Z`.
 `work update` shows the section of the new version in your language before
 asking whether to update. Each version is a `vX.Y.Z` tag.
 
+## v3.2.1
+
+### Português
+
+- No kitty, `Cmd+Enter` (`Ctrl+Shift+Enter` no Linux) abre um terminal num painel novo dentro do workdeck, em grade como o `Cmd+T`, em vez de uma janela do kitty fora da sessão. Depois de atualizar, recarregue a configuração do kitty ou abra o kitty de novo.
+
+### English
+
+- In kitty, `Cmd+Enter` (`Ctrl+Shift+Enter` on Linux) opens a terminal in a new pane inside workdeck, in a grid like `Cmd+T`, instead of a kitty window outside the session. After updating, reload the kitty configuration or open kitty again.
+
 ## v3.2.0
 
 ### Português
