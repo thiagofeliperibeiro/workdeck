@@ -186,7 +186,7 @@ settings_ensure_template() {
   fi
   if ! grep -aqE '^#?CLAUDE_DIFF_PANEL=' "$WORKDECK_SETTINGS"; then
     settings_end_with_newline
-    printf '\n%s\n%s\n' "$(msg settings_claude_diff_panel)" '#CLAUDE_DIFF_PANEL="no"' >> "$WORKDECK_SETTINGS"
+    printf '\n%s\n%s\n' "$(msg settings_claude_diff_panel)" '#CLAUDE_DIFF_PANEL="yes"' >> "$WORKDECK_SETTINGS"
   fi
   if ! grep -aqE '^#?NOTIFY_AGENTS=' "$WORKDECK_SETTINGS"; then
     settings_end_with_newline

@@ -1028,10 +1028,20 @@ configure_claude_statusline() {
 }
 
 # The /diff panel shows beside the conversation only in the fullscreen
-# renderer. A tui value already in the file is the user's choice and stays,
-# including one changed with /tui after an earlier install.
+# renderer, so with CLAUDE_DIFF_PANEL="yes" the installer sets it. A tui value
+# already in the file is the user's choice and stays, including one changed
+# with /tui after an earlier install. Without the setting, the fullscreen tui
+# an earlier install set is taken back out.
 configure_claude_tui() {
   local file="$1"
+  if [ "$(setting_get CLAUDE_DIFF_PANEL no)" != yes ]; then
+    grep -qF "claude-tui|$file|" "$MANIFEST" 2>/dev/null || return 0
+    if [ "$(json_get "$file" tui 2>/dev/null || true)" = '"fullscreen"' ] && json_delete "$file" tui; then
+      say "$(msg install_claude_tui_removed "$(short_path "$file")")"
+    fi
+    { grep -vxF "claude-tui|$file|" "$MANIFEST" || true; } > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+    return 0
+  fi
   if json_get "$file" tui >/dev/null; then
     grep -qF "claude-tui|$file|" "$MANIFEST" 2>/dev/null || say "$(msg install_claude_tui_kept)"
     return 0

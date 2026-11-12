@@ -157,7 +157,7 @@ test_template_keeps_the_users_edits() {
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#NOTIFY_AGENTS="yes"' "the notification example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#KITTY_OPENS_WORK="no"' "the kitty example is added"
   assert_contains "$(cat "$WORKDECK_SETTINGS")" '#PANEL_CLOCK="yes"' "the clock example is added"
-  assert_contains "$(cat "$WORKDECK_SETTINGS")" '#CLAUDE_DIFF_PANEL="no"' "the diff panel example is added"
+  assert_contains "$(cat "$WORKDECK_SETTINGS")" '#CLAUDE_DIFF_PANEL="yes"' "the diff panel example is added"
   write_settings 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"\nCLAUDE_DIFF_PANEL="no"\n'
   settings_ensure_template
   assert_equal "$(cat "$WORKDECK_SETTINGS")" "$(printf 'ACTIVE_PANE="line"\nPROJECT_LAYOUT="agent-server-shell"\nKITTY_OPENS_WORK="no"\nPANEL_CLOCK="yes"\nNOTIFY_AGENTS="yes"\nCLAUDE_DIFF_PANEL="no"')" "active keys are left alone"

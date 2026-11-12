@@ -129,9 +129,6 @@ sozinho, então abrir muitos projetos não liga vários agentes ao mesmo tempo.
 precisar de mais painéis, e <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> abre um
 painel com o seu agente já rodando.
 
-No Claude Code, o agente abre com o painel de diff ao lado da conversa,
-mostrando os arquivos que você alterou: veja [O painel de diff no Claude Code](#o-painel-de-diff-no-claude-code).
-
 ### Um shell ao lado do agente
 
 Para abrir a janela de cada projeto com o agente e um shell lado a lado,
@@ -166,25 +163,25 @@ as portas não entram em conflito quando muitos projetos abrem juntos.
 ## O painel de diff no Claude Code
 
 O Claude Code tem um painel de diff, aberto com `/diff`, que lista os arquivos
-alterados no projeto e mostra o que mudou em cada um. Dá para navegar pelos
-arquivos sem sair da conversa. O workdeck abre esse painel para você:
+alterados no projeto e mostra o que mudou em cada um, ao lado da conversa. Ele
+vem desligado. Para o Claude já abrir com ele, acrescente ao
+`~/.config/workdeck/settings.conf` e rode `work update`:
+
+```
+CLAUDE_DIFF_PANEL="yes"
+```
 
 - <kbd>Ctrl</kbd>+<kbd>b</kbd> <kbd>A</kbd> inicia o Claude como `claude "/diff"`.
-- Digitar `claude` sem argumentos num painel do workdeck faz o mesmo, por meio
-  de uma função `claude` que o instalador acrescenta ao bloco do workdeck no
-  seu `.zshrc` ou `.bashrc`. Fora do workdeck, e com qualquer argumento, como
-  `claude --resume`, o `claude` roda como sempre.
+- Digitar `claude` sem argumentos num painel do tmux faz o mesmo, por meio de
+  uma função `claude` no bloco do workdeck do seu `.zshrc` ou `.bashrc`. Com
+  qualquer argumento, como `claude --resume`, o `claude` roda como sempre.
 
-O `/diff` roda dentro do Claude e não envia nada ao modelo. Para iniciar o
-Claude sem o painel, acrescente `CLAUDE_DIFF_PANEL="no"` ao
-`~/.config/workdeck/settings.conf`.
-
-O painel precisa do renderizador fullscreen do Claude Code. O instalador
-configura `"tui": "fullscreen"` em `~/.claude/settings.json` (ou em
-`$CLAUDE_CONFIG_DIR`) quando você ainda não escolheu um renderizador, o que
-equivale a rodar `/tui fullscreen`. Para voltar ao renderizador padrão, rode
-`/tui default` no Claude; o workdeck respeita a sua escolha. O `work uninstall`
-remove a configuração que ele acrescentou.
+O `/diff` roda dentro do Claude e não envia nada ao modelo. O painel precisa do
+renderizador fullscreen do Claude Code, então, com a configuração ligada, o
+`work update` grava `"tui": "fullscreen"` em `~/.claude/settings.json` (ou em
+`$CLAUDE_CONFIG_DIR`) quando você ainda não escolheu um renderizador. Um
+renderizador escolhido com `/tui` fica como está. Sem a configuração, o
+`work update` tira o que ele gravou, e o `work uninstall` também.
 
 ## Outra sessão
 

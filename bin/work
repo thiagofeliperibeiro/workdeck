@@ -261,11 +261,11 @@ terminal_shortcut_modifier() {
   if [ "$(uname -s)" = Darwin ]; then echo "⌘"; else echo "Ctrl+Shift+"; fi
 }
 
-# Claude starts with its diff panel open. /diff runs inside Claude and sends
-# nothing to the model. CLAUDE_DIFF_PANEL="no" turns this off.
+# With CLAUDE_DIFF_PANEL="yes", Claude starts with its diff panel open. /diff
+# runs inside Claude and sends nothing to the model.
 agent_start_command() {
   case "$(basename "${1%% *}")" in
-    claude) [ "$(setting_get CLAUDE_DIFF_PANEL yes)" = no ] || { printf '%s "/diff"\n' "$1"; return 0; } ;;
+    claude) [ "$(setting_get CLAUDE_DIFF_PANEL no)" != yes ] || { printf '%s "/diff"\n' "$1"; return 0; } ;;
   esac
   printf '%s\n' "$1"
 }

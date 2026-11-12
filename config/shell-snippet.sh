@@ -17,12 +17,12 @@ if [ -n "${ZSH_VERSION:-}" ] && command grep -a -m1 '^ZSH=".*"$' "${XDG_CONFIG_H
   fi
 fi
 
-# Inside tmux, a bare `claude` opens with the Claude Code diff panel, unless
-# settings.conf has CLAUDE_DIFF_PANEL="no". An alias or function named claude
+# With CLAUDE_DIFF_PANEL="yes" in settings.conf, a bare `claude` inside tmux
+# opens with the Claude Code diff panel. An alias or function named claude
 # that you already have wins.
 if ! alias claude >/dev/null 2>&1 && ! typeset -f claude >/dev/null 2>&1; then
   function claude {
-    if [ "$#" -eq 0 ] && [ -n "${TMUX:-}" ] && ! command grep -aqx 'CLAUDE_DIFF_PANEL="no"' "${XDG_CONFIG_HOME:-$HOME/.config}/workdeck/settings.conf" 2>/dev/null; then
+    if [ "$#" -eq 0 ] && [ -n "${TMUX:-}" ] && command grep -aqx 'CLAUDE_DIFF_PANEL="yes"' "${XDG_CONFIG_HOME:-$HOME/.config}/workdeck/settings.conf" 2>/dev/null; then
       command claude "/diff"
     else
       command claude "$@"
