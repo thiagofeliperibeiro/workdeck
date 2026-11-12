@@ -4,7 +4,7 @@ export const ptBR = {
   meta: {
     title: "workdeck — framework para trabalhar com agentes de IA no terminal",
     description:
-      "Uma janela por projeto, o agente de CLI ao lado do código, o estado dos seus repositórios e o diff à vista antes do commit. No terminal que você já usa, no macOS e no Linux.",
+      "Uma janela por projeto, o agente de CLI ao lado do código, o estado dos seus repositórios e um review antes do commit. No terminal que você já usa, no macOS e no Linux.",
   },
   language: { label: "Idioma", names: { en: "EN", "pt-BR": "PT" } },
   nav: { how: "Como funciona", terminals: "Terminais", shortcuts: "Atalhos", panel: "Painel", install: "Instalar" },
@@ -16,23 +16,23 @@ export const ptBR = {
     titleHighlight: "agentes de IA",
     titleAfter: "",
     subtitle:
-      "Delegue ao agente de IA sem perder o controle do código. Construído sobre o tmux: uma janela por projeto, o agente de CLI ao lado do código, o estado dos seus repositórios e o diff à vista antes do commit.",
+      "Delegue ao agente de IA sem perder o controle do código. Construído sobre o tmux: uma janela por projeto, o agente de CLI ao lado do código, o estado dos seus repositórios e um review antes do commit.",
     install: "Instalar",
     notice: null as string | null,
   },
   how: {
     eyebrow: "como funciona",
     title: "Do projeto ao review",
-    desc: "Cada projeto é uma janela com o seu agente. Quando ele termina, o painel de diff do Claude Code mostra o que mudou, e você revisa antes do commit.",
+    desc: "Cada projeto é uma janela com o seu agente. Quando ele termina, você pede o review ao próprio agente antes do commit.",
   },
   cycle: [
     { label: "work add ~/api", code: true, when: "uma vez", desc: "work abre a sessão no painel, e work add põe o projeto nela, numa janela em segundo plano." },
     { label: "janela do projeto", code: false, when: "sempre aberta", desc: "Shift+→ vai até ela. Fechou o terminal? work volta onde estava." },
     { label: "agente ao lado", code: false, when: "escreve o código", desc: "Claude Code, Codex ou o que você usar. Quando ele termina, a ✦ na barra avisa, mesmo que você esteja em outra janela." },
-    { label: "painel de diff", code: false, when: "você revisa", desc: "O Claude Code abre com o painel de diff ao lado da conversa, com cada arquivo alterado. Revise ali, ou peça um /code-review ao agente antes do commit." },
+    { label: "você revisa", code: false, when: "antes do commit", desc: "Peça ao próprio agente, como o /code-review no Claude Code. Ele lê a mudança e aponta o que corrigir antes do commit." },
   ],
   layers: [
-    { name: "workdeck", desc: "projetos, agente ao lado, painel de diff e painel" },
+    { name: "workdeck", desc: "projetos, agente ao lado, barra de uso e painel" },
     { name: "tmux", desc: "sessões, janelas, painéis e atalhos" },
     { name: "terminal", desc: "o que você já usa para abrir o tmux" },
   ],
@@ -76,7 +76,7 @@ export const ptBR = {
   shortcutsSection: {
     eyebrow: "teclado",
     title: "Um atalho para cada passo, no kitty",
-    desc: "Do projeto ao diff sem tirar a mão do teclado. Por enquanto, os atalhos são só do kitty.",
+    desc: "Do projeto ao review sem tirar a mão do teclado. Por enquanto, os atalhos são só do kitty.",
   },
   shortcuts: {
     macTab: "macOS",
@@ -88,7 +88,7 @@ export const ptBR = {
       { key: "P", desc: "Adiciona um projeto" },
       { key: "1…9", desc: "Vai para o projeto" },
       { key: "← →", desc: "Projeto anterior / próximo", keys: ["Shift", "← →"] },
-      { key: "A", desc: "Abre o agente num painel novo, com o diff ao lado" },
+      { key: "A", desc: "Abre o agente num painel novo" },
       { key: "T", desc: "Abre um terminal num painel novo, em grade" },
       { key: "Z", desc: "Zoom no painel, e de novo para voltar" },
       { key: "W", desc: "Fecha o painel" },
@@ -150,10 +150,7 @@ export const ptBR = {
     done: "✓ pronto. revise antes de commitar.",
     session: "sessão",
     windows: "4 janelas",
-    agentHint: "Ctrl+b v · claude no painel ao lado →",
     agentDone: "o agente terminou",
-    diffPane: "diff · claude",
-    diffSummary: "2 arquivos alterados",
     reviewFound: "2 achados",
     issueEmail: "o regex aceita e-mail sem domínio",
     issueTest: "falta teste para e-mail inválido",

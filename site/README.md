@@ -5,7 +5,7 @@
 **The landing page for [workdeck](https://github.com/thiagofeliperibeiro/workdeck), a framework for working with AI coding agents in the terminal, built on tmux.**
 
 A single page, in English and Portuguese, with animated terminals showing
-workdeck in use: the workflow from `work add` to the diff panel, the terminals,
+workdeck in use: the workflow from `work add` to the review, the terminals,
 the shortcuts and the customizable panel.
 
 **English** · [Português](README.pt-BR.md)
@@ -61,7 +61,7 @@ src/lib/site.ts                   what does not change by language: version, rep
 src/lib/github.ts                 fetches the repository stars from the GitHub API, cached for hours
 src/lib/stars.ts                  when to show the stars (10 or more) and how to format them (+23K)
 src/components/terminal-parts.tsx the pieces of the animated terminals: window, panes, prompt, tmux bar, timeline
-src/components/terminal-demo.tsx  the hero terminal: agent beside the code and the diff panel
+src/components/terminal-demo.tsx  the hero terminal: from `work` to the agent and its review
 src/components/cycle-demo.tsx     the workflow, with clickable chapters
 src/components/panel-demo.tsx     the panel gaining a new block
 src/components/terminal-table.tsx the terminals table: what works everywhere and the extras of each
@@ -80,7 +80,7 @@ and the source of truth is the README and the guides in `docs/` of the
 [workdeck repository](https://github.com/thiagofeliperibeiro/workdeck).
 
 The workdeck interface is in Brazilian Portuguese, so the animated terminals
-keep what workdeck prints (the panel, the command messages and the diff panel) in
+keep what workdeck prints (the panel and the command messages) in
 Portuguese in both languages; only the conversation with the agent and the
 captions around it are translated. The English page says so below the
 heading.

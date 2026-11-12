@@ -5,7 +5,7 @@
 **O site de apresentação do [workdeck](https://github.com/thiagofeliperibeiro/workdeck), um framework para trabalhar com agentes de IA no terminal, construído sobre o tmux.**
 
 Uma página só, em inglês e português, com terminais animados mostrando o
-workdeck em uso: o ciclo do `work add` ao painel de diff, os terminais, os
+workdeck em uso: o ciclo do `work add` ao review, os terminais, os
 atalhos e o painel personalizável.
 
 [English](README.md) · **Português**
@@ -61,7 +61,7 @@ src/lib/site.ts                   o que não muda com o idioma: versão, reposit
 src/lib/github.ts                 busca as estrelas do repositório na API do GitHub, com cache de horas
 src/lib/stars.ts                  quando mostrar as estrelas (a partir de 10) e como formatar (+23K)
 src/components/terminal-parts.tsx as peças dos terminais animados: janela, painéis, prompt, barra do tmux, linha do tempo
-src/components/terminal-demo.tsx  o terminal do topo: agente ao lado e painel de diff
+src/components/terminal-demo.tsx  o terminal do topo: do `work` ao agente e o review
 src/components/cycle-demo.tsx     o ciclo de trabalho, com capítulos clicáveis
 src/components/panel-demo.tsx     o painel ganhando um bloco novo
 src/components/terminal-table.tsx a tabela de terminais: o que funciona em todos e os extras de cada um
@@ -80,8 +80,8 @@ verdade é o README e os guias em `docs/` do
 [repositório do workdeck](https://github.com/thiagofeliperibeiro/workdeck).
 
 A interface do workdeck é em português, então os terminais animados mantêm em
-português, nos dois idiomas, o que o workdeck imprime (o painel, as mensagens
-dos comandos e o painel de diff). Só a conversa com o agente e as legendas em volta
+português, nos dois idiomas, o que o workdeck imprime (o painel e as mensagens
+dos comandos). Só a conversa com o agente e as legendas em volta
 são traduzidas. A página em inglês avisa isso abaixo do título.
 
 Os terminais animados imitam o workdeck de verdade: as mensagens dos comandos,

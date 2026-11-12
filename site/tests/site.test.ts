@@ -32,7 +32,7 @@ describe.each(locales)("site content in %s", (locale) => {
     for (const c of commands) expect(c.desc.length).toBeGreaterThan(0)
   })
 
-  test("the workflow has four steps, from work add to the diff panel", () => {
+  test("the workflow has four steps, from work add to the review in the agent", () => {
     expect(cycle).toHaveLength(4)
     expect(cycle[0].label).toBe("work add ~/api")
     expect(cycle[3].code).toBe(false)

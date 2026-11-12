@@ -5,7 +5,7 @@ export const en: Dictionary = {
   meta: {
     title: "workdeck — a framework for working with AI agents in the terminal",
     description:
-      "One window per project, your CLI agent beside the code, the state of your repositories and the diff in view before every commit. In the terminal you already use, on macOS and Linux.",
+      "One window per project, your CLI agent beside the code, the state of your repositories and a review before every commit. In the terminal you already use, on macOS and Linux.",
   },
   language: { label: "Language", names: { en: "EN", "pt-BR": "PT" } },
   nav: { how: "How it works", terminals: "Terminals", shortcuts: "Shortcuts", panel: "Panel", install: "Install" },
@@ -17,23 +17,23 @@ export const en: Dictionary = {
     titleHighlight: "AI agents",
     titleAfter: "",
     subtitle:
-      "Delegate to your AI agent without losing control of the code. Built on tmux: one window per project, your CLI agent beside the code, the state of your repositories and the diff in view before every commit.",
+      "Delegate to your AI agent without losing control of the code. Built on tmux: one window per project, your CLI agent beside the code, the state of your repositories and a review before every commit.",
     install: "Install",
     notice: "workdeck speaks English or Brazilian Portuguese: the installer asks which one.",
   },
   how: {
     eyebrow: "how it works",
     title: "From project to review",
-    desc: "Each project is a window with your agent. Once it finishes, the Claude Code diff panel shows what changed, and you review it before the commit.",
+    desc: "Each project is a window with your agent. Once it finishes, you ask the agent itself for a review before the commit.",
   },
   cycle: [
     { label: "work add ~/api", code: true, when: "once", desc: "work opens the session on the panel, and work add puts the project in it, in a background window." },
     { label: "project window", code: false, when: "always open", desc: "Shift+→ takes you there. Closed the terminal? work brings you back where you were." },
     { label: "agent beside it", code: false, when: "writes the code", desc: "Claude Code, Codex or whatever you use. When it finishes, the ✦ in the status bar tells you, even from another window." },
-    { label: "diff panel", code: false, when: "you review", desc: "Claude Code opens with its diff panel beside the conversation, with every changed file. Review it there, or ask the agent for a /code-review before the commit." },
+    { label: "you review", code: false, when: "before the commit", desc: "Ask the agent itself, such as /code-review in Claude Code. It reads the change and points out what to fix before the commit." },
   ],
   layers: [
-    { name: "workdeck", desc: "projects, the agent beside the code, the diff panel and the panel" },
+    { name: "workdeck", desc: "projects, the agent beside the code, the usage bar and the panel" },
     { name: "tmux", desc: "sessions, windows, panes and shortcuts" },
     { name: "terminal", desc: "whatever you already use to open tmux" },
   ],
@@ -77,7 +77,7 @@ export const en: Dictionary = {
   shortcutsSection: {
     eyebrow: "keyboard",
     title: "One shortcut for each step, in kitty",
-    desc: "From project to diff without leaving the keyboard. For now, the shortcuts are kitty only.",
+    desc: "From project to review without leaving the keyboard. For now, the shortcuts are kitty only.",
   },
   shortcuts: {
     macTab: "macOS",
@@ -89,7 +89,7 @@ export const en: Dictionary = {
       { key: "P", desc: "Adds a project" },
       { key: "1…9", desc: "Goes to the project" },
       { key: "← →", desc: "Previous / next project", keys: ["Shift", "← →"] },
-      { key: "A", desc: "Opens the agent in a new pane, with the diff beside it" },
+      { key: "A", desc: "Opens the agent in a new pane" },
       { key: "T", desc: "Opens a terminal in a new pane, in a grid" },
       { key: "Z", desc: "Zooms the pane, again to go back" },
       { key: "W", desc: "Closes the pane" },
@@ -151,10 +151,7 @@ export const en: Dictionary = {
     done: "✓ done. review before committing.",
     session: "session",
     windows: "4 windows",
-    agentHint: "Ctrl+b v · claude in the pane beside →",
     agentDone: "the agent finished",
-    diffPane: "diff · claude",
-    diffSummary: "2 files changed",
     reviewFound: "2 findings",
     issueEmail: "the regex accepts an email without a domain",
     issueTest: "no test for an invalid email",

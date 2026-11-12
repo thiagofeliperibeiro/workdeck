@@ -6,7 +6,7 @@ import { Caret, Line, Pane, Prompt, StatusBar, TerminalWindow, Typed, useSteps }
 import type { Dictionary } from "@/lib/dictionaries"
 import { cn } from "@/lib/utils"
 
-const timeline = [1100, 1400, 1700, 1600, 1100, 1300, 1200, 900, 1000, 1700, 2600, 1200, 900, 1000, 1000, 3600]
+const timeline = [1100, 1400, 1700, 1600, 1100, 1300, 1200, 900, 1000, 1700, 2600, 900, 1000, 1000, 3600]
 const scenes = [0, 4, 7, 11, timeline.length]
 
 function sceneOf(step: number) {
@@ -29,10 +29,8 @@ export function CycleDemo({ cycle, demo }: { cycle: Dictionary["cycle"]; demo: D
   const switching = s === 4
   const inProject = s >= 5
   const agentOpen = s >= 7
-  const diffOpen = s >= 11
   const agentDone = s === 10
-  const focus = agentOpen ? "agent" : "shell"
-  const path = inProject ? "~/api" : "~"
+  const paneTitle = !inSession ? "terminal" : !inProject ? "painel" : agentOpen ? demo.agentPane : "shell · api"
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -83,46 +81,8 @@ export function CycleDemo({ cycle, demo }: { cycle: Dictionary["cycle"]; demo: D
           animate={{ scale: agentDone && !reduced ? 1.45 : 1 }}
           transition={{ duration: 0.7, ease: [0.45, 0, 0.2, 1] }}
         >
-          <motion.div layout className={cn("grid min-h-0 gap-1.5 p-1.5", agentOpen ? cn("grid-cols-1 grid-rows-[1fr_auto] sm:grid-rows-1", diffOpen ? "sm:grid-cols-[3fr_1fr]" : "sm:grid-cols-2") : "grid-cols-1")}>
-            <AnimatePresence>
-              {agentOpen && (
-                <motion.div key="ia" layout className={cn("grid min-h-0 gap-1.5", diffOpen ? "grid-cols-[3fr_2fr]" : "grid-cols-1")}>
-                  <Pane title={demo.agentPane} active={focus === "agent"}>
-                    {s >= 8 && (
-                      <Line>
-                        <span className="text-ctp-peach">› </span>
-                        <span className="text-ctp-text">{demo.prompt}</span>
-                      </Line>
-                    )}
-                    {s >= 9 && (
-                      <>
-                        <Line className="text-ctp-subtext0" delay={0.1}>  {demo.reading} src/auth/login.ts</Line>
-                        <Line className="text-ctp-subtext0" delay={0.6}>  {demo.creating} src/auth/email.ts</Line>
-                        <Line className="text-ctp-subtext0" delay={1.1}>  {demo.editing} src/auth/login.ts</Line>
-                      </>
-                    )}
-                    {s >= 10 && <Line className="text-ctp-green">  {demo.done}</Line>}
-                    {s >= 12 && <Line><span className="text-ctp-peach">› </span><span className="text-ctp-text">{s >= 13 ? "/code-review" : <Typed text="/code-review" />}</span><Caret show={s === 12} /></Line>}
-                    {s >= 13 && <Line className="mt-1 text-ctp-text" delay={0.05}>  {demo.reviewFound}</Line>}
-                    {s >= 14 && <Line className="text-ctp-subtext0" delay={0.05}>  email.ts:3   <span className="text-ctp-text">{demo.issueEmail}</span></Line>}
-                    {s >= 15 && <Line className="text-ctp-subtext0" delay={0.05}>  login.ts:13  <span className="text-ctp-text">{demo.issueTest}</span></Line>}
-                  </Pane>
-                  <AnimatePresence>
-                    {diffOpen && (
-                      <motion.div key="diff" layout className="grid min-h-0 min-w-0" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}>
-                        <Pane title={demo.diffPane} active={false}>
-                          <Line className="text-ctp-overlay1">{demo.diffSummary} <span className="text-ctp-green">+18</span> <span className="text-ctp-red">-2</span></Line>
-                          <Line className="text-ctp-subtext0" delay={0.1}>  src/auth/email.ts  <span className="text-ctp-green">+14</span></Line>
-                          <Line className="text-ctp-subtext0" delay={0.2}>  src/auth/login.ts  <span className="text-ctp-green">+4</span> <span className="text-ctp-red">-2</span></Line>
-                        </Pane>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <Pane title={!inSession ? "terminal" : inProject ? "shell · api" : "painel"} active={focus === "shell"}>
+          <div className="grid min-h-0 grid-cols-1 p-1.5">
+            <Pane title={paneTitle} active>
               {!inSession ? (
                 <Prompt path="~" text="work" typing={s === 0} done={false} caret={s === 0} />
               ) : !inProject ? (
@@ -153,17 +113,29 @@ export function CycleDemo({ cycle, demo }: { cycle: Dictionary["cycle"]; demo: D
                 </>
               ) : (
                 <>
-                  <Prompt path={path} text="git status" typing={s === 5} done={s >= 6} caret={s === 5} />
-                  {s >= 6 && (
+                  <Prompt path="~/api" text="claude" typing={s === 5} done={s >= 6} caret={s === 5} />
+                  {s >= 8 && (
+                    <Line className="mt-1">
+                      <span className="text-ctp-peach">› </span>
+                      <span className="text-ctp-text">{demo.prompt}</span>
+                    </Line>
+                  )}
+                  {s >= 9 && (
                     <>
-                      <Line className="text-ctp-subtext0">On branch main</Line>
-                      <Line className="text-ctp-subtext0">nothing to commit, working tree clean</Line>
+                      <Line className="text-ctp-subtext0" delay={0.1}>  {demo.reading} src/auth/login.ts</Line>
+                      <Line className="text-ctp-subtext0" delay={0.6}>  {demo.creating} src/auth/email.ts</Line>
+                      <Line className="text-ctp-subtext0" delay={1.1}>  {demo.editing} src/auth/login.ts</Line>
                     </>
                   )}
+                  {s >= 10 && <Line className="text-ctp-green">  {demo.done}</Line>}
+                  {s >= 11 && <Line><span className="text-ctp-peach">› </span><span className="text-ctp-text">{s >= 12 ? "/code-review" : <Typed text="/code-review" />}</span><Caret show={s === 11} /></Line>}
+                  {s >= 12 && <Line className="mt-1 text-ctp-text" delay={0.05}>  {demo.reviewFound}</Line>}
+                  {s >= 13 && <Line className="text-ctp-subtext0" delay={0.05}>  email.ts:3   <span className="text-ctp-text">{demo.issueEmail}</span></Line>}
+                  {s >= 14 && <Line className="text-ctp-subtext0" delay={0.05}>  login.ts:13  <span className="text-ctp-text">{demo.issueTest}</span></Line>}
                 </>
               )}
             </Pane>
-          </motion.div>
+          </div>
 
           {inSession ? (
             <StatusBar windows={added ? ["painel", "api"] : ["painel"]} active={inProject ? 1 : 0} starred={agentDone ? 1 : undefined} note={demo.agentDone} branch={inProject ? "main" : undefined} />
